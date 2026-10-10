@@ -8,7 +8,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, floats, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -19,10 +19,10 @@ permissions. General canvas graphics, games, a Linux GUI backend and browser sup
 ## Standard library signatures
 
 These are the complete function signatures defined in the bundled source.
-Follow the chapter APIs for the supported application-facing helpers; some
-other prefixed functions are implementation helpers. These declarations are
-reference entries, not standalone compilable programs. Follow the source links
-for bodies, structs and exact status/lifetime contracts.
+Follow the chapter APIs for supported application-facing helpers; some
+prefixed functions are implementation helpers. Read source for structs and
+exact status/lifetime contracts. [OS APIs](18-system.md) document native
+intrinsics and the system/path/process libraries.
 
 ### bytes.ramos
 
@@ -125,6 +125,44 @@ fn num_text(n: int64) -> string
 fn num_parse(text: string) -> int64
 ```
 
+### path.ramos
+
+[Read the source](../stdlib/path.ramos).
+
+```ramos
+fn path_separator(value: int64) -> bool
+fn path_absolute_bytes(path: bytes) -> bool
+fn path_join_bytes(parent: bytes, child: bytes) -> bytes
+fn path_name_bytes(path: bytes) -> bytes
+fn path_join(parent: string, child: string) -> string
+fn path_name(path: string) -> string
+fn path_absolute(path: string) -> bool
+```
+
+### process.ramos
+
+[Read the source](../stdlib/process.ramos).
+
+```ramos
+fn process_put(packet: ProcessPacket, value: int64)
+fn process_raw(packet: ProcessPacket, text: bytes)
+fn process_quote(packet: ProcessPacket, text: bytes)
+fn process_run(executable: string, arguments: [string]) -> ProcessResult
+```
+
+### system.ramos
+
+[Read the source](../stdlib/system.ramos).
+
+```ramos
+fn system_cwd() -> SystemValue
+fn system_env(name: string) -> SystemValue
+fn directory_open(path: bytes) -> Directory
+fn directory_next(directory: Directory) -> DirectoryEntry
+fn directory_close(directory: Directory) -> int64
+fn directory_create(path: bytes) -> int64
+```
+
 ### text.ramos
 
 [Read the source](../stdlib/text.ramos).
@@ -157,3 +195,4 @@ fn tui_box(row: int64, column: int64, width: int64, height: int64)
 fn tui_safe(value: bytes, width: int64) -> string
 fn tui_key(timeout_ms: int64) -> int64
 ```
+

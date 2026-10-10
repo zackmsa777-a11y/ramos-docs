@@ -2,7 +2,7 @@
 
 This repository documents Ramos; it is not the compiler repository.
 
-- Target the released version recorded in `book.json` (currently 0.14.0).
+- Target the released version recorded in `book.json` (currently 0.15.0).
 - Edit canonical chapters in `book/`; never directly edit generated `docs/` or
   `book/BOOK.md`. Change design assets in `assets/`.
 - Treat proposed roadmap features as unavailable until verified in a release.

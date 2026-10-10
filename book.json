@@ -1,7 +1,7 @@
 {
-  "version": "0.14.0",
+  "version": "0.15.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "c1c495307331dbba96d04b4befe4bb8b412d782a",
+  "source_commit": "7cb4a012370b9824f256397a5b63fb44129c6793",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -47,6 +47,11 @@
       "slug": "07-libraries",
       "title": "Libraries with weave",
       "source": "docs/libraries.md"
+    },
+    {
+      "slug": "18-system",
+      "title": "Paths, directories, environment and child processes",
+      "source": "docs/system.md"
     },
     {
       "slug": "08-cli-tui",

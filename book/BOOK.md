@@ -1,4 +1,4 @@
-# The Ramos Book — 0.14.0
+# The Ramos Book — 0.15.0
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.14.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.15.0**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -16,9 +16,9 @@ identify when a feature arrived; they do not change this book's baseline.
 - New to Ramos? Start with [install, build and run](01-getting-started.md), then
   [the language](02-language.md) and [values](03-values.md).
 - Building a tool? Read [files](06-files.md), [libraries](07-libraries.md) and
-  [CLI/TUI](08-cli-tui.md), then try the [projects](11-cookbook.md).
+  [OS libraries](18-system.md) and [CLI/TUI](08-cli-tui.md), then try the [projects](11-cookbook.md).
 - Building a desktop window? Read [Windows GUI](09-gui.md). The Linux GUI backend
-  is not available in 0.14.
+  is not available in 0.15.
 - Writing Ramos with an AI agent? Start with the [agent guide](16-agent-guide.md)
   and [API reference](13-reference.md).
 - Working on the compiler? Read [self-hosting](12-self-hosting.md).
@@ -28,10 +28,11 @@ identify when a feature arrived; they do not change this book's baseline.
 Checked int64 arithmetic, booleans, functions, comments, while/range loops, else-if chains, compound assignment, immutable
 UTF-8 strings, mutable bytes, structs, typed arrays, reclaiming managed memory,
 compile-time `weave`, stdin, streamed files, terminal interfaces and Windows
-native GUI controls.
+native GUI controls, directory iteration/creation, lexical path helpers,
+environment lookup and direct child execution.
 
-There are no floats, directory iteration, child-process API, namespaces or
-package registry in 0.14. See [the new syntax](17-easier-syntax.md) for ranges,
+There are no floats, namespaces or package registry in 0.15. Read
+[the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
 must not be used in programs targeting this version.
@@ -42,7 +43,7 @@ currently interpret a source file or provide `ramos run`.
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.14.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.14.0)
+- [Ramos 0.14.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.15.0)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 
 The limits and negative results matter as much as working features. Native
@@ -55,8 +56,8 @@ interactive applications have been tested there.
 # Install, build and run
 
 Use the complete
-[0.14.0 syntax bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.14.0/ramos-0.14.0-syntax.zip),
-which also includes the CLI/TUI tools, both compilers, examples and all nine
+[0.15.0 system bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.15.0/ramos-0.15.0-system.zip),
+which also includes the CLI/TUI tools, both compilers, examples and all twelve
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.
 
@@ -274,7 +275,7 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 
@@ -435,7 +436,7 @@ language speed claim.
 A fresh eight-task C/Rust/Python baseline was recorded before changing 0.13.
 Existing workload binaries remain byte-identical for Linux and Windows; see
 [the continuity report](../evidence/syntax-codegen-continuity.json). The
-[current measurements](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/benchmarks/0.14.0/report.md) use the baseline's work
+[current measurements](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/benchmarks/0.14.0/report.md) use the baseline's work
 counts and verify every timed output. This syntax milestone makes no speedup
 claim. Compiler rebuild and app-build timings are recorded separately in
 [the acceptance evidence](../evidence/syntax-verification.json).
@@ -641,7 +642,7 @@ allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
 Metadata and alignment count toward the heap limit. Invalid sizes, indices,
 byte values or allocation failures report a runtime error and exit 1.
 Unreachable allocations can be collected automatically or with `collect()`.
-See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/docs/buffers.md).
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/docs/buffers.md).
 
 ## Bytes versus strings
 
@@ -905,7 +906,8 @@ including a source's hardlink/symlink alias.
 ## Standard library written in Ramos
 
 Copy the repository's `stdlib` folder beside your program, then weave only the
-files you use. These are readable Ramos implementations, not native hidden APIs.
+files you use. Helpers are readable Ramos source; OS operations call documented
+native intrinsics.
 `text.ramos` itself weaves `bytes.ramos`; an explicit second weave of that file
 reuses it. All functions are checked by the ordinary compiler.
 
@@ -918,7 +920,10 @@ reuses it. All functions are checked by the ordinary compiler.
 | `io.ramos` (0.12) | Streamed readers, lines, seeking, copy |
 | `cli.ramos` (0.12) | Argument/option scan helpers |
 | `tui.ramos` (0.12) | Full-screen terminal, colors, cursor, boxes and key input |
-| `gui.ramos` (0.13) | Windows desktop widgets, panels and events |
+| `gui.ramos` (0.13) | Native Windows desktop controls and events |
+| `system.ramos` (0.15) | Cwd/environment results, directory iteration and creation |
+| `path.ramos` (0.15) | Lexical path joining, names and rooted-path checks |
+| `process.ramos` (0.15) | Typed direct child execution and exit/OS status |
 | `maps.ramos` | `StringMap`, `map_new`, `map_len`, `map_has`, `map_get`, `map_set`, `map_remove` (plus `map_index`) |
 
 Number operations keep checked int64 semantics: `num_abs(INT64_MIN)` traps.
@@ -949,7 +954,8 @@ not promised. Lookup is linear; capacity doubles starting at four. Keys and
 values are immutable strings; map handles alias. Treat collection metadata
 fields as implementation state and mutate through the helper functions.
 
-All library errors print a diagnostic and exit 1. Ordinary arithmetic, array
+Contract violations in pure helpers print a diagnostic and exit 1; expected
+OS failures in I/O and system/process libraries return explicit statuses. Ordinary arithmetic, array
 bounds, allocation and UTF-8 checks retain the native Ramos traps. The standard
 library introduces no unbounded allocator or relaxed safety mode.
 
@@ -960,8 +966,8 @@ make library-demo
 ./ramos build examples/library_demo.ramos -o library-demo --target windows
 ```
 
-The 0.14 release's `ramos-0.14.0-syntax.zip` contains both compilers, all nine
-libraries and the example sources. Extract the whole archive so
+The release's `ramos-0.11.0-libraries.zip` contains both compilers, `stdlib/`,
+`examples/library_demo.ramos` and this guide. Extract the whole archive so
 source-relative paths keep working. On Windows:
 
 ```powershell
@@ -1003,6 +1009,182 @@ and [Windows proof](../evidence/windows-bootstrap-proof.json).
 
 Version 0.12 expands the bundle with [CLI and TUI libraries](08-cli-tui.md).
 
+See [0.15 OS contracts](18-system.md) for the new system, path and process helpers.
+
+
+---
+
+# Paths, directories, environment and child processes
+
+These APIs run natively on Linux x64 and Windows x64. Libraries are ordinary
+Ramos source; weave only what you need. Compiled programs require no Python,
+C compiler, shell or separate Ramos runtime.
+
+## A small directory tool
+
+```ramos
+weave "stdlib/system.ramos"
+weave "stdlib/path.ramos"
+fn main() {
+    let directory = directory_open(".")
+    if directory.status != 0 { stderr("cannot open directory\n")
+        exit(1) }
+    while !directory.end {
+        let entry = directory_next(directory)
+        if !entry.end { print(path_join_bytes(".", entry.name)) }
+    }
+    let read_status = directory.status
+    let close_status = directory_close(directory)
+    if read_status != 0 || close_status != 0 { exit(1) }
+}
+```
+
+`Directory` contains `handle`, `status`, `end`. `DirectoryEntry` contains
+`name: bytes`, `kind: int64`, `end: bool`, `status: int64`. Kinds are 1 regular
+file, 2 directory, 3 symbolic link / Windows reparse point (including junctions),
+4 other, 0 no entry. Entries omit `.` and `..`; order is unspecified. A name is
+one component, with no appended separator. An empty successful result ends
+iteration. The iterator owns one OS handle and an 8 KiB buffer, irrespective
+of directory size. Always close, including after early termination or error.
+Garbage collection reclaims memory; it does not close OS handles.
+
+`directory_create(path: bytes) -> int64` creates one new directory: parents
+must already exist, and an existing destination returns -17. Linux uses mode
+0755 subject to the process umask; Windows uses inherited security defaults.
+No permission preservation or recursive creation is implied.
+
+Low-level intrinsics:
+
+| Signature | Result |
+| --- | --- |
+| `cwd() -> bytes` | Current working directory; empty on error |
+| `env_get(name: bytes) -> bytes` | Inherited environment value; empty on missing/error or empty success |
+| `dir_open(path: bytes) -> int64` | Positive iterator ID, or negative error |
+| `dir_next(handle: int64) -> bytes` | Next name; empty on EOF/error |
+| `dir_kind(handle: int64) -> int64` | Kind of latest returned entry, zero without an entry |
+| `dir_close(handle: int64) -> int64` | Zero success or negative error; retires a valid ID even on close failure |
+| `dir_create(path: bytes) -> int64` | Zero success or negative error |
+
+All overwrite `io_error()` with zero on success or a negative status on error.
+Capture it before another I/O operation. Directory IDs use the same increasing
+generation counter as file streams, with separate lookup tables: file and
+directory handles cannot be substituted. Closed IDs remain invalid after slot
+reuse. There are 64 concurrently open directories, separately from 64 file
+streams. Limit exhaustion is fallible (-24); invalid handles return -9.
+
+Paths must be nonempty, NUL-free and at most 4095 input bytes. Windows validates
+UTF-8 and uses wide APIs; Linux preserves arbitrary filename bytes. Host Windows
+path-length and filesystem restrictions still apply; this release does not add
+an extended-path prefix or a long-path opt-in manifest. A caller-supplied root
+path may follow a link. Entries themselves are classified without following links.
+Linux resolves unknown entry kinds with `fstatat(..., AT_SYMLINK_NOFOLLOW)`.
+Missing paths return -2, non-directories -20, access denied -13; other native
+Linux errno values are preserved. Windows maps unclassified failures to -5.
+
+## Path helpers and environment
+
+`stdlib/path.ramos` provides `path_join(parent: string, child: string) -> string`,
+`path_name(path: string) -> string`, `path_absolute(path: string) -> bool`, and
+byte-preserving counterparts `path_join_bytes`, `path_name_bytes`,
+`path_absolute_bytes`. These helpers are lexical: no filesystem access or `..`
+normalization. A rooted child replaces its parent; joining an empty child
+returns the parent. Linux recognizes `/`; Windows also recognizes `\` and
+`C:/...`. Windows rooted paths such as `/x` are drive-rooted, and `C:file` stays
+drive-relative: `path_absolute` means rooted, not a canonical full path.
+`path_name` strips trailing separators and returns the last component; a root
+made only of separators has an empty name. Generic helpers retain the ordinary
+1 MiB value limit; native OS calls enforce their narrower path limits.
+
+`stdlib/system.ramos` provides `system_cwd() -> SystemValue` and
+`system_env(name: string) -> SystemValue`, with `value: bytes` and `status: int64`.
+Missing environment names return -2; an existing empty value has status zero.
+Empty names, embedded NUL and `=` are invalid (-22). Values are limited to
+32767 bytes (-27 when exceeded); Linux names over 32767 bytes are invalid,
+Windows oversized UTF-8 name input returns -27. Lookup follows native OS case
+rules (case-sensitive Linux, case-insensitive Windows). Values remain bytes;
+call `string(result.value)` when UTF-8 is required. No environment setter is
+introduced; children inherit the parent environment.
+
+## A direct command runner
+
+```ramos
+weave "stdlib/process.ramos"
+fn main() {
+    let arguments = array(string, 1, s"--version")
+    let result = process_run(string(arg(1)), arguments)
+    if result.status != 0 { stderr("cannot start or wait for process\n")
+        exit(1) }
+    print(result.code)
+}
+```
+
+`process_run(executable: string, arguments: [string]) -> ProcessResult` waits
+synchronously and returns `code: int64`, `status: int64`. Success has status zero,
+even when the child exits nonzero. OS failure has negative status and code -1.
+On Linux, normal exit codes are 0..255 and signal termination maps to 128+signal.
+Windows returns the unsigned 32-bit process exit code in int64.
+
+Supply an executable path, with `.exe` on Windows. No PATH search, shell,
+command-string evaluation, implicit interpreter or batch-file handling is added.
+The child inherits cwd, environment, stdin/stdout/stderr. Existing redirection
+and pipes on those standard streams work; output streams are not captured in
+managed memory. Nonstandard Ramos file/directory handles are not inheritable.
+Close active TUI/GUI state before running an interactive child. There is no
+asynchronous spawning, process cancellation, redirection API or timeout yet.
+
+Arguments preserve Unicode, empty values, spaces, tabs, quotes, backslashes and
+shell characters as values. Embedded NUL returns -22. The limit is 256 argument
+values, plus argv[0], and 32767 packed UTF-8 bytes; exceeding the public library
+limit returns -7. On Windows this count includes executable quoting, spaces and
+escaping, and UTF-16 conversion is also bounded. Quoting follows the
+[Microsoft CRT argument rules](https://learn.microsoft.com/en-us/cpp/c-language/parsing-c-command-line-arguments)
+and is tested with Ramos and Python children. A Windows child with its own
+nonstandard parser may interpret its command line differently.
+
+The internal `_process_run(executable: bytes, packet: bytes)` is an OS boundary,
+not the library contract. Linux packets are NUL-separated arguments with a final
+NUL (empty packet means no arguments). Windows packets contain the fully quoted
+UTF-8 command line including argv[0]. Prefer the typed `process_run` helper.
+Linux uses fork/execve/wait4 and a close-on-exec pipe so exec failures cannot be
+confused with child exit 127. Windows uses explicit `lpApplicationName` with
+[CreateProcessW](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw),
+waits, reads the exit code and closes both returned handles.
+
+## Run the real tools
+
+```sh
+./ramos build examples/rfind.ramos -o rfind
+./rfind ./examples .ramos
+./ramos build examples/rrun.ramos -o rrun
+./rrun /bin/echo "one argument" "; still one argument"
+./ramos build examples/rcopy.ramos -o rcopy
+./rcopy large-input.bin new-copy.bin
+```
+
+```powershell
+.\ramos.exe build .\examples\rfind.ramos -o .\rfind.exe
+.\rfind.exe .\examples .ramos
+.\ramos.exe build .\examples\rrun.ramos -o .\rrun.exe
+.\rrun.exe .\ramos.exe --version
+```
+
+`rfind` searches regular-file names recursively using an iterative work stack,
+holding only one directory handle at a time. Links, junctions and other entries
+are skipped. The root may be an explicitly supplied link. At most 8192 pending
+directories are retained, subject to the existing live heap; errors exit 2.
+Traversal is not a snapshot or a security boundary: another process changing a
+path between listing and opening can change what is visited. `rrun` forwards
+child exit codes up to 255, maps larger Windows codes to exit 1, and exits 2 on
+usage or spawn/wait errors. `rcopy` remains the streamed, exclusive-create file
+copy tool; this milestone does not claim a recursive backup or metadata copier.
+
+Verification includes multichunk iteration across garbage collection, early
+close, generation/capacity checks, Unicode directory creation, junction/symlink
+cycles, exact child arguments, inherited streams/environment and child failures.
+See [release evidence](../evidence/system-verification.json), [Linux bootstrap proof](../evidence/bootstrap-proof.json)
+and [Windows bootstrap proof](../evidence/windows-bootstrap-proof.json). Historical 0.14
+benchmark scores are not performance measurements of 0.15; no speedup is claimed.
+
 
 ---
 
@@ -1015,7 +1197,7 @@ and emits ELF/PE directly.
 
 ## Run the tools
 
-Extract the complete `ramos-0.14.0-syntax.zip` archive; keep `stdlib/` beside
+Extract the complete `ramos-0.15.0-system.zip` archive; keep `stdlib/` beside
 `examples/`. On Linux:
 
 ```sh
@@ -1402,7 +1584,7 @@ There is no interpreter, Python dependency or C runtime in generated programs.
 
 ## Use Ramos on Windows
 
-Download [ramos.exe from the 0.13 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.14.0/ramos.exe)
+Download [ramos.exe from the 0.15 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.15.0/ramos.exe)
 and open PowerShell in its directory. CI artifacts are also available from the
 [Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
 
@@ -1515,12 +1697,16 @@ on OS control termination. Use Windows Terminal or a
 real interactive console; redirected handles are rejected for TUI startup.
 See [file tools and terminal interfaces](08-cli-tui.md).
 
+Version 0.15 adds wide-API directory iteration/creation, cwd and environment
+lookup, and direct native child execution. See [OS libraries](18-system.md) for
+argument quoting, status handling, resource ownership and current limits.
+
 
 ---
 
 # Runnable projects
 
-These are complete programs from Ramos 0.14, not pseudocode. The repository
+These are complete programs from Ramos 0.15, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -1615,12 +1801,34 @@ is inside `examples/` and therefore uses `../stdlib/`. Build for Windows with
 The shell and PowerShell versions of a build follow the same structure:
 `COMPILER build SOURCE -o OUTPUT`. Windows outputs should use `.exe`.
 
+## Recursive file-name search
+
+```sh
+./ramos-linux-x86_64 build examples/rfind.ramos -o rfind
+./rfind examples .ramos
+```
+
+[Source: rfind.ramos](../examples/rfind.ramos). Iterative traversal uses one
+directory handle at a time, skips links/junctions and reports OS failures.
+See [limits and traversal policy](18-system.md).
+
+## Direct command execution
+
+```powershell
+.\ramos.exe build .\examples\rrun.ramos -o .\rrun.exe
+.\rrun.exe .\ramos.exe --version
+```
+
+[Source: rrun.ramos](../examples/rrun.ramos). No shell or PATH lookup. Argument
+values and inherited standard streams are preserved; OS failures are separate
+from child exit codes. Exit codes above 255 map to 1 in this small CLI wrapper.
+
 
 ---
 
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -1646,7 +1854,9 @@ cmp build/stage2 build/stage3
 sha256sum build/stage2 build/stage3
 ```
 
-Stage 0 is the retained assembly bootstrap with the new typed OS intrinsics.
+Stage 0 is the retained assembly compiler seed with the audited native runtime.
+It supports the compiler source subset; application grammar and new OS intrinsic
+names are provided by the Ramos-written compiler.
 Stages 1, 2 and 3 are compiled from the same Ramos compiler source. Stage 1 can
 differ in instruction selection from stage 2; the required fixed point is
 **stage 2 = stage 3**. `make all` copies stage 2 to the normal `ramos` executable.
@@ -1670,7 +1880,7 @@ The literal is instruction data, not an embedded compiler executable.
 The runtime's assembly source remains in `bootstrap/src/runtime.inc`,
 `buffer_runtime.inc`, `heap_runtime.inc`, `values_runtime.inc`, `io_runtime.inc`,
 `text_runtime.inc`, `stdin_runtime.inc`, `source_guard.inc`,
-`stream_runtime.inc`, `stream_os.inc`, `terminal_os.inc` and `gui_os.inc`. The proof verifies every embedded byte
+`stream_runtime.inc`, `stream_os.inc` and `terminal_os.inc`. The proof verifies every embedded byte
 and native entry offset against the bootstrap's emitted runtime. Retaining an
 assembly OS boundary does not mean the Ramos compiler invokes assembly at run
 time; once stage 1 is seeded, the next stages require no assembler or linker.
@@ -1683,7 +1893,7 @@ seed it. User programs can use the new structs and typed arrays; no preprocessin
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -1692,7 +1902,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -1704,7 +1914,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.14 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.11 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.
@@ -1735,7 +1945,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, floats, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -1746,10 +1956,10 @@ permissions. General canvas graphics, games, a Linux GUI backend and browser sup
 ## Standard library signatures
 
 These are the complete function signatures defined in the bundled source.
-Follow the chapter APIs for the supported application-facing helpers; some
-other prefixed functions are implementation helpers. These declarations are
-reference entries, not standalone compilable programs. Follow the source links
-for bodies, structs and exact status/lifetime contracts.
+Follow the chapter APIs for supported application-facing helpers; some
+prefixed functions are implementation helpers. Read source for structs and
+exact status/lifetime contracts. [OS APIs](18-system.md) document native
+intrinsics and the system/path/process libraries.
 
 ### bytes.ramos
 
@@ -1852,6 +2062,44 @@ fn num_text(n: int64) -> string
 fn num_parse(text: string) -> int64
 ```
 
+### path.ramos
+
+[Read the source](../stdlib/path.ramos).
+
+```ramos
+fn path_separator(value: int64) -> bool
+fn path_absolute_bytes(path: bytes) -> bool
+fn path_join_bytes(parent: bytes, child: bytes) -> bytes
+fn path_name_bytes(path: bytes) -> bytes
+fn path_join(parent: string, child: string) -> string
+fn path_name(path: string) -> string
+fn path_absolute(path: string) -> bool
+```
+
+### process.ramos
+
+[Read the source](../stdlib/process.ramos).
+
+```ramos
+fn process_put(packet: ProcessPacket, value: int64)
+fn process_raw(packet: ProcessPacket, text: bytes)
+fn process_quote(packet: ProcessPacket, text: bytes)
+fn process_run(executable: string, arguments: [string]) -> ProcessResult
+```
+
+### system.ramos
+
+[Read the source](../stdlib/system.ramos).
+
+```ramos
+fn system_cwd() -> SystemValue
+fn system_env(name: string) -> SystemValue
+fn directory_open(path: bytes) -> Directory
+fn directory_next(directory: Directory) -> DirectoryEntry
+fn directory_close(directory: Directory) -> int64
+fn directory_create(path: bytes) -> int64
+```
+
 ### text.ramos
 
 [Read the source](../stdlib/text.ramos).
@@ -1886,11 +2134,15 @@ fn tui_key(timeout_ms: int64) -> int64
 ```
 
 
+
 ---
 
 # Performance and evidence
 
-These are recorded **Ramos 0.14.0** measurements, including exact outputs,
+This 0.15 edition retains measured **0.14** results below. They are historical;
+no comparative performance or speedup measurement for 0.15 is claimed.
+
+These are recorded **Ramos 0.15.0** measurements, including exact outputs,
 source/compiler hashes, flags and raw samples. The shared VM and selected
 workloads limit the conclusions. This is an execution index, not a score for
 language quality or all possible applications.
@@ -1980,7 +2232,7 @@ Median of three builds per task, including compiler startup and linking/publicat
 ## Next work for Ramos
 
 1. Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (6.1× C time), Runtime-seeded recursive tree (5.1× C time), Scan 16 KiB ASCII text (3.9× C time). Version 0.7.1 already reduces buffer-call and stack traffic and specializes constant arithmetic. Further changes need their own measurements.
-2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/benchmarks/optimization.md).
+2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/benchmarks/optimization.md).
 3. Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.
 
 ![Overall index and task ratios](../assets/performance-0.14.0.png)
@@ -2004,9 +2256,9 @@ make
 python3 benchmarks/run_suite.py --work-counts benchmarks/baseline-0.13.0/results.json --output-dir work/reproduced-0.14.0
 ```
 
-Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
+Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
 
-Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/benchmarks/results-0.2.json); they are not directly comparable to this suite.
 
 
 ---
@@ -2018,7 +2270,7 @@ applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.
 
-This development plan starts from 0.13. The 0.14 syntax milestone is now
+This development plan starts from 0.13. The 0.14 syntax and 0.15 OS library milestones are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -2055,7 +2307,7 @@ timings are historical; they are not a performance result for 0.13.
 | Proposed milestone | Work | Runnable acceptance example |
 | --- | --- | --- |
 | 0.14: easier code (implemented; see [contracts](17-easier-syntax.md)) | `else if`, exclusive-range `for`, `+=` and `-=`; updated syntax documentation and highlighting | Simplify an existing search/viewer example while preserving its output and behavior on both OSes |
-| 0.15: useful OS libraries | Directory iteration, paths, environment access and direct child-process execution | Recursive file search and a copy/backup tool; a command runner that reports child exit status |
+| 0.15: useful OS libraries (implemented; see [contracts](18-system.md)) | Directory iteration, paths, environment access and direct child-process execution | Recursive name search, streamed exclusive file copy and a direct command runner; recursive backup is not shipped |
 | 0.16: easier development | Source-line/caret errors, a formatter and a compile-and-run command | A new user can run a file, correct a reported error and format it using the documented commands |
 | 0.17: data and math | `float64`, conversions and essential math; string builders and better collection growth; reviewed memory/recursion limits | A numerical renderer and a streaming text tool that builds output without repeated whole-string copies |
 | 0.18: portable GUI | Linux backend, layout/DPI handling, file dialogs and basic drawing behind the GUI library | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
@@ -2176,7 +2428,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.14.0** unless the task explicitly provides a newer compiler
+programs. Target **0.15.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -2211,7 +2463,7 @@ useful. Individual chapters are smaller and have stable relative links.
 
 No `import`, `++`, `*=`, `/=`, floats, bitwise/shift operators,
 exceptions, nullable pointers, generics, methods, closures, namespaces, package
-manager, direct child-process API or directory iteration. Both `else if` chains and nested `if` blocks are supported. Planned features in the roadmap are not current
+manager, asynchronous child spawning, environment mutation or recursive backup. Both `else if` chains and nested `if` blocks are supported. Planned features in the roadmap are not current
 capabilities. Do not substitute Python or C as a hidden backend for Ramos code.
 
 ## Error and lifetime contracts
@@ -2224,8 +2476,15 @@ as a return value alone does not distinguish a successful parse from failure.
 
 `arg_count()` includes the executable name. Use `arg()` for bytes, `cli_arg()`
 for validated strings. Process the final nonempty stdin line even if EOF is set.
-Close file streams explicitly; GC reclaims memory, not OS handles. Do not mix
+Close file streams and directory iterators explicitly; GC reclaims memory, not OS handles. Do not mix
 buffered stdin reading with raw terminal input.
+
+For directories/processes, read [OS contracts](18-system.md). Use directory
+entry kinds, skip links/junctions during traversal, and close after early exit.
+`process_run(executable: string, arguments: [string])` has explicit status/code;
+there is no shell or PATH lookup. Supply an executable path; at most 256 argument
+values and 32767 packed UTF-8 bytes. Child input/output is inherited, not captured.
+`system_env` returns bytes and distinguishes missing (-2) from empty success.
 
 For GUI, support is Windows-only. Pump events regularly, use blocking waits
 when idle and close the window. Do not promise dialogs, canvas APIs or a Linux

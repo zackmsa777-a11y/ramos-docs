@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.15.0, with Markdown for agents and HTML for people.">
+<title>Paths, directories, environment and child processes · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.15.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="17-easier-syntax.html"><span>03</span>Easier syntax: branches, ranges and assignment</a><a href="03-values.html"><span>04</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>05</span>Working with bytes</a><a href="05-input.html"><span>06</span>Stdin and number conversion</a><a href="06-files.html"><span>07</span>Arguments and file I/O</a><a href="07-libraries.html"><span>08</span>Libraries with weave</a><a href="18-system.html" aria-current="page"><span>09</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>10</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>11</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>12</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>13</span>Runnable projects</a><a href="12-self-hosting.html"><span>14</span>How the compiler builds itself</a><a href="13-reference.html"><span>15</span>Limits and standard library reference</a><a href="14-performance.html"><span>16</span>Performance and evidence</a><a href="15-roadmap.html"><span>17</span>What comes next</a><a href="16-agent-guide.html"><span>18</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="paths-directories-environment-and-child-processes">Paths, directories, environment and child processes</h1>
+<p>These APIs run natively on Linux x64 and Windows x64. Libraries are ordinary
+Ramos source; weave only what you need. Compiled programs require no Python,
+C compiler, shell or separate Ramos runtime.</p>
+<h2 id="a-small-directory-tool">A small directory tool</h2>
+<pre><code class="language-ramos">weave &quot;stdlib/system.ramos&quot;
+weave &quot;stdlib/path.ramos&quot;
+fn main() {
+    let directory = directory_open(&quot;.&quot;)
+    if directory.status != 0 { stderr(&quot;cannot open directory\n&quot;)
+        exit(1) }
+    while !directory.end {
+        let entry = directory_next(directory)
+        if !entry.end { print(path_join_bytes(&quot;.&quot;, entry.name)) }
+    }
+    let read_status = directory.status
+    let close_status = directory_close(directory)
+    if read_status != 0 || close_status != 0 { exit(1) }
+}
+</code></pre>
+<p><code>Directory</code> contains <code>handle</code>, <code>status</code>, <code>end</code>. <code>DirectoryEntry</code> contains
+<code>name: bytes</code>, <code>kind: int64</code>, <code>end: bool</code>, <code>status: int64</code>. Kinds are 1 regular
+file, 2 directory, 3 symbolic link / Windows reparse point (including junctions),
+4 other, 0 no entry. Entries omit <code>.</code> and <code>..</code>; order is unspecified. A name is
+one component, with no appended separator. An empty successful result ends
+iteration. The iterator owns one OS handle and an 8 KiB buffer, irrespective
+of directory size. Always close, including after early termination or error.
+Garbage collection reclaims memory; it does not close OS handles.</p>
+<p><code>directory_create(path: bytes) -&gt; int64</code> creates one new directory: parents
+must already exist, and an existing destination returns -17. Linux uses mode
+0755 subject to the process umask; Windows uses inherited security defaults.
+No permission preservation or recursive creation is implied.</p>
+<p>Low-level intrinsics:</p>
+<table>
+<thead>
+<tr>
+<th>Signature</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cwd() -&gt; bytes</code></td>
+<td>Current working directory; empty on error</td>
+</tr>
+<tr>
+<td><code>env_get(name: bytes) -&gt; bytes</code></td>
+<td>Inherited environment value; empty on missing/error or empty success</td>
+</tr>
+<tr>
+<td><code>dir_open(path: bytes) -&gt; int64</code></td>
+<td>Positive iterator ID, or negative error</td>
+</tr>
+<tr>
+<td><code>dir_next(handle: int64) -&gt; bytes</code></td>
+<td>Next name; empty on EOF/error</td>
+</tr>
+<tr>
+<td><code>dir_kind(handle: int64) -&gt; int64</code></td>
+<td>Kind of latest returned entry, zero without an entry</td>
+</tr>
+<tr>
+<td><code>dir_close(handle: int64) -&gt; int64</code></td>
+<td>Zero success or negative error; retires a valid ID even on close failure</td>
+</tr>
+<tr>
+<td><code>dir_create(path: bytes) -&gt; int64</code></td>
+<td>Zero success or negative error</td>
+</tr>
+</tbody>
+</table>
+<p>All overwrite <code>io_error()</code> with zero on success or a negative status on error.
+Capture it before another I/O operation. Directory IDs use the same increasing
+generation counter as file streams, with separate lookup tables: file and
+directory handles cannot be substituted. Closed IDs remain invalid after slot
+reuse. There are 64 concurrently open directories, separately from 64 file
+streams. Limit exhaustion is fallible (-24); invalid handles return -9.</p>
+<p>Paths must be nonempty, NUL-free and at most 4095 input bytes. Windows validates
+UTF-8 and uses wide APIs; Linux preserves arbitrary filename bytes. Host Windows
+path-length and filesystem restrictions still apply; this release does not add
+an extended-path prefix or a long-path opt-in manifest. A caller-supplied root
+path may follow a link. Entries themselves are classified without following links.
+Linux resolves unknown entry kinds with <code>fstatat(..., AT_SYMLINK_NOFOLLOW)</code>.
+Missing paths return -2, non-directories -20, access denied -13; other native
+Linux errno values are preserved. Windows maps unclassified failures to -5.</p>
+<h2 id="path-helpers-and-environment">Path helpers and environment</h2>
+<p><code>stdlib/path.ramos</code> provides <code>path_join(parent: string, child: string) -&gt; string</code>,
+<code>path_name(path: string) -&gt; string</code>, <code>path_absolute(path: string) -&gt; bool</code>, and
+byte-preserving counterparts <code>path_join_bytes</code>, <code>path_name_bytes</code>,
+<code>path_absolute_bytes</code>. These helpers are lexical: no filesystem access or <code>..</code>
+normalization. A rooted child replaces its parent; joining an empty child
+returns the parent. Linux recognizes <code>/</code>; Windows also recognizes <code>\</code> and
+<code>C:/...</code>. Windows rooted paths such as <code>/x</code> are drive-rooted, and <code>C:file</code> stays
+drive-relative: <code>path_absolute</code> means rooted, not a canonical full path.
+<code>path_name</code> strips trailing separators and returns the last component; a root
+made only of separators has an empty name. Generic helpers retain the ordinary
+1 MiB value limit; native OS calls enforce their narrower path limits.</p>
+<p><code>stdlib/system.ramos</code> provides <code>system_cwd() -&gt; SystemValue</code> and
+<code>system_env(name: string) -&gt; SystemValue</code>, with <code>value: bytes</code> and <code>status: int64</code>.
+Missing environment names return -2; an existing empty value has status zero.
+Empty names, embedded NUL and <code>=</code> are invalid (-22). Values are limited to
+32767 bytes (-27 when exceeded); Linux names over 32767 bytes are invalid,
+Windows oversized UTF-8 name input returns -27. Lookup follows native OS case
+rules (case-sensitive Linux, case-insensitive Windows). Values remain bytes;
+call <code>string(result.value)</code> when UTF-8 is required. No environment setter is
+introduced; children inherit the parent environment.</p>
+<h2 id="a-direct-command-runner">A direct command runner</h2>
+<pre><code class="language-ramos">weave &quot;stdlib/process.ramos&quot;
+fn main() {
+    let arguments = array(string, 1, s&quot;--version&quot;)
+    let result = process_run(string(arg(1)), arguments)
+    if result.status != 0 { stderr(&quot;cannot start or wait for process\n&quot;)
+        exit(1) }
+    print(result.code)
+}
+</code></pre>
+<p><code>process_run(executable: string, arguments: [string]) -&gt; ProcessResult</code> waits
+synchronously and returns <code>code: int64</code>, <code>status: int64</code>. Success has status zero,
+even when the child exits nonzero. OS failure has negative status and code -1.
+On Linux, normal exit codes are 0..255 and signal termination maps to 128+signal.
+Windows returns the unsigned 32-bit process exit code in int64.</p>
+<p>Supply an executable path, with <code>.exe</code> on Windows. No PATH search, shell,
+command-string evaluation, implicit interpreter or batch-file handling is added.
+The child inherits cwd, environment, stdin/stdout/stderr. Existing redirection
+and pipes on those standard streams work; output streams are not captured in
+managed memory. Nonstandard Ramos file/directory handles are not inheritable.
+Close active TUI/GUI state before running an interactive child. There is no
+asynchronous spawning, process cancellation, redirection API or timeout yet.</p>
+<p>Arguments preserve Unicode, empty values, spaces, tabs, quotes, backslashes and
+shell characters as values. Embedded NUL returns -22. The limit is 256 argument
+values, plus argv[0], and 32767 packed UTF-8 bytes; exceeding the public library
+limit returns -7. On Windows this count includes executable quoting, spaces and
+escaping, and UTF-16 conversion is also bounded. Quoting follows the
+<a href="https://learn.microsoft.com/en-us/cpp/c-language/parsing-c-command-line-arguments">Microsoft CRT argument rules</a>
+and is tested with Ramos and Python children. A Windows child with its own
+nonstandard parser may interpret its command line differently.</p>
+<p>The internal <code>_process_run(executable: bytes, packet: bytes)</code> is an OS boundary,
+not the library contract. Linux packets are NUL-separated arguments with a final
+NUL (empty packet means no arguments). Windows packets contain the fully quoted
+UTF-8 command line including argv[0]. Prefer the typed <code>process_run</code> helper.
+Linux uses fork/execve/wait4 and a close-on-exec pipe so exec failures cannot be
+confused with child exit 127. Windows uses explicit <code>lpApplicationName</code> with
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw">CreateProcessW</a>,
+waits, reads the exit code and closes both returned handles.</p>
+<h2 id="run-the-real-tools">Run the real tools</h2>
+<pre><code class="language-sh">./ramos build examples/rfind.ramos -o rfind
+./rfind ./examples .ramos
+./ramos build examples/rrun.ramos -o rrun
+./rrun /bin/echo &quot;one argument&quot; &quot;; still one argument&quot;
+./ramos build examples/rcopy.ramos -o rcopy
+./rcopy large-input.bin new-copy.bin
+</code></pre>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\rfind.ramos -o .\rfind.exe
+.\rfind.exe .\examples .ramos
+.\ramos.exe build .\examples\rrun.ramos -o .\rrun.exe
+.\rrun.exe .\ramos.exe --version
+</code></pre>
+<p><code>rfind</code> searches regular-file names recursively using an iterative work stack,
+holding only one directory handle at a time. Links, junctions and other entries
+are skipped. The root may be an explicitly supplied link. At most 8192 pending
+directories are retained, subject to the existing live heap; errors exit 2.
+Traversal is not a snapshot or a security boundary: another process changing a
+path between listing and opening can change what is visited. <code>rrun</code> forwards
+child exit codes up to 255, maps larger Windows codes to exit 1, and exits 2 on
+usage or spawn/wait errors. <code>rcopy</code> remains the streamed, exclusive-create file
+copy tool; this milestone does not claim a recursive backup or metadata copier.</p>
+<p>Verification includes multichunk iteration across garbage collection, early
+close, generation/capacity checks, Unicode directory creation, junction/symlink
+cycles, exact child arguments, inherited streams/environment and child failures.
+See <a href="evidence/system-verification.json">release evidence</a>, <a href="evidence/bootstrap-proof.json">Linux bootstrap proof</a>
+and <a href="evidence/windows-bootstrap-proof.json">Windows bootstrap proof</a>. Historical 0.14
+benchmark scores are not performance measurements of 0.15; no speedup is claimed.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="07-libraries.html">← Libraries with weave</a><a href="08-cli-tui.html">CLI tools and terminal interfaces →</a></nav><footer>Ramos 0.15.0 · <a href="book/18-system.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

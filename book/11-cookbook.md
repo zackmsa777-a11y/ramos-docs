@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.14, not pseudocode. The repository
+These are complete programs from Ramos 0.15, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -94,3 +94,25 @@ is inside `examples/` and therefore uses `../stdlib/`. Build for Windows with
 
 The shell and PowerShell versions of a build follow the same structure:
 `COMPILER build SOURCE -o OUTPUT`. Windows outputs should use `.exe`.
+
+## Recursive file-name search
+
+```sh
+./ramos-linux-x86_64 build examples/rfind.ramos -o rfind
+./rfind examples .ramos
+```
+
+[Source: rfind.ramos](../examples/rfind.ramos). Iterative traversal uses one
+directory handle at a time, skips links/junctions and reports OS failures.
+See [limits and traversal policy](18-system.md).
+
+## Direct command execution
+
+```powershell
+.\ramos.exe build .\examples\rrun.ramos -o .\rrun.exe
+.\rrun.exe .\ramos.exe --version
+```
+
+[Source: rrun.ramos](../examples/rrun.ramos). No shell or PATH lookup. Argument
+values and inherited standard streams are preserved; OS failures are separate
+from child exit codes. Exit codes above 255 map to 1 in this small CLI wrapper.

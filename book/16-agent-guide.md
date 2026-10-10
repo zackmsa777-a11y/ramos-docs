@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.14.0** unless the task explicitly provides a newer compiler
+programs. Target **0.15.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -36,7 +36,7 @@ useful. Individual chapters are smaller and have stable relative links.
 
 No `import`, `++`, `*=`, `/=`, floats, bitwise/shift operators,
 exceptions, nullable pointers, generics, methods, closures, namespaces, package
-manager, direct child-process API or directory iteration. Both `else if` chains and nested `if` blocks are supported. Planned features in the roadmap are not current
+manager, asynchronous child spawning, environment mutation or recursive backup. Both `else if` chains and nested `if` blocks are supported. Planned features in the roadmap are not current
 capabilities. Do not substitute Python or C as a hidden backend for Ramos code.
 
 ## Error and lifetime contracts
@@ -49,8 +49,15 @@ as a return value alone does not distinguish a successful parse from failure.
 
 `arg_count()` includes the executable name. Use `arg()` for bytes, `cli_arg()`
 for validated strings. Process the final nonempty stdin line even if EOF is set.
-Close file streams explicitly; GC reclaims memory, not OS handles. Do not mix
+Close file streams and directory iterators explicitly; GC reclaims memory, not OS handles. Do not mix
 buffered stdin reading with raw terminal input.
+
+For directories/processes, read [OS contracts](18-system.md). Use directory
+entry kinds, skip links/junctions during traversal, and close after early exit.
+`process_run(executable: string, arguments: [string])` has explicit status/code;
+there is no shell or PATH lookup. Supply an executable path; at most 256 argument
+values and 32767 packed UTF-8 bytes. Child input/output is inherited, not captured.
+`system_env` returns bytes and distinguishes missing (-2) from empty success.
 
 For GUI, support is Windows-only. Pump events regularly, use blocking waits
 when idle and close the window. Do not promise dialogs, canvas APIs or a Linux

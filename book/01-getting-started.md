@@ -1,8 +1,8 @@
 # Install, build and run
 
 Use the complete
-[0.14.0 syntax bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.14.0/ramos-0.14.0-syntax.zip),
-which also includes the CLI/TUI tools, both compilers, examples and all nine
+[0.15.0 system bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.15.0/ramos-0.15.0-system.zip),
+which also includes the CLI/TUI tools, both compilers, examples and all twelve
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.
 

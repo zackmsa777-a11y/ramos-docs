@@ -54,7 +54,8 @@ including a source's hardlink/symlink alias.
 ## Standard library written in Ramos
 
 Copy the repository's `stdlib` folder beside your program, then weave only the
-files you use. These are readable Ramos implementations, not native hidden APIs.
+files you use. Helpers are readable Ramos source; OS operations call documented
+native intrinsics.
 `text.ramos` itself weaves `bytes.ramos`; an explicit second weave of that file
 reuses it. All functions are checked by the ordinary compiler.
 
@@ -67,7 +68,10 @@ reuses it. All functions are checked by the ordinary compiler.
 | `io.ramos` (0.12) | Streamed readers, lines, seeking, copy |
 | `cli.ramos` (0.12) | Argument/option scan helpers |
 | `tui.ramos` (0.12) | Full-screen terminal, colors, cursor, boxes and key input |
-| `gui.ramos` (0.13) | Windows desktop widgets, panels and events |
+| `gui.ramos` (0.13) | Native Windows desktop controls and events |
+| `system.ramos` (0.15) | Cwd/environment results, directory iteration and creation |
+| `path.ramos` (0.15) | Lexical path joining, names and rooted-path checks |
+| `process.ramos` (0.15) | Typed direct child execution and exit/OS status |
 | `maps.ramos` | `StringMap`, `map_new`, `map_len`, `map_has`, `map_get`, `map_set`, `map_remove` (plus `map_index`) |
 
 Number operations keep checked int64 semantics: `num_abs(INT64_MIN)` traps.
@@ -98,7 +102,8 @@ not promised. Lookup is linear; capacity doubles starting at four. Keys and
 values are immutable strings; map handles alias. Treat collection metadata
 fields as implementation state and mutate through the helper functions.
 
-All library errors print a diagnostic and exit 1. Ordinary arithmetic, array
+Contract violations in pure helpers print a diagnostic and exit 1; expected
+OS failures in I/O and system/process libraries return explicit statuses. Ordinary arithmetic, array
 bounds, allocation and UTF-8 checks retain the native Ramos traps. The standard
 library introduces no unbounded allocator or relaxed safety mode.
 
@@ -109,8 +114,8 @@ make library-demo
 ./ramos build examples/library_demo.ramos -o library-demo --target windows
 ```
 
-The 0.14 release's `ramos-0.14.0-syntax.zip` contains both compilers, all nine
-libraries and the example sources. Extract the whole archive so
+The release's `ramos-0.11.0-libraries.zip` contains both compilers, `stdlib/`,
+`examples/library_demo.ramos` and this guide. Extract the whole archive so
 source-relative paths keep working. On Windows:
 
 ```powershell
@@ -151,3 +156,5 @@ passed 164 Linux tests and 114 Windows tests. See
 and [Windows proof](../evidence/windows-bootstrap-proof.json).
 
 Version 0.12 expands the bundle with [CLI and TUI libraries](08-cli-tui.md).
+
+See [0.15 OS contracts](18-system.md) for the new system, path and process helpers.
