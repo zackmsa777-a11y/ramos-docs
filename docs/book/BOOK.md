@@ -1,0 +1,2013 @@
+# The Ramos Book — 0.13.0
+
+# Welcome to the Ramos Book
+
+Ramos is a small, self-hosted language that compiles directly to native
+Linux x64 and Windows x64 executables. Its two guiding rules are **simple
+programming** and **measured speed**.
+
+This book describes **Ramos 0.13.0**. Markdown chapters are the canonical edition
+for AI agents, review and offline reading. The HTML edition is generated from
+those same chapters for comfortable human reading. Historical version labels
+identify when a feature arrived; they do not change this book's baseline.
+
+## Choose your path
+
+- New to Ramos? Start with [install, build and run](01-getting-started.md), then
+  [the language](02-language.md) and [values](03-values.md).
+- Building a tool? Read [files](06-files.md), [libraries](07-libraries.md) and
+  [CLI/TUI](08-cli-tui.md), then try the [projects](11-cookbook.md).
+- Building a desktop window? Read [Windows GUI](09-gui.md). The Linux GUI backend
+  is not available in 0.13.
+- Writing Ramos with an AI agent? Start with the [agent guide](16-agent-guide.md)
+  and [API reference](13-reference.md).
+- Working on the compiler? Read [self-hosting](12-self-hosting.md).
+
+## What you can use today
+
+Checked int64 arithmetic, booleans, functions, comments, while loops, immutable
+UTF-8 strings, mutable bytes, structs, typed arrays, reclaiming managed memory,
+compile-time `weave`, stdin, streamed files, terminal interfaces and Windows
+native GUI controls.
+
+There are no floats, range-for loops, `else if`, compound assignment, directory
+iteration, child-process API, namespaces or package registry in 0.13. See the
+[limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
+must not be used in programs targeting this version.
+
+You compile a `.ramos` source and run the resulting executable. Ramos does not
+currently interpret a source file or provide `ramos run`.
+
+## Project links
+
+- [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
+- [Ramos 0.13.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.13.0)
+- [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
+
+The limits and negative results matter as much as working features. Native
+output is not proof of speed, and compiling for an OS is not proof that its
+interactive applications have been tested there.
+
+
+---
+
+# Install, build and run
+
+Use the complete
+[0.13.0 GUI bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.13.0/ramos-0.13.0-gui.zip),
+which also includes the CLI/TUI tools, both compilers, examples and all nine
+libraries. Extract the archive and keep its directory structure. The published
+`SHA256SUMS.txt` file lists asset hashes for integrity checking.
+
+## Your first source file
+
+Save `hello.ramos` as UTF-8 in the extracted directory:
+
+```ramos
+fn main() {
+    print(s"Hello, Ramos!")
+}
+```
+
+## Windows x64 — PowerShell
+
+```powershell
+.\ramos.exe --version
+.\ramos.exe build .\hello.ramos -o .\hello.exe
+.\hello.exe
+```
+
+Expected output: `Hello, Ramos!`. Python, a C compiler and a separate runtime
+are not required to compile or run programs with the downloaded compiler.
+
+## Linux x64 — shell
+
+```sh
+chmod +x ramos-linux-x86_64
+./ramos-linux-x86_64 --version
+./ramos-linux-x86_64 build hello.ramos -o hello
+./hello
+```
+
+## Rebuilding an existing output
+
+Use `--force` only when you intend to replace an existing executable:
+
+```sh
+./ramos-linux-x86_64 build hello.ramos -o hello --force
+```
+
+A failed compilation preserves existing output. The compiler refuses source
+file aliases as output even with `--force`.
+
+## Libraries and example folders
+
+For a root-level source file, use `weave "stdlib/numbers.ramos"`. Sources inside
+`examples/` use `weave "../stdlib/numbers.ramos"`. Paths resolve relative to the
+source that contains the directive, not the terminal's working directory.
+
+This documentation repository includes the same example and library sources.
+To use them, place the downloaded native compiler at the repository root:
+
+```sh
+./ramos-linux-x86_64 build examples/library_demo.ramos -o library-demo
+./library-demo
+```
+
+```powershell
+.\ramos.exe build .\examples\library_demo.ramos -o .\library-demo.exe
+.\library-demo.exe
+```
+
+## Build from the compiler repository
+
+In a checkout of the main Ramos repository, initial bootstrapping on Linux
+requires Make and GNU binutils. Python is used for validation, not as a runtime
+for generated programs.
+
+```sh
+make
+./ramos build examples/hello.ramos -o hello --force
+./hello
+make install PREFIX="$HOME/.local"
+```
+
+Once built, the compiler emits executables without those bootstrap tools.
+Add the installation prefix's `bin` directory to `PATH` if needed. See
+[self-hosting](12-self-hosting.md) for verification commands.
+
+
+---
+
+# The language
+
+## Syntax
+
+```text
+fn main() {
+    let price = 20
+    var count = 3
+    print(price * count)
+
+    count = count + 2
+    print("Updated total:")
+    print(price * count)
+}
+```
+
+- Exactly one parameterless `main` returning void is required. Other top-level
+  functions and structs may appear before or after it. `weave` adds library
+  definitions at top level.
+- `print` accepts a string literal, buffer, integer expression, or boolean expression
+  and adds a newline. Booleans print as `true` or `false`.
+- Integer expressions support `+`, `-`, `*`, `/`, `%`, unary `+`/`-`, and
+  parentheses. Multiplication, division, and remainder bind more tightly than
+  addition and subtraction. Binary operators at the same precedence associate
+  left to right.
+- Integers range from `-9223372036854775808` to `9223372036854775807`.
+  `-9223372036854775808` is accepted as a directly negated literal; its positive
+  magnitude cannot be used as an ordinary positive literal.
+- `let` declares an immutable binding; `var` declares a mutable
+  binding. Every binding must have an initializer. `int64`, `bool`, `bytes`, `string`, struct and array types
+  are inferred and fixed for the lifetime of the binding.
+- Binding reassignment is supported only for `var`; fields and array elements can be mutated through `let`. Names must be declared before use;
+  duplicate declarations in the same block are errors. Inner blocks may
+  shadow outer names, and their bindings are invisible after the block ends.
+  Identifiers use ASCII letters,
+  underscores, and digits, with a letter or underscore first. Keywords are
+  reserved. `"..."` produces bytes; `s"..."` produces immutable UTF-8 strings.
+- Separate statements with newlines; the final statement may directly precede
+  `}`. Newlines after operators and opening parentheses are allowed. Semicolons
+  are not implemented. Comments use `//` or non-nesting `/* ... */`; newlines
+  in block comments retain their statement-separator meaning.
+- Input is UTF-8. String escapes are `\n`, `\t`, `\r`, `\"`, `\\`, and `\0`.
+- Empty bodies, empty strings, LF, and CRLF are supported.
+- Raw NUL source bytes, malformed UTF-8, unsupported escapes, and raw newlines inside
+  strings are rejected. Diagnostics contain filename, line, and byte column.
+
+## Booleans and control flow
+
+```text
+fn main() {
+    var running = true
+    var count = 0
+    while running {
+        count = count + 1
+        if count == 5 {
+            running = false
+        } else {
+            print(count)
+        }
+    }
+    print(!running)
+}
+```
+
+- `true` and `false` are distinct boolean literals; `!` negates a boolean.
+- `<`, `<=`, `>`, and `>=` compare signed integers. `==` and `!=` compare
+  two integers, two booleans or two strings. Mixing types is a compile-time error.
+- `&&` and `||` require booleans and short-circuit left to right; skipped operands
+  still undergo type checking.
+- From lowest to highest precedence: `||`, `&&`, equality, ordering, addition/subtraction,
+  multiplication/division/remainder, unary signs/`!`, and primary expressions.
+  Operators at one level associate left to right. `1 < 2 < 3` is rejected;
+  combine pairwise comparisons with `&&`. Arithmetic requires integers; `+` also concatenates strings.
+- `if condition { ... } else { ... }` and `while condition { ... }` require
+  a boolean condition. `else` is optional and may follow on a new line.
+  Branches use braces, including for a nested `if` in an `else` body.
+- `while` reevaluates its condition before every iteration. `break` exits the
+  innermost loop; `continue` reevaluates its condition. Both require a loop.
+  `while true` runs until a `break` or a runtime failure; there is no implicit
+  iteration limit. Code in skipped branches is type-checked but not executed.
+- Bindings initialize whenever execution reaches their declaration. A shadowing
+  initializer can refer to the outer binding. Blocks do not expose their locals.
+- `else if` and `for` are not implemented.
+  Separate statements with newlines, including after a compound statement.
+
+Run `make control-flow` for a native Fibonacci/loop example.
+
+## Functions
+
+```text
+fn factorial(n: int64) -> int64 {
+    if n == 0 {
+        return 1
+    } else {
+        return n * factorial(n - 1)
+    }
+}
+
+fn main() {
+    print(factorial(10))
+    announce()
+}
+
+fn announce() {
+    print("Functions work!")
+}
+```
+
+Parameters require non-void type annotations and their bindings are immutable.
+Results can declare any value type or `void`; omitting the result means void.
+Calls evaluate arguments left to right and require exactly matching types and
+argument counts. Functions may call later definitions, themselves or each other.
+A lexical binding can shadow a function name; that name then cannot be called.
+`main` is the process entry and cannot be called by user code.
+
+`return expression` must match the declared value type; bare `return` is for void
+functions, including `main`. A value function must return on every statically
+checked path. Both arms of an `if`/`else` may establish that guarantee. Loops are
+checked conservatively, so even a `while true` needs a return after it for a
+value function. Unreachable statements are still type-checked. Void calls may
+be statements; value calls used as statements discard their result.
+
+Every call has its own local frame. At most 64 Ramos calls may be active,
+including `main`; attempting the next call reports a runtime error and exits 1.
+Normal returns release the frame and restore the active-call counter. This
+check assumes an ordinary Linux process stack; it cannot compensate for an
+unusually small stack limit selected by the caller.
+
+Run `make functions` for factorial, a digit classifier and a void helper.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/functions.md) for compiler details.
+
+## Arithmetic behavior
+
+Generated native instructions check signed overflow for addition, subtraction,
+multiplication, and negation. Division truncates toward zero; a remainder has the
+dividend's sign. Division or remainder by zero, and either operation on
+`INT64_MIN` with divisor `-1`, fail explicitly.
+
+A failed arithmetic operation writes a runtime diagnostic to stderr and exits
+with status 1. It never silently wraps or depends on an unhandled CPU divide
+fault. Successfully completed programs exit with status 0. Earlier output is
+retained if a later operation fails.
+
+
+---
+
+# Strings, structs, arrays and memory
+
+These features implement the first three priorities from the developer feedback.
+Both native targets use the same checked semantics. Existing byte-buffer programs
+keep their byte-literal and API behavior; discarded allocations can now be reclaimed.
+`string`/`struct` are new keywords and the new intrinsic names are reserved for
+function definitions. Older programs defining those names must rename them.
+The compiler's old `string` helper was renamed `string_literal` for this reason.
+The compiler remains written in Ramos and emits ELF/PE directly.
+
+## Immutable UTF-8 strings
+
+```ramos
+fn join(a: string, b: string) -> string { return a + b }
+fn main() {
+    let greeting = join(s"Hello, ", s"🌍")
+    print(greeting)
+    print(len(greeting))              // 8 Unicode scalars
+    print(slice(greeting, 7, 8))       // 🌍
+    print(greeting == s"Hello, 🌍")   // true
+}
+```
+
+| Operation | Contract |
+| --- | --- |
+| `s"..."` | Immutable `string`; same escapes as byte literals |
+| `string(bytes)` | Validate strict UTF-8 and copy into a string |
+| `to_bytes(string)` | Fresh mutable copy; mutating it cannot change the string |
+| `a + b` | Concatenate two strings into a new string |
+| `a == b`, `a != b` | Compare string contents, including embedded NUL |
+| `len(string)` | Count Unicode scalar values |
+| `slice(string, start, end)` | Copy scalar range `[start, end)`; bounds checked |
+| `print(string)` | Write UTF-8 contents followed by LF |
+
+Old `"..."` literals remain mutable `bytes`. Conversion is explicit, including
+at byte-oriented file I/O boundaries. No implicit integer/string conversions
+are added: use `string(int_to_text(n))` for decimal formatting.
+
+Malformed UTF-8, overlong encodings, surrogate encodings and values above
+U+10FFFF trap with a diagnostic and exit 1. NUL is valid string content.
+Length and slicing count scalars, not bytes or grapheme clusters: `s"é"`
+contains two scalars. Slicing allows an empty range at the end and rejects
+negative, reversed or out-of-range indices. Each string has at most 1 MiB of
+UTF-8 payload; an oversized concatenation traps before allocation.
+
+Length/slicing scan the UTF-8 data; concatenation copies both operands.
+Repeatedly growing a string by one character is not an amortized builder API.
+
+## Structs
+
+```ramos
+struct Point { x: int64, y: int64 }
+struct Player { name: string, position: Point }
+fn main() {
+    let player = Player(s"Ramos", Point(3, 4))
+    player.position.x = 42
+    print(player.name + s"!")
+    print(player.position.x)
+}
+```
+
+Fields require non-void types. Definitions may be referenced before they appear,
+including from function signatures or other structs. Fields are separated by
+commas or newlines. A trailing comma and empty structs are allowed. Constructors
+use declaration order, evaluate arguments left to right, and check exact types
+and arity. Duplicate names, missing types and unknown fields are compile errors.
+
+Structs are mutable boxed values. Assignment, parameters and returns copy a
+handle, so aliases observe field writes. `let` protects the binding while allowing
+field changes, as it already does for bytes. String fields can be replaced, but
+the string value itself remains immutable. Nested field/index assignment is
+supported. There are no unchecked addresses, null references or implicit copies.
+
+The checked limits are 64 struct types and 16 fields per type.
+
+## Typed arrays
+
+```ramos
+fn main() {
+    let points = array(Point, 2, Point(1, 2))
+    points[1] = Point(3, 4)
+    print(points[1].x)
+    let more = array_resize(points, 3, Point(5, 6))
+    print(array_len(more))
+}
+struct Point { x: int64, y: int64 }
+```
+
+| Operation | Contract |
+| --- | --- |
+| `[T]` | Array type; annotations may nest up to 16 levels |
+| `array(T, count, initial)` | Fill a new typed array; all elements start with `initial` |
+| `array_empty(T)` | Empty typed array without requiring an initial value |
+| `array_len(a)` | Number of elements |
+| `a[index]`, `array_get(a, index)` | Checked typed read |
+| `a[index] = value`, `array_set(a, index, value)` | Checked typed write |
+| `array_resize(a, count, initial)` | New array: preserve prefix, fill added elements |
+
+Indices and counts are signed integers. Negative or out-of-range indices and
+counts outside 0..131072 trap before access. Elements occupy eight bytes, so
+the maximum payload is 1 MiB. Arrays of int64, bool, bytes, string, structs and
+arrays are supported; void elements are rejected. There is no unchecked default
+reference: every nonempty constructor/growth supplies a typed fill value.
+
+Array handles alias their contents. Reference-type fill values are shared
+across initial elements; construct separate values when independent records
+are needed. Resizing copies elements and leaves the old array and its aliases
+unchanged. It costs O(old/new length), not an amortized in-place growth operation.
+`array_empty(Node)` allows a recursive struct to start with an empty link array.
+
+## Reusable memory
+
+Bytes, strings, structs and arrays use a nonmoving conservative mark/sweep heap.
+When allocation cannot find space, it collects unreachable objects and retries.
+`collect()` requests collection explicitly; `memory_used()` reports currently
+allocated block bytes, including headers/padding and not-yet-collected garbage.
+A reachable returned value, argument, active expression or aggregate field
+remains valid. Unreachable cycles can be reclaimed. Every reused payload is
+zeroed. Scope exit, break and continue clear ended local slots.
+
+The heap holds at most 16 MiB of allocated blocks, plus an 8 MiB ownership map.
+Each block needs a 32-byte header and alignment to eight bytes. Empty values
+therefore consume 32 bytes. Mapped memory is RW and never executable. Stdin
+retains its separate lazy 1 MiB + 12 KiB scratch mapping.
+
+The collector scans active stack words/saved registers and object payload words.
+An integer or byte sequence resembling an allocated address can retain that
+object conservatively. This is not an exact memory-accounting or real-time GC
+guarantee. There is no manual `free`, pointer cast, moving collection or dangling
+alias API. A program whose reachable data exceeds the heap still traps; the
+change removes the cumulative-allocation limit, not the bounded live heap.
+
+## Run a real text tool
+
+[examples/line_stats.ramos](../examples/line_stats.ramos) reads UTF-8 lines from
+stdin, annotates them with a line number, and prints counts. Its `Stats` struct
+holds totals and an integer array of recent line lengths. Temporary strings and
+byte buffers are reclaimed while it streams input.
+
+```sh
+./ramos build examples/line_stats.ramos -o line-stats
+printf 'hello\nمرحبا 🌍\n' | ./line-stats
+```
+
+```powershell
+.\ramos.exe build .\examples\line_stats.ramos -o .\line-stats.exe
+Get-Content .\input.txt -Encoding utf8 | .\line-stats.exe
+```
+
+Redirected stdin must contain UTF-8 for `string(raw)`; PowerShell's pipe encoding
+varies by version/settings. Native console input still follows the configured
+Windows input code page. Empty and final unterminated lines follow `read_line`
+semantics. A local Linux probe streamed 100,000 256-byte lines and reported
+`lines=100000 characters=25600000 longest=256`.
+
+Validation covers Unicode reference comparisons, immutable copies, bounds and
+type failures, aliases, constructors/calls/returns, active-expression roots,
+reused zeroed buffers, live-heap exhaustion and cyclic graph lifetimes.
+Performance tables remain the historical 0.7.1 measurements; this release makes
+no new comparative speed claim. Libraries shipped in 0.11. Syntax conveniences, floats and formatter/assembly
+tooling remain future work in this 0.13 edition.
+
+The [native CI run](https://github.com/zackmsa777-a11y/ramos/actions/runs/38041196929)
+passed 144 Linux tests and 94 Windows tests, with matching self-hosted compiler
+rebuilds on both targets. See [recorded validation](../evidence/values-verification.json),
+[Linux proof](../evidence/bootstrap-proof.json) and [Windows proof](../evidence/windows-bootstrap-proof.json).
+
+
+---
+
+# Working with bytes
+
+```text
+fn main() {
+    let source = "let answer = 42"
+    print(buffer_len(source))
+    print(buffer_get(source, 0))
+    buffer_set(source, 0, 76)
+    print(source)
+}
+```
+
+`buffer(length)` allocates zero-filled bytes. `buffer_len`, `buffer_get`, and
+`buffer_set` provide length, checked reads, and checked writes. Indices count
+bytes; reads return 0..255 and writes accept only that range. String literals
+in expressions allocate fresh buffers. Bindings and function values alias their
+buffer; `let` protects the binding while allowing content changes.
+
+Buffers share the reclaiming heap with strings, structs and arrays: 16 MiB of
+allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
+Metadata and alignment count toward the heap limit. Invalid sizes, indices,
+byte values or allocation failures report a runtime error and exit 1.
+Unreachable allocations can be collected automatically or with `collect()`.
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/buffers.md).
+
+## Bytes versus strings
+
+`"abc"` is mutable bytes. `s"abc"` is an immutable UTF-8 string. A byte index
+is not a Unicode scalar index. Use `string(bytes)` to validate and copy into a
+string, and `to_bytes(string)` to produce an independent mutable copy.
+
+For binary or arbitrary Linux file data, keep bytes. Converting malformed UTF-8
+to a string traps. `print(bytes)` adds LF; `stdout(bytes)` writes exactly the
+bytes and returns a fallible status. Check the result before continuing.
+
+```ramos
+fn main() {
+    let raw = "cat"
+    buffer_set(raw, 0, 98)
+    print(raw)
+    let immutable = string(raw)
+    buffer_set(raw, 0, 114)
+    print(immutable)
+}
+```
+
+Output is `bat`, then `bat`: conversion copied the data before the second edit.
+Use [the bytes library](07-libraries.md) for slicing and copying helpers.
+
+
+---
+
+# Stdin and number conversion
+
+These typed native intrinsics work in Linux ELF and Windows PE programs. They
+use the existing `bytes`, `int64` and `bool` types; no new syntax or dependencies.
+
+| Intrinsic | Signature | Behavior |
+| --- | --- | --- |
+| `read_line` | `() -> bytes` | Read one line from stdin, removing LF or CRLF |
+| `stdin_eof` | `() -> bool` | Whether a read has observed EOF; initially false, then sticky |
+| `int_to_text` | `(int64) -> bytes` | Fresh mutable minimal signed ASCII decimal |
+| `text_to_int` | `(bytes) -> int64` | Parse the whole buffer; return zero on failure |
+| `parse_error` | `() -> int64` | Last `text_to_int` status; initially zero |
+
+## Decimal conversion
+
+`int_to_text` supports the entire signed 64-bit range, including
+`-9223372036854775808`. Zero becomes `"0"`. It adds neither a terminator nor a
+newline and leaves `parse_error` and `io_error` unchanged.
+
+`text_to_int` accepts ASCII `[+-]?[0-9]+`, including leading zeroes. It rejects
+empty input, a sign without digits, whitespace, NUL, non-ASCII digits, prefixes,
+decimal points and trailing bytes. Check `parse_error()` immediately afterward:
+
+- `0`: success, including a valid zero.
+- `-22`: invalid decimal syntax.
+- `-34`: valid decimal syntax outside the signed 64-bit range.
+
+Invalid syntax takes precedence over overflow: `"999999999999999999999x"`
+reports `-22`. Every byte is validated even after overflow. Parsing does not
+allocate and has no digit limit beyond the existing 1 MiB buffer limit.
+`parse_error` is independent of I/O status and changes only on `text_to_int`.
+
+## Line input and EOF
+
+`read_line` blocks until LF, EOF or a read failure. An empty line is a successful
+empty buffer with `io_error() == 0` and `stdin_eof() == false`. A final line without
+LF is returned in full and sets EOF true. Subsequent reads return empty bytes
+with status zero. Process a nonempty final line even when EOF is already true:
+
+```ramos
+fn main() {
+    var done = false
+    while !done {
+        let line = read_line()
+        if io_error() != 0 {
+            stderr("cannot read stdin\n")
+            exit(1)
+        }
+        if buffer_len(line) == 0 && stdin_eof() {
+            done = true
+        } else {
+            print(line)
+        }
+    }
+}
+```
+
+LF and exactly one CR immediately before LF are removed. A bare CR at EOF is
+retained. Other bytes, including NUL and invalid UTF-8, are preserved.
+
+Payloads up to 1 MiB excluding LF/CRLF succeed. An oversized line is drained to
+its next LF or EOF, then returns empty bytes with `io_error() == -27`. The next
+line remains available. OS failures return empty bytes and a negative I/O status;
+a consumed partial line is discarded. Failures do not themselves mark EOF.
+Every `read_line` updates `io_error`, including resetting it after successful
+reads or EOF; it does not change decimal parse status or file identity protection.
+
+Input is read in 4 KiB chunks. A private lazy RW scratch mapping of 1 MiB +
+12 KiB is reused outside the 16 MiB value heap. Returned lines are
+fresh mutable heap allocations sized to their payload, so short lines do not
+each consume 1 MiB. Version 0.10 can reclaim discarded lines; allocation still traps if live
+data exceeds the heap. Do not mix this buffered API with another consumer of stdin.
+
+Linux reads fd 0 directly and retries EINTR. Windows uses `GetStdHandle` and
+`ReadFile`; broken pipe and handle EOF are treated as normal end of input.
+Redirected files and pipes retain raw bytes. Windows console input follows its
+configured input code page, unlike the UTF-8 command-line argument API; Ramos
+does not promise UTF-8 console input. See Microsoft's
+[ReadFile contract](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile).
+
+## Try interactive input
+
+```sh
+./ramos build examples/input.ramos -o input --force
+./input
+```
+
+On Windows:
+
+```powershell
+.\ramos.exe build .\input.ramos -o .\input.exe
+.\input.exe
+```
+
+Type `21` and press Enter; the program prints `42`. The example checks input and
+parse errors before arithmetic. Doubling remains checked and traps on overflow.
+
+The shared tests cover integer boundaries and 180 seeded round trips, invalid
+syntax and overflow precedence, independent statuses, live input before pipe
+closure, binary data, CRLF and refill boundaries, exact limits and oversized
+line recovery, 20,000 short lines, OS failures, preserved input-file protection,
+and the interactive example. Both self-hosting proofs run these tests.
+
+
+---
+
+# Arguments and file I/O
+
+On Linux these intrinsics use x86-64 syscalls directly; on Windows they use
+the native Windows API boundary described in [windows.md](10-windows.md). They are checked and typed in
+the bootstrap and self-hosted compilers. No C library, shell, subprocess or external compiler is involved.
+
+| Intrinsic | Signature | Behavior |
+| --- | --- | --- |
+| `arg_count` | `() -> int64` | argc, including the executable name |
+| `arg` | `(int64) -> bytes` | fresh copy of an argument; invalid index traps |
+| `read_file` | `(bytes) -> bytes` | bounded regular-file read; empty bytes on failure |
+| `write_file` | `(bytes, bytes, int64) -> int64` | atomic publication; zero or negative errno |
+| `read_line` | `() -> bytes` | buffered stdin line read; empty bytes on failure |
+| `stdin_eof` | `() -> bool` | sticky EOF observed by a stdin read |
+| `io_error` | `() -> int64` | last read/write status; zero or negative errno |
+| `stderr` | `(bytes) -> void` | exact bytes to fd 2, with no added newline |
+| `platform` | `() -> int64` | host OS: 0 Linux, 1 Windows |
+| `exit` | `(int64) -> void` | terminate with status 0..255; invalid status traps |
+
+On Linux, arguments are raw operating-system bytes and may be empty or invalid
+UTF-8. Windows arguments are UTF-8 copies of the native UTF-16 command line.
+Paths must be nonempty, shorter than 4096 bytes, and contain no NUL. All byte
+buffers retain the 1 MiB payload and 16 MiB live-heap limit (plus an 8 MiB ownership map). Discarded values can be reclaimed in 0.10; allocations
+still trap on resource exhaustion; OS file failures are explicitly fallible.
+`arg` returns a fresh mutable copy, not a pointer into the kernel argv stack.
+
+On Linux, `read_file` opens with nonblocking and close-on-exec flags and checks regular-file
+status before reading, so a FIFO cannot hang the program. It retries interrupted
+reads, allows files that shrink, and fails if a file grows beyond its sampled
+size. The limit is 1 MiB. The descriptor is closed on success and failure. A
+successful empty read is distinguished from failure using `io_error()`.
+The identity of the most recent successful input (device and inode) is retained
+as an output safeguard. A failed read does not erase that protection.
+Version 0.11's compiler additionally records all root/library identities using
+its internal guard, so a weave build protects every input; ordinary user I/O
+keeps the most-recent-input contract.
+
+`write_file` flags are bit 0 = executable and bit 1 = replacement. Other values
+are rejected. On Linux, normal output mode is 0644 and executable output mode is 0755. Output
+is first written into a private 0600 temporary file under the opened destination
+directory, with an independently generated short basename. Partial writes and
+EINTR are handled, permissions are set, and the closed file is published using
+`renameat2`. Without replacement, `RENAME_NOREPLACE` also protects against a
+concurrent destination appearing. Failures remove the temporary file and leave
+existing output unchanged. Maximum-length destination basenames are supported.
+
+Source/destination identity is checked before creation and again before
+publication. Hardlink and symlink aliases to the last successful input are
+rejected even with replacement enabled. This contract protects one most recent
+input, not every file ever read by an application. Atomic publication is not a
+power-loss durability guarantee: the implementation does not perform fsync.
+
+Output failures from `print` or `stderr`, invalid argument indices, invalid exit
+statuses and buffer misuse terminate with status 1 as in the existing runtime.
+
+Windows preserves the signatures and bounds with UTF-8 arguments and UTF-16
+path conversion. `io_error` maps Windows errors into common negative statuses.
+Publication uses a same-directory temporary file and `MoveFileExW`; Windows
+does not use POSIX executable permission bits. See [Windows I/O details](10-windows.md).
+
+Stdin, integer/text conversion, line limits and error precedence are specified
+in [input-text.md](05-input.md). Stdin reads preserve the most recent successful
+file identity, and file writes do not change decimal parse status.
+
+Version 0.12 adds fallible exact-byte `stdout`, checked regular-file stream IDs,
+read/write/seek/EOF/close operations and terminal controls. Streams process files
+larger than a single buffer. Append and the atomic publisher protect all active
+stream inputs as well as the prior input/source guards. See
+[CLI/TUI signatures and lifecycle](08-cli-tui.md).
+
+
+---
+
+# Libraries with weave
+
+Ramos uses **`weave`** to add a library at compile time. The name was chosen by
+the project owner instead of the conventional `import` keyword.
+
+```ramos
+weave "stdlib/numbers.ramos"
+weave "stdlib/text.ramos"
+fn main() {
+    print(s"Hello, " + text_repeat(s"🌍", 2))
+    print(num_text(num_max(7, 42)))
+}
+```
+
+A library is an ordinary UTF-8 `.ramos` source file containing functions,
+structs and optional further `weave` statements. Call its functions normally.
+There is no package manager, runtime module loader or separate library backend.
+The Ramos-written compiler reads and lexes every source itself, then resolves
+one set of typed definitions and emits one native executable.
+
+## Resolution and names
+
+Paths are relative to the file containing the `weave`, including inside another
+library. They do not depend on the shell's current directory. Use `/` separators
+on Linux and Windows. Spaces and UTF-8 names are supported. Paths must be
+nonempty and relative; absolute/drive-relative paths, control characters and
+backslashes in directives are rejected. `.` and `..` are normalized lexically.
+The root CLI source can still use a normal absolute or relative host path.
+
+Each normalized source path loads once, so repeated and shared dependencies
+are allowed. ASCII case is folded for path comparison on Windows. Symlink
+paths are not resolved to a universal canonical name; distinct alias paths can
+still produce duplicate-definition errors. File identities are separately
+protected against output overwrites.
+
+Use one `weave "path.ramos"` per statement, terminated by newline or EOF.
+It must occur at top level. Comments can surround it; directive-like text inside
+comments/literals is ignored. Dependency cycles are compile errors with a source
+location. Libraries cannot define `main`; the root executable defines it.
+
+Definitions share one namespace. Functions/types may refer forward across
+files, but duplicate names are errors. Prefix reusable library functions, as the
+standard library does with `num_`, `text_`, `bytes_`, `list_` and `map_`.
+Namespaces, aliases, selective exports and package registries are not part of
+this small first library system. `weave` is a new reserved keyword; older user
+functions/bindings using that name need renaming.
+
+Diagnostics identify the original file, line and byte column, including lexer
+and type errors inside libraries. A missing file reports the containing
+`weave` site and requested path. Failed builds preserve existing output. With
+`--force`, the compiler still refuses to replace any source identity it loaded,
+including a source's hardlink/symlink alias.
+
+## Standard library written in Ramos
+
+Copy the repository's `stdlib` folder beside your program, then weave only the
+files you use. These are readable Ramos implementations, not native hidden APIs.
+`text.ramos` itself weaves `bytes.ramos`; an explicit second weave of that file
+reuses it. All functions are checked by the ordinary compiler.
+
+| File | Helpers |
+| --- | --- |
+| `numbers.ramos` | `num_min`, `num_max`, `num_abs`, `num_clamp`, `num_text`, `num_parse` |
+| `text.ramos` | `text_starts`, `text_ends`, `text_find`, `text_contains`, `text_join`, `text_repeat` |
+| `bytes.ramos` | `bytes_copy`, `bytes_equal`, `bytes_slice`, `bytes_put` |
+| `lists.ramos` | `IntList`, `list_new`, `list_len`, `list_push`, `list_get`, `list_set`, `list_pop`, `list_clear` |
+| `io.ramos` (0.12) | Streamed readers, lines, seeking, copy |
+| `cli.ramos` (0.12) | Argument/option scan helpers |
+| `tui.ramos` (0.12) | Full-screen terminal, colors, cursor, boxes and key input |
+| `gui.ramos` (0.13) | Windows desktop widgets, panels and events |
+| `maps.ramos` | `StringMap`, `map_new`, `map_len`, `map_has`, `map_get`, `map_set`, `map_remove` (plus `map_index`) |
+
+Number operations keep checked int64 semantics: `num_abs(INT64_MIN)` traps.
+`num_parse` uses `text_to_int` and leaves its status in `parse_error()`; always
+check that status before using the result. `num_clamp` rejects reversed bounds.
+
+Text indices count Unicode scalars. `text_find` returns -1 for a missing match
+and 0 for an empty needle; empty prefixes/suffixes match. Search uses a simple
+scan and can be quadratic. Join/repeat allocate one result byte buffer and copy
+pieces into it, then validate/copy into an immutable string. Output still has a
+1 MiB payload cap. Repeat rejects negative counts; an empty string repeats to
+empty even for a large count.
+
+Byte slicing uses `[start, end)`. `bytes_put(destination, start, source)` checks
+the destination range and copies forward; overlapping ranges are not a memmove
+operation. String conversions and byte copies produce independent storage.
+
+Lists hold integers, enforce logical bounds, and grow capacity by doubling
+starting at four. `list_pop` rejects an empty list; `list_clear` retains capacity.
+The array limit bounds capacity at 131072 elements, subject to the live heap.
+List handles alias, so changes through one alias are visible through another.
+
+Maps hold string keys and string values. Keys compare by contents; set replaces
+an existing value without increasing length. `map_get(map, key, fallback)` avoids
+null or unchecked missing-value defaults. Remove returns bool and releases the
+removed references, using the final entry to fill the gap. Iteration order is
+not promised. Lookup is linear; capacity doubles starting at four. Keys and
+values are immutable strings; map handles alias. Treat collection metadata
+fields as implementation state and mutate through the helper functions.
+
+All library errors print a diagnostic and exit 1. Ordinary arithmetic, array
+bounds, allocation and UTF-8 checks retain the native Ramos traps. The standard
+library introduces no unbounded allocator or relaxed safety mode.
+
+## Run and install
+
+```sh
+make library-demo
+./ramos build examples/library_demo.ramos -o library-demo --target windows
+```
+
+The 0.13 release's `ramos-0.13.0-gui.zip` contains both compilers, all nine
+libraries and the example sources. Extract the whole archive so
+source-relative paths keep working. On Windows:
+
+```powershell
+.\ramos.exe build .\examples\library_demo.ramos -o .\library-demo.exe
+.\library-demo.exe
+```
+
+`make install` installs the compiler and library files to
+`PREFIX/share/ramos/stdlib` (default `/usr/local/share/ramos/stdlib`). Copy that
+folder into a project's source tree. There are no implicit search paths or
+machine-specific paths embedded in binaries.
+
+## Checked limits and proof
+
+A build allows at most 64 source files including the root, 1 MiB of combined
+source including boundary separators, and 50,000 lexical tokens including EOF.
+Each normalized path is at most 4095 bytes/512 components; all stored paths
+share a 41900-byte pool. Existing function, struct, declaration, output and
+runtime limits still apply. Dependencies are processed with an explicit queue,
+so a 63-library chain does not consume recursive loader call depth.
+
+The compiler stores source spans/path metadata alongside its token tables.
+The internal `_protect_input()` binding records up to 64 successfully read file
+identities in a heap-rooted table; the native atomic publisher checks all of
+them before writing. This binding is reserved compiler machinery, not a stable
+standard-library API. Ordinary `read_file` programs keep their previous contract
+unless that internal guard is invoked.
+
+The retained assembly seed still has the older surface grammar. The compiler
+source stays compatible with that grammar and implements `weave` directly in
+Ramos. Library tests run on both self-hosted Linux stages and native Windows.
+Bootstrap fixed points and embedded OS-boundary bytes remain audited. Saved
+0.7.1 speed tables are historical; this release makes no new speed claim.
+
+[Native CI](https://github.com/zackmsa777-a11y/ramos/actions/runs/38043340397)
+passed 164 Linux tests and 114 Windows tests. See
+[recorded validation](../evidence/libraries-verification.json), [Linux proof](../evidence/bootstrap-proof.json)
+and [Windows proof](../evidence/windows-bootstrap-proof.json).
+
+Version 0.12 expands the bundle with [CLI and TUI libraries](08-cli-tui.md).
+
+
+---
+
+# CLI tools and terminal interfaces
+
+Ramos 0.12 adds streamed regular-file I/O, exact stdout, command-line helpers,
+and a terminal UI library written in Ramos. These are concrete building blocks
+for native CLI tools on Linux and Windows x64. The compiler remains self-hosted
+and emits ELF/PE directly.
+
+## Run the tools
+
+Extract the complete `ramos-0.13.0-gui.zip` archive; keep `stdlib/` beside
+`examples/`. On Linux:
+
+```sh
+chmod +x ramos-linux-x86_64
+./ramos-linux-x86_64 build examples/rcopy.ramos -o rcopy
+./ramos-linux-x86_64 build examples/rgrep.ramos -o rgrep
+./ramos-linux-x86_64 build examples/rview.ramos -o rview
+./rcopy source.bin new-copy.bin
+./rgrep needle README.md
+./rview README.md
+```
+
+On Windows (PowerShell, in a real console or Windows Terminal):
+
+```powershell
+.\ramos.exe build .\examples\rcopy.ramos -o .\rcopy.exe
+.\ramos.exe build .\examples\rgrep.ramos -o .\rgrep.exe
+.\ramos.exe build .\examples\rview.ramos -o .\rview.exe
+.\rcopy.exe .\source.bin .\new-copy.bin
+.\rgrep.exe needle .\README.md
+.\rview.exe .\README.md
+```
+
+In a repository checkout, `make cli-tools` builds all three under `build/`.
+`--help` describes each tool. Copy refuses an existing destination. Search is a
+literal byte-pattern search, prints `file:line:contents`, accepts multiple files
+and `--` before its pattern, and uses exit 0 for matches, 1 for none, 2 for errors.
+It preserves NUL/invalid UTF-8 in matching lines. Viewer shows a colored frame,
+filename, highlighted selection and page/line status. Arrows or j/k select a
+line, Space/n/PageDown advances, p/PageUp goes back, Home/End selects the page's
+first/last line, and q/Escape exits. Ctrl+C exits 130.
+
+Viewer reads pages of twenty lines and retains only the displayed page, input
+chunk and a bounded list of page offsets; it seeks when going back. It adjusts
+the viewport when resized. File contents are clipped to 240 bytes per displayed
+line; control/non-ASCII bytes become `?`, preventing embedded terminal escapes
+from taking over the screen. This first example uses an ASCII preview; the TUI
+library itself can write UTF-8 strings. Lines above 1 MiB report an error. The
+page-index limit is 131072 entries, subject to the existing live heap limit.
+
+## Native stream API
+
+Paths are `bytes`, with the existing nonempty/no-NUL/4095-byte contract. Linux
+accepts host path bytes; Windows validates UTF-8 and converts to UTF-16. Stream
+IDs are positive opaque generation numbers, not OS descriptors or addresses.
+At most 64 streams can be open. Closed IDs cannot act on a reused slot.
+
+| Intrinsic | Signature | Result |
+| --- | --- | --- |
+| `stdout` | `(bytes) -> int64` | Exact bytes, no added newline; zero or negative status |
+| `file_open` | `(bytes, int64) -> int64` | Positive ID or negative status |
+| `file_read` | `(int64, int64) -> bytes` | Up to requested bytes; check `io_error()` |
+| `file_write` | `(int64, bytes) -> int64` | Full-buffer write; zero or negative status |
+| `file_eof` | `(int64) -> bool` | Sticky EOF observed by a positive-size read |
+| `file_seek` | `(int64, int64) -> int64` | Absolute nonnegative read offset, or negative status |
+| `file_close` | `(int64) -> int64` | Close once; zero or negative status |
+
+Open modes are 0 read-only, 1 create a **new** write-only file, 2 write-only append
+(create if missing). Reads/seek/EOF require read mode; writes require write mode.
+Non-regular files/directories are rejected. Linux opens nonblocking/close-on-exec
+and validates file type, so a FIFO cannot block. Each read is 0..1 MiB; a file's
+total size is not capped at 1 MiB. Short reads are allowed. Zero-length reads do
+not observe EOF. A positive-size zero-byte read sets EOF; a successful seek
+clears it. EOF is observed by reading, not predicted from a sampled file size.
+
+All stream operations update `io_error()`, including successful EOF checks.
+Invalid IDs or wrong modes report -9, invalid counts/offsets/modes -22, and a
+full registry -24. Other OS failures use negative statuses; Windows retains
+its common error mapping. Parse status remains independent. Close retires the
+ID even if the OS reports an error, preventing double-close/reuse mistakes.
+Applications must close resources; memory collection does not close a stream.
+The operating system releases remaining handles when the process ends.
+
+Append and `write_file` replacement reject identities of **all active input
+streams**, the last successfully opened/read input and compiler-protected source
+files. That includes hardlink aliases. Closing an input removes its active-stream
+protection; most-recent-input protection remains. Creation never truncates an
+existing file. Callers control the destination directory, as with existing I/O.
+
+Streaming writes are immediate, not atomic transactions. A failed copy may
+leave a partial **new** destination; `rcopy` reports this and exits 1. Existing
+`write_file` remains the atomic bounded publisher, with its old flags and
+failure-preservation contract. `read_file` keeps its 1 MiB whole-file limit.
+Linux ignores SIGPIPE so fallible stdout can report -32; existing print/stderr
+still exit 1 when writing fails. Neither API promises power-loss durability.
+
+```ramos
+fn main() {
+    let input = file_open(arg(1), 0)
+    if input < 0 { exit(1) }
+    var done = false
+    while !done {
+        let chunk = file_read(input, 65536)
+        if io_error() != 0 { file_close(input)
+            exit(1) }
+        if buffer_len(chunk) == 0 { done = true }
+        else { if stdout(chunk) != 0 { file_close(input)
+            exit(1) } }
+    }
+    if file_close(input) != 0 { exit(1) }
+}
+```
+
+## Ramos libraries
+
+`weave "stdlib/io.ramos"` supplies `FileReader`, `io_reader(path)`, `io_byte`,
+`io_line`, `io_seek`, `io_close` and `io_copy(source, destination)`. A reader
+keeps a 64 KiB chunk and exposes `status`, `eof` and consumed-byte `offset`.
+`io_line` strips LF/CRLF, preserves other bytes, and grows a bounded byte builder.
+An oversized line is drained and reports -27; another `io_line` recovers. OS
+errors remain sticky until a successful seek. Check reader status immediately;
+process a nonempty final line even when EOF is true. `io_copy` returns its first
+failure rather than relying on a later native operation's global status.
+`bytes_find(haystack, needle)` adds literal binary search (0 for empty, -1 absent).
+
+`weave "stdlib/cli.ramos"` adds `cli_arg`, `cli_has`, `cli_value` and `cli_fail`.
+The first three use UTF-8 strings. `cli_has` checks an exact option name;
+`cli_value` accepts `--name=value` or `--name value`, returns a supplied fallback,
+and exits 2 for a missing value. Both stop at `--`. These scan helpers are not a
+schema parser: the application checks unknown options and positional arguments.
+For arbitrary Linux argv/path bytes, use `arg` directly, as the file tools do.
+
+## TUI API and lifecycle
+
+```ramos
+weave "stdlib/tui.ramos"
+fn main() {
+    if tui_begin() != 0 { stderr("interactive terminal required\n")
+        exit(1) }
+    tui_color(6, 0)
+    tui_box(1, 1, 40, 8)
+    tui_at(3, 3, s"Hello from Ramos")
+    tui_at(6, 3, s"Press q to quit")
+    var done = false
+    while !done {
+        let key = tui_key(100)
+        if io_error() != 0 { tui_end()
+            exit(1) }
+        if key == 113 || key == 27 || key == 3 { done = true }
+    }
+    if tui_end() != 0 { exit(1) }
+}
+```
+
+`tui_begin` starts native terminal input and enters an alternate screen, hides
+the cursor and clears. `tui_end` resets color/cursor/screen and restores saved
+native input/output modes; stopping twice succeeds. Additional helpers:
+`tui_write`, `tui_at(row,column,text)`, `tui_move`, `tui_color(fg,bg)`, `tui_reset`,
+`tui_clear`, `tui_box(row,column,width,height)`, `tui_safe(bytes,width)` and
+`tui_key(timeout_ms)`. Coordinates are 1-based. Colors 0..7 are black, red, green,
+yellow, blue, magenta, cyan, white. Text does not add a newline. Callers clip
+layout to the screen; Unicode scalar length is not terminal display-cell width.
+
+Native primitives are `terminal_start/stop() -> int64`,
+`terminal_width/height() -> int64`, and `terminal_key(timeout_ms) -> int64`.
+Start requires both stdin and stdout to be interactive; failure preserves
+existing modes. Starting twice reports -16. Dimensions report zero with a
+negative I/O status when unavailable. A key timeout is -1 with status zero;
+a read failure is -1 with negative status. Timeout is -1 (block) or
+0..2147483647 milliseconds. Calling key input without start reports -25.
+
+The first key contract supports ASCII/control keys and navigation. Linux's
+native primitive returns input bytes; `tui_key` decodes common VT arrow,
+Home/End/Page/Delete sequences with a 30 ms escape-sequence grace period.
+Windows reads native key-down console events and maps navigation directly.
+Codes: Up 256, Down 257, Right 258, Left 259, Home 260, End 261, PageUp 262,
+PageDown 263, Delete 264; Escape 27, Enter 13, Ctrl+C 3. Non-ASCII Windows text
+input is ignored; Linux non-ASCII bytes are not assembled into Unicode keys.
+Unknown/incomplete escape sequences return Escape and may consume their prefix.
+Do not mix this input with `read_line` or another stdin reader.
+
+Normal return, explicit exit and Ramos runtime traps restore the terminal.
+Linux also restores on SIGHUP/SIGINT/SIGTERM; Windows installs a console control
+handler that attempts cleanup on OS control termination (tested with Ctrl+Break). Ctrl+C is delivered as a key during raw
+input, so a custom TUI must handle it (the viewer does). Uncatchable termination
+such as SIGKILL cannot run cleanup. Applications must be foreground terminal
+processes. Suspended/background terminal job control is not implemented here.
+
+Linux uses [tty ioctls](https://man7.org/linux/man-pages/man2/TCGETS.2const.html)
+and poll/read syscalls. Windows uses
+[console modes](https://learn.microsoft.com/en-us/windows/console/setconsolemode),
+[key events](https://learn.microsoft.com/en-us/windows/console/key-event-record-str)
+and console control callbacks. There is no curses dependency, delegated renderer,
+GUI toolkit or runtime host language. TUI means a terminal interface. Desktop windows and widgets are provided by
+the separate Windows GUI library described in the next chapter.
+
+## Verification and remaining work
+
+The corpus includes a 25.6 MB binary copy, large multi-file search, aliases,
+64-slot exhaustion/generation reuse, 2,000 opens across collections, exact line
+limits/recovery and status/type errors. Real Linux pseudo-terminals verify
+input, arrows, Escape, timeouts, navigation, Ctrl+C, SIGTERM and cleanup after
+normal return, explicit exit and native traps. Native Windows CI additionally
+creates isolated consoles, observes drawing, injects a key event and checks
+restored modes after exit/traps and a control event. Saved results are in
+[cli/tui verification](../evidence/cli-tui-verification.json) and the bootstrap proof files.
+
+This milestone makes file-processing CLI tools and keyboard-driven terminal
+interfaces runnable. Further practical-language work remains: syntax
+conveniences, reviewed recursion/stack budgets, directory/environment/process
+APIs, richer diagnostics, floats, generic collections and packaging/tooling.
+See [the staged roadmap](15-roadmap.md). No new speed comparison is claimed.
+
+[Native release CI](https://github.com/zackmsa777-a11y/ramos/actions/runs/38051519258)
+passed: 192 Linux tests discovered, 190 passed and two Windows-only checks
+skipped; 134 native Windows tests passed, including both isolated-console
+checks. Both self-hosting targets reached their byte-identical fixed points.
+
+
+---
+
+# Desktop GUI on Windows
+
+`weave "stdlib/gui.ramos"` adds real desktop windows and native controls. The
+first backend is **Windows x64**. It uses system USER32/GDI32 APIs: no Python,
+interpreter, browser, C runtime or separately installed GUI toolkit is needed.
+The library and application logic are ordinary Ramos; the compiler still emits
+native code itself. Linux compilers can cross-compile these apps to Windows.
+Linux GUI startup returns `-38` (unsupported); CLI and TUI remain native on both
+platforms. An X11/Wayland backend is future work.
+
+## A complete app
+
+```ramos
+weave "stdlib/gui.ramos"
+fn main() {
+    gui_check(gui_open(s"My first Ramos window", 360, 180))
+    gui_label(1, 20, 20, 320, 24, s"Hello, desktop!")
+    gui_button(2, 20, 60, 120, 32, s"Click me")
+    var running = true
+    while running {
+        let event = gui_event(-1)
+        if event.kind == 1 { running = false }
+        if event.kind == 2 && event.id == 2 {
+            gui_set(1, s"The button works")
+        }
+    }
+    gui_check(gui_close())
+}
+```
+
+Keep `stdlib/` beside the source. On Windows, with the full release extracted:
+
+```powershell
+.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
+.\notes.exe
+```
+
+From Linux:
+
+```sh
+make gui-demo
+# Or:
+./ramos build examples/notes.ramos -o notes.exe --target windows --gui
+```
+
+`--gui` sets the Windows PE subsystem to desktop GUI, so Explorer or PowerShell
+launches a window without a console. Omit it to retain a console for debugging.
+It is rejected for Linux targets or when repeated. Existing output still needs
+`--force`, and every source remains protected from accidental replacement.
+The console compiler itself is unchanged; stderr/stdout APIs still use inherited
+handles when available. A GUI launched from Explorer should show messages inside
+its controls rather than relying on console output.
+
+The included **Ramos Notes** app supports Unicode editing, a file-path input,
+Save/Clear buttons, a colored panel and resizing. Save creates a new UTF-8 file
+atomically and refuses to overwrite an existing file. Choose a new filename for
+another save. File errors appear in the status label. It is a small example,
+not an editor with open dialogs, unsaved-change confirmation or autosave.
+
+## Library API
+
+Coordinates and dimensions are integer client-area pixels. Windows supplies
+font rendering, focus, Tab navigation, button activation, text selection and
+editing. Native control appearance and available glyphs depend on Windows and
+installed fonts. These are ordinary Windows controls, not terminal escape codes.
+
+| Function | Behavior |
+| --- | --- |
+| `gui_open(title, width, height) -> int64` | Open one resizable window; zero succeeds, negative status fails |
+| `gui_label(id, x, y, w, h, text)` | Native text label |
+| `gui_button(id, x, y, w, h, text)` | Native clickable button |
+| `gui_input(id, x, y, w, h, text)` | Single-line editable Unicode text |
+| `gui_editor(id, x, y, w, h, text)` | Multiline editor with vertical scrolling |
+| `gui_panel(id, x, y, w, h, color)` | Solid colored rectangular panel; Windows repaints it automatically |
+| `gui_rgb(r, g, b) -> int64` | Construct an opaque color; each component is 0..255 |
+| `gui_set(id, text)` | Update a label, button or editor's text |
+| `gui_text(id) -> string` | Read label/button/editor text as validated UTF-8 |
+| `gui_move(id, x, y, w, h)` | Move or resize a control |
+| `gui_event(timeout_ms) -> GuiEvent` | Pump messages and retrieve one typed event |
+| `gui_close() -> int64` | Destroy the window and its controls; repeated close succeeds |
+| `gui_check(status)` | Close the GUI and exit 1 with a diagnostic on failure |
+
+Every control gets a unique ID **1..64**. Creation order determines the native
+Tab order. There is one top-level window per process; close it before opening
+another. IDs are local to the current window and can be reused after close;
+applications must not retain old IDs as references to old windows. Call
+`gui_event` regularly: it dispatches OS painting, keyboard and control messages.
+There are no arbitrary callbacks into Ramos or exposed native handles.
+
+`GuiEvent` has `kind`, `id`, `width`, `height` fields:
+
+| Kind | Meaning | Fields |
+| --- | --- | --- |
+| 0 | Timeout | Other fields zero |
+| 1 | Close requested | App should finish its loop and call `gui_close` |
+| 2 | Button activated | `id` is the control ID |
+| 3 | Client resized | `width`, `height` are current client pixel dimensions |
+| 4 | Parent window key-down | `id` is a Windows virtual-key code |
+| 5 | Editor text changed | `id` is the control ID; programmatic `gui_set` can also cause this |
+
+Text inputs consume normal editing keys themselves; kind 4 is not a global
+keyboard hook. Native controls handle mouse input and activation; raw pointer
+motion, canvas drawing, images, menus, file dialogs and multiple windows are not
+part of this first API. Colored panels provide basic rectangular drawing.
+Resize events include the initial layout and minimization (zero dimensions).
+Control layout is explicit; there is no automatic layout manager or DPI scaling.
+Apps should handle small dimensions without requesting zero-sized controls.
+The Notes example keeps a minimum logical layout of 360x240 and clips when the
+client is smaller. Clipboard/editing behavior belongs to the native controls.
+
+Timeouts are `-1` for indefinite wait, `0` for immediate polling, or
+`1..2147483647` milliseconds. Waiting uses the native message wait API rather
+than spinning. Calling poll after close is an error. Resize/paint/focus events
+can exist before user input; don't assume the first event is a button press.
+
+## Limits, statuses and lifetime
+
+Window titles are at most 4095 UTF-8 bytes. Text passed to controls is at most
+32767 UTF-8 bytes; edit controls accept at most 32767 UTF-16 units through native
+editing. Reading can therefore produce more than 32767 UTF-8 bytes. Invalid UTF-8
+and embedded NUL are rejected at the native boundary. Strings stay validated;
+empty labels and edits are allowed. Initial client width is 160..4096 and height
+80..4096. Control positions are 0..8192 and dimensions 1..8192; drawing is clipped
+by the native client area. There are at most 64 controls and 64 queued events.
+A full queue fails explicitly instead of silently losing user actions.
+
+`gui_open` and `gui_close` return fallible statuses. Widget/event helpers call
+`gui_check`, so they fail with a diagnostic and exit 1. Low-level `_gui_*`
+intrinsics are reserved library machinery; they return negative statuses (or
+empty bytes with `io_error`) and validate every property independently:
+`-9` inactive window/unknown control, `-16` second active window, `-17` duplicate
+ID, `-22` invalid argument/encoding, `-27` oversized read, `-38` missing platform
+backend, `-75` event queue overflow, and native errors mapped to existing I/O
+statuses. The old checked arithmetic, allocation and bounds contracts remain.
+
+The reclaiming heap roots the GUI state. Collection does not close native
+windows. Close releases the controls and owned brushes; the default GUI font is
+borrowed, and the two system DLLs are process-owned. Normal main return, `exit`
+and native Ramos traps attempt GUI cleanup automatically. Process termination
+also releases OS resources; no durability or user-data save is promised on an
+abrupt termination. GUI calls run on the program's single main thread.
+
+## Validation
+
+The focused corpus checks raw argument/type errors, PE subsystem selection,
+existing-output preservation and static Linux unsupported behavior. Real desktop
+tests create native controls, inspect the actual panel color, inject Unicode text
+and an editing key, activate buttons, change the actual client size, and verify
+relayout, file contents and refusal to overwrite. A stress fixture opens/closes
+12 windows, collects after 40 MiB of temporary allocations and checks cleanup on
+return, explicit exit and arithmetic trap. CI runs these on native Windows;
+Wine is an additional development runner, not a user dependency.
+
+Use `python tools/windows_proof.py` on Windows. For development under Wine, set
+`RAMOS_GUI_WINE_PYTHON` to a Windows Python executable used only by the test
+harness, keep one isolated `WINEPREFIX` per X display, and set `DISPLAY`.
+The harness reads another process's editor with `WM_GETTEXT`, as required by
+[Microsoft's API contract](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw).
+Native CI passed **194 Linux tests and 140 Windows tests**, including the GUI
+corpus and both compiler fixed points. See [verification evidence](../evidence/gui-verification.json)
+and [the successful run](https://github.com/zackmsa777-a11y/ramos/actions/runs/38057232751).
+No new speed claim is made.
+
+
+---
+
+# Windows and cross-compilation
+
+Ramos produces native Windows x64 console executables in PE32+ format. The same
+language supports arithmetic, booleans, scopes, control flow, typed functions,
+recursion, byte buffers, arguments and binary file I/O on Linux and Windows.
+There is no interpreter, Python dependency or C runtime in generated programs.
+
+## Use Ramos on Windows
+
+Download [ramos.exe from the 0.13 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.13.0/ramos.exe)
+and open PowerShell in its directory. CI artifacts are also available from the
+[Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
+
+```text
+fn main() {
+    print("Hello, Windows!")
+}
+```
+
+Compile and run:
+
+```powershell
+.\ramos.exe build .\hello.ramos -o .\hello.exe
+.\hello.exe
+```
+
+Windows is the default target when the compiler runs on Windows. Existing output
+requires `--force`. Use `.exe` for Windows output filenames. The target is x64;
+32-bit Windows and a native ARM64 backend are not supported by this milestone.
+Programs default to console applications. Version 0.13 adds `--gui` and the
+[native desktop GUI library](09-gui.md); build the Notes example with:
+
+```powershell
+.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
+.\notes.exe
+```
+
+## Cross-compile from Linux
+
+```sh
+make
+./ramos build examples/hello.ramos -o hello.exe --target windows
+make windows                 # build the native Windows compiler as build/ramos.exe
+```
+
+The Windows compiler can also emit Linux executables with `--target linux`.
+No target assembler, linker or cross-toolchain is used to compile Ramos sources.
+Only the initial assembly runtime/bootstrap audit uses GNU binutils.
+
+## Runtime and executable format
+
+The Ramos emitter writes PE headers, sections, imports and a relocation directory
+itself. Code is read/execute, literals are read-only, import slots are read/write,
+and the value heap is read/write. No section is both writable and executable.
+The PE advertises NX compatibility and ASLR, uses position-independent code and
+contains no timestamps or build paths. The imports are Windows' built-in
+`KERNEL32.dll` and `SHELL32.dll`; no compiler tool, CRT or interpreter is imported.
+GUI startup loads USER32/GDI32 from System32 through `LoadLibraryExW`; ordinary
+CLI programs never initialize a GUI. Control creation and rendering use native
+system calls, and the default console subsystem remains unchanged.
+
+The private Ramos calling convention remains the same. A small native API bridge
+aligns the stack and reserves Windows shadow space for system calls. Function
+frames probe each stack page before reserving larger frames, preserving Windows
+stack guard behavior. Arithmetic, buffer, allocation and call-depth checks remain.
+
+Arguments use Windows' command-line parsing rules and are converted from UTF-16
+to UTF-8. Paths are converted from UTF-8 to UTF-16 with invalid encodings rejected.
+Whole-file `read_file` rejects non-disk files/directories and enforces the 1 MiB bound;
+0.12 streams process regular files in bounded chunks. Atomic `write_file` writes
+use a separate same-directory temporary file, handle partial writes, close the
+file and publish it with `MoveFileExW`. Existing output requires the replacement
+flag, and source/hardlink aliases are rejected even with replacement enabled.
+Temporary files are cleaned up on failure. Windows output paths are made absolute
+once before publication; unlike the Linux publisher, directory-handle anchoring
+is not implemented. Both publishers assume the caller controls the destination
+directory; neither promises crash durability.
+
+`platform()` returns 0 on Linux and 1 on Windows. All other intrinsic signatures
+remain unchanged. Windows maps OS errors into common negative statuses: -2
+missing file/path, -13 access denied, -17 already exists, -22 invalid path or
+source alias, -27 oversized/growing input, -36 path too long, and -5 other I/O
+failures. File-operation status stays fallible. The executable flag to
+`write_file` is accepted on Windows; executable format and `.exe` naming determine
+how it is launched, rather than POSIX permission bits.
+
+## Prove Windows self-hosting
+
+Using the native compiler on Windows:
+
+```powershell
+.\ramos.exe build .\compiler\ramos.ramos -o .\stage2.exe --force
+.\stage2.exe build .\compiler\ramos.ramos -o .\stage3.exe --force
+(Get-FileHash .\stage2.exe).Hash -eq (Get-FileHash .\stage3.exe).Hash
+```
+
+`tools/windows_proof.py` does this, also compares the Linux-built seed with the
+Windows-built stages, and runs native programs against shared language tests,
+PE permissions, binary I/O, Unicode paths, arguments, source aliases, replacement,
+checked runtime failures and large stack frames. CI runs it on `windows-latest`
+and uploads `windows-bootstrap-proof.json` with the executable. Linux developers
+can run the same harness under Wine using `make test-windows` with an isolated
+`WINEPREFIX`. Wine is a development test runner; end users do not need it.
+
+Version 0.9 adds native buffered stdin and signed decimal conversions. Console
+input uses the configured input code page; redirected input preserves bytes.
+See [input and conversion semantics](05-input.md).
+
+Version 0.10 adds strings, reclaimed heap memory, structs and typed arrays with
+the same contracts as Linux. See [values and memory](03-values.md).
+
+Version 0.11 supports source-relative `weave` libraries and the Ramos standard
+library. Extract the libraries archive before building its examples; use `/` in
+directives even on Windows. See [libraries.md](07-libraries.md).
+
+Version 0.12 adds regular-file streams and TUI console controls. The Windows
+runtime enables VT output, reads native key events, and restores console modes
+on return, exit and Ramos traps; its control callback also attempts cleanup
+on OS control termination. Use Windows Terminal or a
+real interactive console; redirected handles are rejected for TUI startup.
+See [file tools and terminal interfaces](08-cli-tui.md).
+
+
+---
+
+# Runnable projects
+
+These are complete programs from Ramos 0.13, not pseudocode. The repository
+includes their exact source under `examples/` and the matching `stdlib/`.
+Compile commands below assume you placed the native compiler in this
+repository's root. Add `--force` when intentionally rebuilding an output.
+
+## File copy
+
+```sh
+./ramos-linux-x86_64 build examples/rcopy.ramos -o rcopy
+./rcopy source.bin new-copy.bin
+```
+
+```powershell
+.\ramos.exe build .\examples\rcopy.ramos -o .\rcopy.exe
+.\rcopy.exe .\source.bin .\new-copy.bin
+```
+
+[Source: rcopy.ramos](../examples/rcopy.ramos). Uses streamed I/O, processes files
+larger than the per-buffer limit and refuses existing destinations. Failed
+streaming copies can leave a partial new file; they are not atomic replacement.
+
+## Literal file search
+
+```sh
+./ramos-linux-x86_64 build examples/rgrep.ramos -o rgrep
+./rgrep needle book/00-welcome.md book/01-getting-started.md
+```
+
+[Source: rgrep.ramos](../examples/rgrep.ramos). Matches literal bytes, reports
+file and line, and returns 0 for a match, 1 for none and 2 for errors. It does
+not traverse directories or interpret regular expressions.
+
+## Full-screen file viewer
+
+```sh
+./ramos-linux-x86_64 build examples/rview.ramos -o rview
+./rview book/00-welcome.md
+```
+
+[Source: rview.ramos](../examples/rview.ramos). Run in an interactive terminal;
+use arrows, j/k, Space/n, p and q. The viewer deliberately sanitizes non-ASCII
+and control bytes. It is not a complete Unicode text editor.
+
+## Desktop Notes — Windows
+
+```powershell
+.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
+.\notes.exe
+```
+
+[Source: notes.ramos](../examples/notes.ramos). Unicode editor, Save/Clear
+buttons, status messages and resizing. Save creates a new file and refuses an
+existing path. This version has no open dialog or unsaved-change prompt.
+
+## A small GUI event loop
+
+[Source: gui_hello.ramos](../examples/gui_hello.ramos):
+
+```ramos
+weave "stdlib/gui.ramos"
+weave "stdlib/numbers.ramos"
+
+fn main() {
+    gui_check(gui_open(s"Hello, Ramos", 360, 180))
+    gui_label(1, 20, 20, 320, 24, s"A real window, written in Ramos")
+    gui_button(2, 20, 60, 120, 32, s"Click me")
+    var count = 0
+    var running = true
+    while running {
+        let event = gui_event(-1)
+        if event.kind == 1 { running = false }
+        if event.kind == 2 && event.id == 2 {
+            count = count + 1
+            gui_set(1, s"Clicks: " + num_text(count))
+        }
+    }
+    gui_check(gui_close())
+}
+
+```
+
+The code above is intended as a root-level source file. The checked-in example
+is inside `examples/` and therefore uses `../stdlib/`. Build for Windows with
+`--gui`; Linux can cross-compile this source but cannot run its GUI backend.
+
+## More complete sources
+
+- [Interactive number input](../examples/input.ramos)
+- [Streaming Unicode line statistics](../examples/line_stats.ramos)
+- [Library, list and map demo](../examples/library_demo.ramos)
+- [Checked calculator](../examples/calculator.ramos)
+
+The shell and PowerShell versions of a build follow the same structure:
+`COMPILER build SOURCE -o OUTPUT`. Windows outputs should use `.exe`.
+
+
+---
+
+# How the compiler builds itself
+
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/ramos.ramos).
+It reads source files, lexes and checks tokens, discovers typed signatures,
+resolves scoped symbols, emits native x86-64 instructions, resolves labels,
+writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
+interpret Ramos, launch another compiler, or delegate machine-code generation.
+
+## Reproduce from a clean checkout
+
+On x86-64 Linux with GNU binutils, Make and Python 3:
+
+```sh
+make clean all selfhost
+```
+
+The actual compilation chain is:
+
+```sh
+as --64 -o build/stage0.o bootstrap/src/ramos.s
+ld -z noexecstack --build-id=none -o build/stage0 build/stage0.o
+./build/stage0 build compiler/ramos.ramos -o build/stage1 --force
+./build/stage1 build compiler/ramos.ramos -o build/stage2 --force
+./build/stage2 build compiler/ramos.ramos -o build/stage3 --force
+cmp build/stage2 build/stage3
+sha256sum build/stage2 build/stage3
+```
+
+Stage 0 is the retained assembly bootstrap with the new typed OS intrinsics.
+Stages 1, 2 and 3 are compiled from the same Ramos compiler source. Stage 1 can
+differ in instruction selection from stage 2; the required fixed point is
+**stage 2 = stage 3**. `make all` copies stage 2 to the normal `ramos` executable.
+
+The proof harness additionally runs stage 2 with `PATH=/nonexistent`, verifies
+that its output still matches stage 3, and runs the language/I/O corpus (the retained seed skips post-0.7 grammar tests)
+with stages 0, 2 and 3 (the Linux-only assembly bootstrap skips target selection).
+It writes hashes and checks to `build/bootstrap-proof.json`.
+The GitHub Actions workflow rebuilds this chain and preserves the report and
+native compiler as artifacts. A local proof snapshot is in
+[bootstrap-proof.json](../evidence/bootstrap-proof.json); CI is the reproducible authority.
+
+## Implementation boundary
+
+The entire compiler pipeline is Ramos source, including the machine-code and
+ELF/PE emitters. The private native runtime is represented as a hexadecimal literal
+inside that source. It provides checked arithmetic diagnostics, integer/boolean
+printing, reclaimed values, string/aggregate operations, and native OS boundaries for arguments and file I/O.
+The literal is instruction data, not an embedded compiler executable.
+
+The runtime's assembly source remains in `bootstrap/src/runtime.inc`,
+`buffer_runtime.inc`, `heap_runtime.inc`, `values_runtime.inc`, `io_runtime.inc`,
+`text_runtime.inc`, `stdin_runtime.inc`, `source_guard.inc`,
+`stream_runtime.inc`, `stream_os.inc`, `terminal_os.inc` and `gui_os.inc`. The proof verifies every embedded byte
+and native entry offset against the bootstrap's emitted runtime. Retaining an
+assembly OS boundary does not mean the Ramos compiler invokes assembly at run
+time; once stage 1 is seeded, the next stages require no assembler or linker.
+
+The compiler uses byte buffers as packed token, function, symbol, operator,
+block and fixup tables. A bounded iterative expression parser and explicit block
+stack avoid depending on the generated runtime's 64-call limit for deep syntax.
+The compiler deliberately retains byte-buffer source so the old grammar can
+seed it. User programs can use the new structs and typed arrays; no preprocessing
+or host-language parser is required.
+
+The self-hosted compiler has tighter token/output limits than the bootstrap,
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/README.md). Diagnostics
+preserve filename, line and byte-column formatting and give specific reasons.
+Native behavior, traps, output preservation, scopes, calls and ELF permissions
+are covered by the shared corpus.
+
+## GitHub's language label
+
+Self-hosting is a compiler property. GitHub's language sidebar is a separate
+Linguist classification service; it does not yet include Ramos. See
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/github-language.md). The bootstrap and Python test
+harness are retained honestly rather than relabeled as Ramos.
+
+## Windows fixed point
+
+The same Ramos source builds the Windows compiler. `make windows` produces
+`build/ramos.exe`; `tools/windows_proof.py` compiles it twice on Windows and
+requires identical seed/stage-2/stage-3 PE binaries. The CI Windows job runs
+shared language tests and records the native Windows proof. See
+[Windows bootstrap instructions](10-windows.md).
+
+The retained assembly seed implements the 0.7 grammar. The compiler source uses
+compatible surface syntax while implementing the full 0.13 API and grammar itself. Tests
+for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
+the seed explicitly skips them. The proof JSON records both discovered counts
+and these skips. No source preprocessing or external backend is required.
+
+Version 0.9 extends the seed with the same five typed input/text intrinsics.
+The Ramos compiler itself uses `int_to_text` for decimal diagnostics. These
+contracts run on the retained seed as well as both self-hosted stages. Linux
+and Windows runtime bytes, entry offsets and fixed points are audited.
+
+Version 0.10 adds shared heap collection, audited value operations and checked
+struct/array typing. The retained seed shares the heap but explicitly skips the
+new syntax tests; the proof records that separate count.
+
+Version 0.11 reads library graphs using the Ramos-written `load_sources` pipeline.
+The retained seed supplies the private source-identity guard but skips weave/stdlib
+tests; both self-hosted stages and native Windows run them.
+
+
+---
+
+# Limits and standard library reference
+
+The self-hosted compiler accepts up to 64 regular source files totaling 1 MiB
+(with boundary separators), at most 50,000
+tokens including EOF, 4,096 total declarations including parameters and ended
+blocks, 256 functions and 16 parameters per function. Structs are limited to 64
+types with 16 fields each; array type nesting to 16. Expression and block
+depth remain bounded at 128; generated programs allow 64 active calls.
+Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
+have a 40,000-entry bound. These are checked limits. The retained bootstrap has
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/README.md).
+
+The compiler is self-hosted; namespaces, more library types, floats, syntax conveniences, wrapping arithmetic,
+broader optimization and additional targets remain future work. Performance claims need
+new repeatable measurements. The runtime provides checked arithmetic and bounded
+buffers, but generated programs execute with the caller's operating-system
+permissions. General canvas graphics, games, a Linux GUI backend and browser support need further platform work.
+
+## Standard library signatures
+
+These are the complete function signatures defined in the bundled source.
+Follow the chapter APIs for the supported application-facing helpers; some
+other prefixed functions are implementation helpers. These declarations are
+reference entries, not standalone compilable programs. Follow the source links
+for bodies, structs and exact status/lifetime contracts.
+
+### bytes.ramos
+
+[Read the source](../stdlib/bytes.ramos).
+
+```ramos
+fn bytes_copy(source: bytes) -> bytes
+fn bytes_equal(a: bytes, b: bytes) -> bool
+fn bytes_slice(source: bytes, start: int64, end: int64) -> bytes
+fn bytes_put(out: bytes, start: int64, source: bytes)
+fn bytes_find(haystack: bytes, needle: bytes) -> int64
+```
+
+### cli.ramos
+
+[Read the source](../stdlib/cli.ramos).
+
+```ramos
+fn cli_arg(index: int64) -> string
+fn cli_has(name: string) -> bool
+fn cli_value(name: string, fallback: string) -> string
+fn cli_fail(message: string)
+```
+
+### gui.ramos
+
+[Read the source](../stdlib/gui.ramos).
+
+```ramos
+fn gui_word(out: bytes, at: int64, value: int64)
+fn gui_number(raw: bytes, at: int64) -> int64
+fn gui_check(status: int64)
+fn gui_open(title: string, width: int64, height: int64) -> int64
+fn gui_close() -> int64
+fn gui_rgb(red: int64, green: int64, blue: int64) -> int64
+fn gui_properties(kind: int64, id: int64, x: int64, y: int64, width: int64, height: int64, color: int64) -> bytes
+fn gui_label(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_button(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_input(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_editor(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_panel(id: int64, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn gui_set(id: int64, text: string)
+fn gui_move(id: int64, x: int64, y: int64, width: int64, height: int64)
+fn gui_text(id: int64) -> string
+fn gui_event(timeout_ms: int64) -> GuiEvent
+```
+
+### io.ramos
+
+[Read the source](../stdlib/io.ramos).
+
+```ramos
+fn io_reader(path: bytes) -> FileReader
+fn io_close(reader: FileReader) -> int64
+fn io_byte(reader: FileReader) -> int64
+fn io_append(builder: ByteBuilder, value: int64)
+fn io_line(reader: FileReader) -> bytes
+fn io_copy(source: bytes, destination: bytes) -> int64
+fn io_seek(reader: FileReader, offset: int64) -> int64
+```
+
+### lists.ramos
+
+[Read the source](../stdlib/lists.ramos).
+
+```ramos
+fn list_new() -> IntList
+fn list_len(list: IntList) -> int64
+fn list_push(list: IntList, value: int64)
+fn list_get(list: IntList, index: int64) -> int64
+fn list_set(list: IntList, index: int64, value: int64)
+fn list_pop(list: IntList) -> int64
+fn list_clear(list: IntList)
+```
+
+### maps.ramos
+
+[Read the source](../stdlib/maps.ramos).
+
+```ramos
+fn map_new() -> StringMap
+fn map_len(map: StringMap) -> int64
+fn map_index(map: StringMap, key: string) -> int64
+fn map_has(map: StringMap, key: string) -> bool
+fn map_get(map: StringMap, key: string, fallback: string) -> string
+fn map_set(map: StringMap, key: string, value: string)
+fn map_remove(map: StringMap, key: string) -> bool
+```
+
+### numbers.ramos
+
+[Read the source](../stdlib/numbers.ramos).
+
+```ramos
+fn num_min(a: int64, b: int64) -> int64
+fn num_max(a: int64, b: int64) -> int64
+fn num_abs(n: int64) -> int64
+fn num_clamp(n: int64, low: int64, high: int64) -> int64
+fn num_text(n: int64) -> string
+fn num_parse(text: string) -> int64
+```
+
+### text.ramos
+
+[Read the source](../stdlib/text.ramos).
+
+```ramos
+fn text_starts(text: string, prefix: string) -> bool
+fn text_ends(text: string, suffix: string) -> bool
+fn text_find(text: string, needle: string) -> int64
+fn text_contains(text: string, needle: string) -> bool
+fn text_join(parts: [string], separator: string) -> string
+fn text_repeat(text: string, count: int64) -> string
+```
+
+### tui.ramos
+
+[Read the source](../stdlib/tui.ramos).
+
+```ramos
+fn tui_escape() -> string
+fn tui_write(value: string)
+fn tui_control(value: string)
+fn tui_begin() -> int64
+fn tui_end() -> int64
+fn tui_clear()
+fn tui_move(row: int64, column: int64)
+fn tui_color(foreground: int64, background: int64)
+fn tui_reset()
+fn tui_at(row: int64, column: int64, value: string)
+fn tui_box(row: int64, column: int64, width: int64, height: int64)
+fn tui_safe(value: bytes, width: int64) -> string
+fn tui_key(timeout_ms: int64) -> int64
+```
+
+
+
+---
+
+# Performance and evidence
+
+Ramos 0.7.1 has a reproducible eight-task comparison with optimized checked C,
+Rust and CPython. On the recorded Linux VM, the execution index is **Ramos 40.82,
+C 100, Rust 119.77 and Python 2.53** (higher is faster). Ramos is **16.16× faster
+than Python** across this suite and takes **2.45× C's time**. These are geometric
+means of per-task median ratios, not a general language ranking.
+
+The suite checks outputs against independent references, runs nine randomized
+samples per task, and records raw timings, build commands and source hashes.
+Startup and build times are reported separately. See the
+[full report and methodology](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/benchmarks/report.md), [raw samples](../evidence/results.json)
+and [workload sources](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/benchmarks/fixtures). The saved 0.7.0 baseline and
+[interleaved old/new comparison](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/benchmarks/optimization.md) show a **2.05× overall
+speedup**. Version 0.8 emits [identical benchmark executable bytes](../evidence/codegen-continuity.json)
+for both targets. Versions 0.9–0.11 expand the native runtime; the timings above
+remain the recorded 0.7.1 measurements, not a current-version performance claim.
+
+```sh
+make
+python3 benchmarks/run_suite.py                 # measure all eight tasks
+python3 benchmarks/run_suite.py --validate-only # output checks without timing
+```
+
+
+
+The [historical 0.2 comparison](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/benchmarks/report-0.2.md) used another machine
+and one unrolled workload; it is not directly comparable. Its legacy script
+still requires the 0.2 compiler and writes to `work/results-0.2` by default.
+
+## Read the results correctly
+
+The 0.7.1 index is historical, not a speed measurement of Ramos 0.13. C is
+normalized to 100; higher is faster on the recorded workloads. The historical
+Ramos score of 40.82 means roughly 2.45 times C's execution time on that suite,
+not 2.45 times faster than C. It says nothing about all possible programs.
+
+The development roadmap requires fresh measurements before new release speed
+claims. Run benchmark commands from the compiler repository, where the harness
+and workload sources live, rather than from this documentation repository.
+
+
+---
+
+# What comes next
+
+**Goal:** make Ramos a simple native language for useful CLI, TUI and desktop
+applications on Windows x64 and Linux x64. A beginner should be able to build
+and run a small tool from a short example; larger tools should have the libraries,
+diagnostics and resource handling needed to keep working.
+
+This is a development plan starting from 0.13, not a claim that these features
+have shipped. Proposed version labels below describe order, not deadlines.
+Keep each release small enough to implement and verify completely; split a
+milestone if necessary. Python-like ease and Rust/C-like native performance
+are design aims, not promises of ecosystem parity or benchmark superiority.
+
+## The user's rules
+
+**1. Simple.** Keep a small, readable syntax and one clear way to perform common
+tasks. Preserve `weave` for libraries. Put ordinary helpers in Ramos libraries
+instead of growing the compiler for every convenience. Prefer inferred local
+types, useful defaults and examples over configuration. Common text, file and
+GUI operations should not require hand-written byte manipulation.
+
+**3. Fast.** Keep direct native ELF/PE generation and the self-hosted compiler.
+Measure speed rather than infer it from native output. Avoid needless copying,
+allocations and idle polling. Optimize costs observed in real applications;
+performance claims must identify the release, machine, workload and measurement.
+
+No rule 2 was supplied. Correctness remains a release prerequisite: preserve
+checked arithmetic, bounds, UTF-8 contracts, resource cleanup and deterministic
+self-hosting. Any change in those contracts must be explicit and tested.
+
+## Starting point
+
+0.13 already has immutable strings, reusable managed memory, structs, typed
+arrays, `weave`, a small standard library, streamed files, stdin, CLI/TUI tools
+and a Windows GUI library. Those foundations should be extended, not rebuilt.
+The Linux desktop backend is still missing. Live memory, individual values,
+recursion and source size have documented limits. The published comparative
+timings are historical; they are not a performance result for 0.13.
+
+## Ordered milestones
+
+| Proposed milestone | Work | Runnable acceptance example |
+| --- | --- | --- |
+| 0.14: easier code | `else if`, exclusive-range `for`, `+=` and `-=`; updated syntax documentation and highlighting | Simplify an existing search/viewer example while preserving its output and behavior on both OSes |
+| 0.15: useful OS libraries | Directory iteration, paths, environment access and direct child-process execution | Recursive file search and a copy/backup tool; a command runner that reports child exit status |
+| 0.16: easier development | Source-line/caret errors, a formatter and a compile-and-run command | A new user can run a file, correct a reported error and format it using the documented commands |
+| 0.17: data and math | `float64`, conversions and essential math; string builders and better collection growth; reviewed memory/recursion limits | A numerical renderer and a streaming text tool that builds output without repeated whole-string copies |
+| 0.18: portable GUI | Linux backend, layout/DPI handling, file dialogs and basic drawing behind the GUI library | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
+| 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
+
+### 0.14: specify the small syntax changes first
+
+Define range bounds as evaluated once, with the upper bound excluded. Specify
+loop-variable scope, `break`, `continue` and checked iteration overflow. Define
+compound assignment so its destination is evaluated once, including fields and
+array indices. Retain checked arithmetic and useful errors.
+
+Start with `+=` and `-=`; do not also add `++` merely to duplicate the same task.
+Review per-function stack requirements before increasing recursion depth. A
+larger constant alone does not solve stack safety.
+
+Record a fresh 0.13 performance baseline before compiler changes. Existing
+programs must still compile, and the simplified example must have matching
+output. Measure compile time as well as the affected runtime workloads.
+
+### 0.15: file tools as the first practical application target
+
+Directory iteration must stream entries and release handles when stopped early.
+Specify Unicode paths, missing files, permission failures and traversal policy,
+including symbolic links, so recursive tools cannot accidentally loop forever.
+Use fallible results for expected OS failures, consistent with existing I/O.
+
+Child processes receive an executable and argument values directly. Shell
+interpretation should require an explicit separate choice. Specify inherited
+or redirected stdin/stdout/stderr, waiting and exit status. Avoid capturing
+unbounded output into the managed heap.
+
+Test empty directories, Unicode filenames, large streamed files, failed copies,
+early exit and child failures on native Windows and Linux.
+
+### 0.16: make common mistakes easy to fix
+
+Errors should show filename, line, column, the relevant source line and a caret,
+with the expected construct or type. Preserve original library locations.
+The formatter must preserve comments and program meaning and be idempotent.
+
+Design `ramos run app.ramos` as compile-and-run using a temporary native binary,
+with program arguments, exit-status forwarding and cleanup. Keep `build` for
+distributable executables. Update editor support alongside new syntax. Evaluate
+`--emit-asm` after the core authoring work; an inspection feature needs a clear
+contract and should not become a second code-generation backend.
+
+### 0.17: remove the walls using measured application needs
+
+Specify floating-point literals, IEEE-754 behavior, comparisons, conversions,
+NaN/infinity handling, division and printing before implementation. Keep integer
+overflow checks intact. Verify numerical results against independent references
+on both targets.
+
+Add a string builder and amortized collection growth with clear aliasing and
+lifetime rules. Keep immutable string values and low-level bytes available.
+Profile collection and heap behavior before redesigning the allocator or GC.
+Use long-running allocation tests and actual live-data workloads to choose
+larger or configurable limits; do not silently remove checks. Ordinary code
+should not need manual freeing. Explicit release remains necessary for OS
+resources such as files, processes and windows.
+
+Generics and broader containers come later if concrete apps need them; they
+should not block useful strings, arrays and number handling.
+
+### 0.18: one GUI API with real desktop evidence
+
+Choose and document the initial Linux display backend and its OS dependencies.
+Keep platform details behind `stdlib/gui.ramos`. Add layout, scaling, dialogs
+and drawing in small tested slices. Verify events, focus, input, close, resize,
+resource lifetime and Unicode on actual desktop sessions, including Windows.
+Cross-compilation alone is not proof that a GUI works.
+
+Retain an idle-blocking event loop. Multi-window support, menus, images and
+advanced widgets can follow demonstrated app needs.
+
+## Performance evidence
+
+Use at least eight workloads spanning integer arithmetic, recursion, arrays,
+strings, allocation, file streaming, parsing/search and numerical rendering.
+Compare equivalent C, Rust and Python implementations on the same machine;
+verify results before timing, record toolchain versions and build flags, repeat
+runs and report medians and variability. Explain semantic differences, including
+checked arithmetic. Benchmark input must be large enough to separate useful
+work from process startup.
+
+For a C-relative execution index, define C as 100 and each Ramos task score as
+`100 * C_time / Ramos_time`; the overall score is the geometric mean of the
+task scores. Report per-task results and Rust/Python ratios too. A score above
+100 means faster on this suite, not a better language. Track startup time,
+compile time, binary size and peak memory separately from the speed index.
+
+Investigate regressions outside measured variability and explain any deliberate
+tradeoff. Never reuse old benchmark numbers as evidence for a new release.
+Documentation-only edits do not require rerunning the performance suite.
+
+## Completion checks
+
+A feature milestone is complete when its behavior is specified, an application
+uses it, relevant success/failure tests pass natively on Windows and Linux,
+both deterministic self-hosting proofs still match, and the downloadable package
+contains the working compiler, libraries, examples and instructions. Platform
+features additionally need execution on the platform they target.
+
+The 1.0 goal is complete when a clean-install user can build and run recursive
+file tools, an interactive TUI and the portable Notes GUI; a numerical example
+exercises the math support; long-running examples stay within their documented
+resource behavior; and current performance measurements and remaining limits
+are published. This is useful application capability, not all of Python or Rust.
+
+Package registries, async runtimes, advanced generics and ecosystem expansion
+remain follow-up goals. GitHub Linguist recognition is independent of language
+correctness and application readiness.
+
+
+---
+
+# Guide for AI coding agents
+
+This chapter is a compact capability contract for agents generating Ramos
+programs. Target **0.13.0** unless the task explicitly provides a newer compiler
+and verified documentation. Read the relevant chapter rather than guessing
+from Python, C or Rust syntax.
+
+## Read in this order
+
+1. [Language](02-language.md): statements, types, operators and functions.
+2. [Values](03-values.md): immutable strings, aliases, arrays and heap behavior.
+3. [Libraries](07-libraries.md) and [signatures](13-reference.md).
+4. [Files](06-files.md), [CLI/TUI](08-cli-tui.md) or [GUI](09-gui.md) for the task.
+
+`BOOK.md` is a generated single-file edition if loading the whole reference is
+useful. Individual chapters are smaller and have stable relative links.
+
+## Supported source patterns
+
+- One parameterless `fn main()` returning void per executable; none in libraries.
+- Newline-separated statements and braces; no semicolons.
+- `let` for an immutable binding, `var` for a reassignable binding. Inferred local
+  types cannot change. Mutating a field/array/byte value through `let` is allowed.
+- Function parameters use explicit types; omitted return type is void.
+- `if`/`else`, `while`, `break`, `continue`, `&&`, `||`, `!`; boolean conditions.
+- `int64`, `bool`, `bytes`, `string`, named structs and `[T]` arrays.
+- `"bytes"` and `s"UTF-8 string"` have different types. Conversions copy.
+- `weave "relative/path.ramos"` is top-level and resolves relative to its file.
+- Use normal reassignment such as `i = i + 1`.
+
+## Do not invent these features
+
+No `import`, `for`, `else if`, `+=`, `++`, floats, bitwise/shift operators,
+exceptions, nullable pointers, generics, methods, closures, namespaces, package
+manager, direct child-process API or directory iteration. A nested `if` inside
+an `else` block is supported. Planned features in the roadmap are not current
+capabilities. Do not substitute Python or C as a hidden backend for Ramos code.
+
+## Error and lifetime contracts
+
+Integer overflow, divide-by-zero, invalid bounds and malformed string UTF-8
+trap with a diagnostic and exit 1. Expected file failures are fallible instead.
+Check `io_error()` immediately after operations that use it; another operation
+can change it. Check `parse_error()` after `text_to_int` or `num_parse`; zero
+as a return value alone does not distinguish a successful parse from failure.
+
+`arg_count()` includes the executable name. Use `arg()` for bytes, `cli_arg()`
+for validated strings. Process the final nonempty stdin line even if EOF is set.
+Close file streams explicitly; GC reclaims memory, not OS handles. Do not mix
+buffered stdin reading with raw terminal input.
+
+For GUI, support is Windows-only. Pump events regularly, use blocking waits
+when idle and close the window. Do not promise dialogs, canvas APIs or a Linux
+backend. For TUI, require an interactive terminal and restore it before exit.
+
+## Build and verify
+
+For a native downloaded compiler on Linux:
+
+```sh
+./ramos-linux-x86_64 build app.ramos -o app
+./app
+```
+
+For Windows:
+
+```powershell
+.\ramos.exe build .\app.ramos -o .\app.exe
+.\app.exe
+```
+
+Preserve existing user files; `--force` intentionally replaces outputs. Compile
+before reporting working syntax. Check expected output, exit status and failure
+paths relevant to the app. Cross-compiling proves emission, not native GUI/TUI
+interaction. Do not claim a speedup without equivalent workloads and timings.
+
+When changing compiler internals, use the main repository's native suites and
+Linux/Windows fixed-point proofs. This book repository only builds and checks
+documentation. Its build dependency is not a Ramos runtime dependency.

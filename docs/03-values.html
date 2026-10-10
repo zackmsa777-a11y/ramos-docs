@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>Strings, structs, arrays and memory · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="03-values.html" aria-current="page"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html"><span>05</span>Stdin and number conversion</a><a href="06-files.html"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="strings-structs-arrays-and-memory">Strings, structs, arrays and memory</h1>
+<p>These features implement the first three priorities from the developer feedback.
+Both native targets use the same checked semantics. Existing byte-buffer programs
+keep their byte-literal and API behavior; discarded allocations can now be reclaimed.
+<code>string</code>/<code>struct</code> are new keywords and the new intrinsic names are reserved for
+function definitions. Older programs defining those names must rename them.
+The compiler's old <code>string</code> helper was renamed <code>string_literal</code> for this reason.
+The compiler remains written in Ramos and emits ELF/PE directly.</p>
+<h2 id="immutable-utf-8-strings">Immutable UTF-8 strings</h2>
+<pre><code class="language-ramos">fn join(a: string, b: string) -&gt; string { return a + b }
+fn main() {
+    let greeting = join(s&quot;Hello, &quot;, s&quot;🌍&quot;)
+    print(greeting)
+    print(len(greeting))              // 8 Unicode scalars
+    print(slice(greeting, 7, 8))       // 🌍
+    print(greeting == s&quot;Hello, 🌍&quot;)   // true
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s"..."</code></td>
+<td>Immutable <code>string</code>; same escapes as byte literals</td>
+</tr>
+<tr>
+<td><code>string(bytes)</code></td>
+<td>Validate strict UTF-8 and copy into a string</td>
+</tr>
+<tr>
+<td><code>to_bytes(string)</code></td>
+<td>Fresh mutable copy; mutating it cannot change the string</td>
+</tr>
+<tr>
+<td><code>a + b</code></td>
+<td>Concatenate two strings into a new string</td>
+</tr>
+<tr>
+<td><code>a == b</code>, <code>a != b</code></td>
+<td>Compare string contents, including embedded NUL</td>
+</tr>
+<tr>
+<td><code>len(string)</code></td>
+<td>Count Unicode scalar values</td>
+</tr>
+<tr>
+<td><code>slice(string, start, end)</code></td>
+<td>Copy scalar range <code>[start, end)</code>; bounds checked</td>
+</tr>
+<tr>
+<td><code>print(string)</code></td>
+<td>Write UTF-8 contents followed by LF</td>
+</tr>
+</tbody>
+</table>
+<p>Old <code>"..."</code> literals remain mutable <code>bytes</code>. Conversion is explicit, including
+at byte-oriented file I/O boundaries. No implicit integer/string conversions
+are added: use <code>string(int_to_text(n))</code> for decimal formatting.</p>
+<p>Malformed UTF-8, overlong encodings, surrogate encodings and values above
+U+10FFFF trap with a diagnostic and exit 1. NUL is valid string content.
+Length and slicing count scalars, not bytes or grapheme clusters: <code>s"é"</code>
+contains two scalars. Slicing allows an empty range at the end and rejects
+negative, reversed or out-of-range indices. Each string has at most 1 MiB of
+UTF-8 payload; an oversized concatenation traps before allocation.</p>
+<p>Length/slicing scan the UTF-8 data; concatenation copies both operands.
+Repeatedly growing a string by one character is not an amortized builder API.</p>
+<h2 id="structs">Structs</h2>
+<pre><code class="language-ramos">struct Point { x: int64, y: int64 }
+struct Player { name: string, position: Point }
+fn main() {
+    let player = Player(s&quot;Ramos&quot;, Point(3, 4))
+    player.position.x = 42
+    print(player.name + s&quot;!&quot;)
+    print(player.position.x)
+}
+</code></pre>
+<p>Fields require non-void types. Definitions may be referenced before they appear,
+including from function signatures or other structs. Fields are separated by
+commas or newlines. A trailing comma and empty structs are allowed. Constructors
+use declaration order, evaluate arguments left to right, and check exact types
+and arity. Duplicate names, missing types and unknown fields are compile errors.</p>
+<p>Structs are mutable boxed values. Assignment, parameters and returns copy a
+handle, so aliases observe field writes. <code>let</code> protects the binding while allowing
+field changes, as it already does for bytes. String fields can be replaced, but
+the string value itself remains immutable. Nested field/index assignment is
+supported. There are no unchecked addresses, null references or implicit copies.</p>
+<p>The checked limits are 64 struct types and 16 fields per type.</p>
+<h2 id="typed-arrays">Typed arrays</h2>
+<pre><code class="language-ramos">fn main() {
+    let points = array(Point, 2, Point(1, 2))
+    points[1] = Point(3, 4)
+    print(points[1].x)
+    let more = array_resize(points, 3, Point(5, 6))
+    print(array_len(more))
+}
+struct Point { x: int64, y: int64 }
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[T]</code></td>
+<td>Array type; annotations may nest up to 16 levels</td>
+</tr>
+<tr>
+<td><code>array(T, count, initial)</code></td>
+<td>Fill a new typed array; all elements start with <code>initial</code></td>
+</tr>
+<tr>
+<td><code>array_empty(T)</code></td>
+<td>Empty typed array without requiring an initial value</td>
+</tr>
+<tr>
+<td><code>array_len(a)</code></td>
+<td>Number of elements</td>
+</tr>
+<tr>
+<td><code>a[index]</code>, <code>array_get(a, index)</code></td>
+<td>Checked typed read</td>
+</tr>
+<tr>
+<td><code>a[index] = value</code>, <code>array_set(a, index, value)</code></td>
+<td>Checked typed write</td>
+</tr>
+<tr>
+<td><code>array_resize(a, count, initial)</code></td>
+<td>New array: preserve prefix, fill added elements</td>
+</tr>
+</tbody>
+</table>
+<p>Indices and counts are signed integers. Negative or out-of-range indices and
+counts outside 0..131072 trap before access. Elements occupy eight bytes, so
+the maximum payload is 1 MiB. Arrays of int64, bool, bytes, string, structs and
+arrays are supported; void elements are rejected. There is no unchecked default
+reference: every nonempty constructor/growth supplies a typed fill value.</p>
+<p>Array handles alias their contents. Reference-type fill values are shared
+across initial elements; construct separate values when independent records
+are needed. Resizing copies elements and leaves the old array and its aliases
+unchanged. It costs O(old/new length), not an amortized in-place growth operation.
+<code>array_empty(Node)</code> allows a recursive struct to start with an empty link array.</p>
+<h2 id="reusable-memory">Reusable memory</h2>
+<p>Bytes, strings, structs and arrays use a nonmoving conservative mark/sweep heap.
+When allocation cannot find space, it collects unreachable objects and retries.
+<code>collect()</code> requests collection explicitly; <code>memory_used()</code> reports currently
+allocated block bytes, including headers/padding and not-yet-collected garbage.
+A reachable returned value, argument, active expression or aggregate field
+remains valid. Unreachable cycles can be reclaimed. Every reused payload is
+zeroed. Scope exit, break and continue clear ended local slots.</p>
+<p>The heap holds at most 16 MiB of allocated blocks, plus an 8 MiB ownership map.
+Each block needs a 32-byte header and alignment to eight bytes. Empty values
+therefore consume 32 bytes. Mapped memory is RW and never executable. Stdin
+retains its separate lazy 1 MiB + 12 KiB scratch mapping.</p>
+<p>The collector scans active stack words/saved registers and object payload words.
+An integer or byte sequence resembling an allocated address can retain that
+object conservatively. This is not an exact memory-accounting or real-time GC
+guarantee. There is no manual <code>free</code>, pointer cast, moving collection or dangling
+alias API. A program whose reachable data exceeds the heap still traps; the
+change removes the cumulative-allocation limit, not the bounded live heap.</p>
+<h2 id="run-a-real-text-tool">Run a real text tool</h2>
+<p><a href="examples/line_stats.ramos">examples/line_stats.ramos</a> reads UTF-8 lines from
+stdin, annotates them with a line number, and prints counts. Its <code>Stats</code> struct
+holds totals and an integer array of recent line lengths. Temporary strings and
+byte buffers are reclaimed while it streams input.</p>
+<pre><code class="language-sh">./ramos build examples/line_stats.ramos -o line-stats
+printf 'hello\nمرحبا 🌍\n' | ./line-stats
+</code></pre>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\line_stats.ramos -o .\line-stats.exe
+Get-Content .\input.txt -Encoding utf8 | .\line-stats.exe
+</code></pre>
+<p>Redirected stdin must contain UTF-8 for <code>string(raw)</code>; PowerShell's pipe encoding
+varies by version/settings. Native console input still follows the configured
+Windows input code page. Empty and final unterminated lines follow <code>read_line</code>
+semantics. A local Linux probe streamed 100,000 256-byte lines and reported
+<code>lines=100000 characters=25600000 longest=256</code>.</p>
+<p>Validation covers Unicode reference comparisons, immutable copies, bounds and
+type failures, aliases, constructors/calls/returns, active-expression roots,
+reused zeroed buffers, live-heap exhaustion and cyclic graph lifetimes.
+Performance tables remain the historical 0.7.1 measurements; this release makes
+no new comparative speed claim. Libraries shipped in 0.11. Syntax conveniences, floats and formatter/assembly
+tooling remain future work in this 0.13 edition.</p>
+<p>The <a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38041196929">native CI run</a>
+passed 144 Linux tests and 94 Windows tests, with matching self-hosted compiler
+rebuilds on both targets. See <a href="evidence/values-verification.json">recorded validation</a>,
+<a href="evidence/bootstrap-proof.json">Linux proof</a> and <a href="evidence/windows-bootstrap-proof.json">Windows proof</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="02-language.html">← The language</a><a href="04-bytes.html">Working with bytes →</a></nav><footer>Ramos 0.13.0 · <a href="book/03-values.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

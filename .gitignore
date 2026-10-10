@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+.preview/
+ramos
+ramos.exe
+ramos-linux-x86_64

@@ -1,0 +1,1870 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>Complete book · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="03-values.html"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html"><span>05</span>Stdin and number conversion</a><a href="06-files.html"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><nav class="contents" aria-label="Full book contents"><h1>The Ramos Book</h1><a href="#00-welcome">Welcome to the Ramos Book</a><a href="#01-getting-started">Install, build and run</a><a href="#02-language">The language</a><a href="#03-values">Strings, structs, arrays and memory</a><a href="#04-bytes">Working with bytes</a><a href="#05-input">Stdin and number conversion</a><a href="#06-files">Arguments and file I/O</a><a href="#07-libraries">Libraries with weave</a><a href="#08-cli-tui">CLI tools and terminal interfaces</a><a href="#09-gui">Desktop GUI on Windows</a><a href="#10-windows">Windows and cross-compilation</a><a href="#11-cookbook">Runnable projects</a><a href="#12-self-hosting">How the compiler builds itself</a><a href="#13-reference">Limits and standard library reference</a><a href="#14-performance">Performance and evidence</a><a href="#15-roadmap">What comes next</a><a href="#16-agent-guide">Guide for AI coding agents</a></nav><article><section id="00-welcome"><h1 id="00-welcome--welcome-to-the-ramos-book">Welcome to the Ramos Book</h1>
+<p>Ramos is a small, self-hosted language that compiles directly to native
+Linux x64 and Windows x64 executables. Its two guiding rules are <strong>simple
+programming</strong> and <strong>measured speed</strong>.</p>
+<p>This book describes <strong>Ramos 0.13.0</strong>. Markdown chapters are the canonical edition
+for AI agents, review and offline reading. The HTML edition is generated from
+those same chapters for comfortable human reading. Historical version labels
+identify when a feature arrived; they do not change this book's baseline.</p>
+<h2 id="00-welcome--choose-your-path">Choose your path</h2>
+<ul>
+<li>New to Ramos? Start with <a href="01-getting-started.html">install, build and run</a>, then
+  <a href="02-language.html">the language</a> and <a href="03-values.html">values</a>.</li>
+<li>Building a tool? Read <a href="06-files.html">files</a>, <a href="07-libraries.html">libraries</a> and
+  <a href="08-cli-tui.html">CLI/TUI</a>, then try the <a href="11-cookbook.html">projects</a>.</li>
+<li>Building a desktop window? Read <a href="09-gui.html">Windows GUI</a>. The Linux GUI backend
+  is not available in 0.13.</li>
+<li>Writing Ramos with an AI agent? Start with the <a href="16-agent-guide.html">agent guide</a>
+  and <a href="13-reference.html">API reference</a>.</li>
+<li>Working on the compiler? Read <a href="12-self-hosting.html">self-hosting</a>.</li>
+</ul>
+<h2 id="00-welcome--what-you-can-use-today">What you can use today</h2>
+<p>Checked int64 arithmetic, booleans, functions, comments, while loops, immutable
+UTF-8 strings, mutable bytes, structs, typed arrays, reclaiming managed memory,
+compile-time <code>weave</code>, stdin, streamed files, terminal interfaces and Windows
+native GUI controls.</p>
+<p>There are no floats, range-for loops, <code>else if</code>, compound assignment, directory
+iteration, child-process API, namespaces or package registry in 0.13. See the
+<a href="13-reference.html">limits</a> and <a href="15-roadmap.html">proposed roadmap</a>. Planned syntax
+must not be used in programs targeting this version.</p>
+<p>You compile a <code>.ramos</code> source and run the resulting executable. Ramos does not
+currently interpret a source file or provide <code>ramos run</code>.</p>
+<h2 id="00-welcome--project-links">Project links</h2>
+<ul>
+<li><a href="https://github.com/zackmsa777-a11y/ramos">Compiler and source</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.13.0">Ramos 0.13.0 release</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation source</a></li>
+</ul>
+<p>The limits and negative results matter as much as working features. Native
+output is not proof of speed, and compiling for an OS is not proof that its
+interactive applications have been tested there.</p></section><section id="01-getting-started"><h1 id="01-getting-started--install-build-and-run">Install, build and run</h1>
+<p>Use the complete
+<a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.13.0/ramos-0.13.0-gui.zip">0.13.0 GUI bundle</a>,
+which also includes the CLI/TUI tools, both compilers, examples and all nine
+libraries. Extract the archive and keep its directory structure. The published
+<code>SHA256SUMS.txt</code> file lists asset hashes for integrity checking.</p>
+<h2 id="01-getting-started--your-first-source-file">Your first source file</h2>
+<p>Save <code>hello.ramos</code> as UTF-8 in the extracted directory:</p>
+<pre><code class="language-ramos">fn main() {
+    print(s&quot;Hello, Ramos!&quot;)
+}
+</code></pre>
+<h2 id="01-getting-started--windows-x64-powershell">Windows x64 — PowerShell</h2>
+<pre><code class="language-powershell">.\ramos.exe --version
+.\ramos.exe build .\hello.ramos -o .\hello.exe
+.\hello.exe
+</code></pre>
+<p>Expected output: <code>Hello, Ramos!</code>. Python, a C compiler and a separate runtime
+are not required to compile or run programs with the downloaded compiler.</p>
+<h2 id="01-getting-started--linux-x64-shell">Linux x64 — shell</h2>
+<pre><code class="language-sh">chmod +x ramos-linux-x86_64
+./ramos-linux-x86_64 --version
+./ramos-linux-x86_64 build hello.ramos -o hello
+./hello
+</code></pre>
+<h2 id="01-getting-started--rebuilding-an-existing-output">Rebuilding an existing output</h2>
+<p>Use <code>--force</code> only when you intend to replace an existing executable:</p>
+<pre><code class="language-sh">./ramos-linux-x86_64 build hello.ramos -o hello --force
+</code></pre>
+<p>A failed compilation preserves existing output. The compiler refuses source
+file aliases as output even with <code>--force</code>.</p>
+<h2 id="01-getting-started--libraries-and-example-folders">Libraries and example folders</h2>
+<p>For a root-level source file, use <code>weave "stdlib/numbers.ramos"</code>. Sources inside
+<code>examples/</code> use <code>weave "../stdlib/numbers.ramos"</code>. Paths resolve relative to the
+source that contains the directive, not the terminal's working directory.</p>
+<p>This documentation repository includes the same example and library sources.
+To use them, place the downloaded native compiler at the repository root:</p>
+<pre><code class="language-sh">./ramos-linux-x86_64 build examples/library_demo.ramos -o library-demo
+./library-demo
+</code></pre>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\library_demo.ramos -o .\library-demo.exe
+.\library-demo.exe
+</code></pre>
+<h2 id="01-getting-started--build-from-the-compiler-repository">Build from the compiler repository</h2>
+<p>In a checkout of the main Ramos repository, initial bootstrapping on Linux
+requires Make and GNU binutils. Python is used for validation, not as a runtime
+for generated programs.</p>
+<pre><code class="language-sh">make
+./ramos build examples/hello.ramos -o hello --force
+./hello
+make install PREFIX=&quot;$HOME/.local&quot;
+</code></pre>
+<p>Once built, the compiler emits executables without those bootstrap tools.
+Add the installation prefix's <code>bin</code> directory to <code>PATH</code> if needed. See
+<a href="12-self-hosting.html">self-hosting</a> for verification commands.</p></section><section id="02-language"><h1 id="02-language--the-language">The language</h1>
+<h2 id="02-language--syntax">Syntax</h2>
+<pre><code class="language-text">fn main() {
+    let price = 20
+    var count = 3
+    print(price * count)
+
+    count = count + 2
+    print(&quot;Updated total:&quot;)
+    print(price * count)
+}
+</code></pre>
+<ul>
+<li>Exactly one parameterless <code>main</code> returning void is required. Other top-level
+  functions and structs may appear before or after it. <code>weave</code> adds library
+  definitions at top level.</li>
+<li><code>print</code> accepts a string literal, buffer, integer expression, or boolean expression
+  and adds a newline. Booleans print as <code>true</code> or <code>false</code>.</li>
+<li>Integer expressions support <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, unary <code>+</code>/<code>-</code>, and
+  parentheses. Multiplication, division, and remainder bind more tightly than
+  addition and subtraction. Binary operators at the same precedence associate
+  left to right.</li>
+<li>Integers range from <code>-9223372036854775808</code> to <code>9223372036854775807</code>.
+  <code>-9223372036854775808</code> is accepted as a directly negated literal; its positive
+  magnitude cannot be used as an ordinary positive literal.</li>
+<li><code>let</code> declares an immutable binding; <code>var</code> declares a mutable
+  binding. Every binding must have an initializer. <code>int64</code>, <code>bool</code>, <code>bytes</code>, <code>string</code>, struct and array types
+  are inferred and fixed for the lifetime of the binding.</li>
+<li>Binding reassignment is supported only for <code>var</code>; fields and array elements can be mutated through <code>let</code>. Names must be declared before use;
+  duplicate declarations in the same block are errors. Inner blocks may
+  shadow outer names, and their bindings are invisible after the block ends.
+  Identifiers use ASCII letters,
+  underscores, and digits, with a letter or underscore first. Keywords are
+  reserved. <code>"..."</code> produces bytes; <code>s"..."</code> produces immutable UTF-8 strings.</li>
+<li>Separate statements with newlines; the final statement may directly precede
+  <code>}</code>. Newlines after operators and opening parentheses are allowed. Semicolons
+  are not implemented. Comments use <code>//</code> or non-nesting <code>/* ... */</code>; newlines
+  in block comments retain their statement-separator meaning.</li>
+<li>Input is UTF-8. String escapes are <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\"</code>, <code>\\</code>, and <code>\0</code>.</li>
+<li>Empty bodies, empty strings, LF, and CRLF are supported.</li>
+<li>Raw NUL source bytes, malformed UTF-8, unsupported escapes, and raw newlines inside
+  strings are rejected. Diagnostics contain filename, line, and byte column.</li>
+</ul>
+<h2 id="02-language--booleans-and-control-flow">Booleans and control flow</h2>
+<pre><code class="language-text">fn main() {
+    var running = true
+    var count = 0
+    while running {
+        count = count + 1
+        if count == 5 {
+            running = false
+        } else {
+            print(count)
+        }
+    }
+    print(!running)
+}
+</code></pre>
+<ul>
+<li><code>true</code> and <code>false</code> are distinct boolean literals; <code>!</code> negates a boolean.</li>
+<li><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code> compare signed integers. <code>==</code> and <code>!=</code> compare
+  two integers, two booleans or two strings. Mixing types is a compile-time error.</li>
+<li><code>&amp;&amp;</code> and <code>||</code> require booleans and short-circuit left to right; skipped operands
+  still undergo type checking.</li>
+<li>From lowest to highest precedence: <code>||</code>, <code>&amp;&amp;</code>, equality, ordering, addition/subtraction,
+  multiplication/division/remainder, unary signs/<code>!</code>, and primary expressions.
+  Operators at one level associate left to right. <code>1 &lt; 2 &lt; 3</code> is rejected;
+  combine pairwise comparisons with <code>&amp;&amp;</code>. Arithmetic requires integers; <code>+</code> also concatenates strings.</li>
+<li><code>if condition { ... } else { ... }</code> and <code>while condition { ... }</code> require
+  a boolean condition. <code>else</code> is optional and may follow on a new line.
+  Branches use braces, including for a nested <code>if</code> in an <code>else</code> body.</li>
+<li><code>while</code> reevaluates its condition before every iteration. <code>break</code> exits the
+  innermost loop; <code>continue</code> reevaluates its condition. Both require a loop.
+  <code>while true</code> runs until a <code>break</code> or a runtime failure; there is no implicit
+  iteration limit. Code in skipped branches is type-checked but not executed.</li>
+<li>Bindings initialize whenever execution reaches their declaration. A shadowing
+  initializer can refer to the outer binding. Blocks do not expose their locals.</li>
+<li><code>else if</code> and <code>for</code> are not implemented.
+  Separate statements with newlines, including after a compound statement.</li>
+</ul>
+<p>Run <code>make control-flow</code> for a native Fibonacci/loop example.</p>
+<h2 id="02-language--functions">Functions</h2>
+<pre><code class="language-text">fn factorial(n: int64) -&gt; int64 {
+    if n == 0 {
+        return 1
+    } else {
+        return n * factorial(n - 1)
+    }
+}
+
+fn main() {
+    print(factorial(10))
+    announce()
+}
+
+fn announce() {
+    print(&quot;Functions work!&quot;)
+}
+</code></pre>
+<p>Parameters require non-void type annotations and their bindings are immutable.
+Results can declare any value type or <code>void</code>; omitting the result means void.
+Calls evaluate arguments left to right and require exactly matching types and
+argument counts. Functions may call later definitions, themselves or each other.
+A lexical binding can shadow a function name; that name then cannot be called.
+<code>main</code> is the process entry and cannot be called by user code.</p>
+<p><code>return expression</code> must match the declared value type; bare <code>return</code> is for void
+functions, including <code>main</code>. A value function must return on every statically
+checked path. Both arms of an <code>if</code>/<code>else</code> may establish that guarantee. Loops are
+checked conservatively, so even a <code>while true</code> needs a return after it for a
+value function. Unreachable statements are still type-checked. Void calls may
+be statements; value calls used as statements discard their result.</p>
+<p>Every call has its own local frame. At most 64 Ramos calls may be active,
+including <code>main</code>; attempting the next call reports a runtime error and exits 1.
+Normal returns release the frame and restore the active-call counter. This
+check assumes an ordinary Linux process stack; it cannot compensate for an
+unusually small stack limit selected by the caller.</p>
+<p>Run <code>make functions</code> for factorial, a digit classifier and a void helper.
+See <a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/functions.md">the native calling convention</a> for compiler details.</p>
+<h2 id="02-language--arithmetic-behavior">Arithmetic behavior</h2>
+<p>Generated native instructions check signed overflow for addition, subtraction,
+multiplication, and negation. Division truncates toward zero; a remainder has the
+dividend's sign. Division or remainder by zero, and either operation on
+<code>INT64_MIN</code> with divisor <code>-1</code>, fail explicitly.</p>
+<p>A failed arithmetic operation writes a runtime diagnostic to stderr and exits
+with status 1. It never silently wraps or depends on an unhandled CPU divide
+fault. Successfully completed programs exit with status 0. Earlier output is
+retained if a later operation fails.</p></section><section id="03-values"><h1 id="03-values--strings-structs-arrays-and-memory">Strings, structs, arrays and memory</h1>
+<p>These features implement the first three priorities from the developer feedback.
+Both native targets use the same checked semantics. Existing byte-buffer programs
+keep their byte-literal and API behavior; discarded allocations can now be reclaimed.
+<code>string</code>/<code>struct</code> are new keywords and the new intrinsic names are reserved for
+function definitions. Older programs defining those names must rename them.
+The compiler's old <code>string</code> helper was renamed <code>string_literal</code> for this reason.
+The compiler remains written in Ramos and emits ELF/PE directly.</p>
+<h2 id="03-values--immutable-utf-8-strings">Immutable UTF-8 strings</h2>
+<pre><code class="language-ramos">fn join(a: string, b: string) -&gt; string { return a + b }
+fn main() {
+    let greeting = join(s&quot;Hello, &quot;, s&quot;🌍&quot;)
+    print(greeting)
+    print(len(greeting))              // 8 Unicode scalars
+    print(slice(greeting, 7, 8))       // 🌍
+    print(greeting == s&quot;Hello, 🌍&quot;)   // true
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>s"..."</code></td>
+<td>Immutable <code>string</code>; same escapes as byte literals</td>
+</tr>
+<tr>
+<td><code>string(bytes)</code></td>
+<td>Validate strict UTF-8 and copy into a string</td>
+</tr>
+<tr>
+<td><code>to_bytes(string)</code></td>
+<td>Fresh mutable copy; mutating it cannot change the string</td>
+</tr>
+<tr>
+<td><code>a + b</code></td>
+<td>Concatenate two strings into a new string</td>
+</tr>
+<tr>
+<td><code>a == b</code>, <code>a != b</code></td>
+<td>Compare string contents, including embedded NUL</td>
+</tr>
+<tr>
+<td><code>len(string)</code></td>
+<td>Count Unicode scalar values</td>
+</tr>
+<tr>
+<td><code>slice(string, start, end)</code></td>
+<td>Copy scalar range <code>[start, end)</code>; bounds checked</td>
+</tr>
+<tr>
+<td><code>print(string)</code></td>
+<td>Write UTF-8 contents followed by LF</td>
+</tr>
+</tbody>
+</table>
+<p>Old <code>"..."</code> literals remain mutable <code>bytes</code>. Conversion is explicit, including
+at byte-oriented file I/O boundaries. No implicit integer/string conversions
+are added: use <code>string(int_to_text(n))</code> for decimal formatting.</p>
+<p>Malformed UTF-8, overlong encodings, surrogate encodings and values above
+U+10FFFF trap with a diagnostic and exit 1. NUL is valid string content.
+Length and slicing count scalars, not bytes or grapheme clusters: <code>s"é"</code>
+contains two scalars. Slicing allows an empty range at the end and rejects
+negative, reversed or out-of-range indices. Each string has at most 1 MiB of
+UTF-8 payload; an oversized concatenation traps before allocation.</p>
+<p>Length/slicing scan the UTF-8 data; concatenation copies both operands.
+Repeatedly growing a string by one character is not an amortized builder API.</p>
+<h2 id="03-values--structs">Structs</h2>
+<pre><code class="language-ramos">struct Point { x: int64, y: int64 }
+struct Player { name: string, position: Point }
+fn main() {
+    let player = Player(s&quot;Ramos&quot;, Point(3, 4))
+    player.position.x = 42
+    print(player.name + s&quot;!&quot;)
+    print(player.position.x)
+}
+</code></pre>
+<p>Fields require non-void types. Definitions may be referenced before they appear,
+including from function signatures or other structs. Fields are separated by
+commas or newlines. A trailing comma and empty structs are allowed. Constructors
+use declaration order, evaluate arguments left to right, and check exact types
+and arity. Duplicate names, missing types and unknown fields are compile errors.</p>
+<p>Structs are mutable boxed values. Assignment, parameters and returns copy a
+handle, so aliases observe field writes. <code>let</code> protects the binding while allowing
+field changes, as it already does for bytes. String fields can be replaced, but
+the string value itself remains immutable. Nested field/index assignment is
+supported. There are no unchecked addresses, null references or implicit copies.</p>
+<p>The checked limits are 64 struct types and 16 fields per type.</p>
+<h2 id="03-values--typed-arrays">Typed arrays</h2>
+<pre><code class="language-ramos">fn main() {
+    let points = array(Point, 2, Point(1, 2))
+    points[1] = Point(3, 4)
+    print(points[1].x)
+    let more = array_resize(points, 3, Point(5, 6))
+    print(array_len(more))
+}
+struct Point { x: int64, y: int64 }
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[T]</code></td>
+<td>Array type; annotations may nest up to 16 levels</td>
+</tr>
+<tr>
+<td><code>array(T, count, initial)</code></td>
+<td>Fill a new typed array; all elements start with <code>initial</code></td>
+</tr>
+<tr>
+<td><code>array_empty(T)</code></td>
+<td>Empty typed array without requiring an initial value</td>
+</tr>
+<tr>
+<td><code>array_len(a)</code></td>
+<td>Number of elements</td>
+</tr>
+<tr>
+<td><code>a[index]</code>, <code>array_get(a, index)</code></td>
+<td>Checked typed read</td>
+</tr>
+<tr>
+<td><code>a[index] = value</code>, <code>array_set(a, index, value)</code></td>
+<td>Checked typed write</td>
+</tr>
+<tr>
+<td><code>array_resize(a, count, initial)</code></td>
+<td>New array: preserve prefix, fill added elements</td>
+</tr>
+</tbody>
+</table>
+<p>Indices and counts are signed integers. Negative or out-of-range indices and
+counts outside 0..131072 trap before access. Elements occupy eight bytes, so
+the maximum payload is 1 MiB. Arrays of int64, bool, bytes, string, structs and
+arrays are supported; void elements are rejected. There is no unchecked default
+reference: every nonempty constructor/growth supplies a typed fill value.</p>
+<p>Array handles alias their contents. Reference-type fill values are shared
+across initial elements; construct separate values when independent records
+are needed. Resizing copies elements and leaves the old array and its aliases
+unchanged. It costs O(old/new length), not an amortized in-place growth operation.
+<code>array_empty(Node)</code> allows a recursive struct to start with an empty link array.</p>
+<h2 id="03-values--reusable-memory">Reusable memory</h2>
+<p>Bytes, strings, structs and arrays use a nonmoving conservative mark/sweep heap.
+When allocation cannot find space, it collects unreachable objects and retries.
+<code>collect()</code> requests collection explicitly; <code>memory_used()</code> reports currently
+allocated block bytes, including headers/padding and not-yet-collected garbage.
+A reachable returned value, argument, active expression or aggregate field
+remains valid. Unreachable cycles can be reclaimed. Every reused payload is
+zeroed. Scope exit, break and continue clear ended local slots.</p>
+<p>The heap holds at most 16 MiB of allocated blocks, plus an 8 MiB ownership map.
+Each block needs a 32-byte header and alignment to eight bytes. Empty values
+therefore consume 32 bytes. Mapped memory is RW and never executable. Stdin
+retains its separate lazy 1 MiB + 12 KiB scratch mapping.</p>
+<p>The collector scans active stack words/saved registers and object payload words.
+An integer or byte sequence resembling an allocated address can retain that
+object conservatively. This is not an exact memory-accounting or real-time GC
+guarantee. There is no manual <code>free</code>, pointer cast, moving collection or dangling
+alias API. A program whose reachable data exceeds the heap still traps; the
+change removes the cumulative-allocation limit, not the bounded live heap.</p>
+<h2 id="03-values--run-a-real-text-tool">Run a real text tool</h2>
+<p><a href="examples/line_stats.ramos">examples/line_stats.ramos</a> reads UTF-8 lines from
+stdin, annotates them with a line number, and prints counts. Its <code>Stats</code> struct
+holds totals and an integer array of recent line lengths. Temporary strings and
+byte buffers are reclaimed while it streams input.</p>
+<pre><code class="language-sh">./ramos build examples/line_stats.ramos -o line-stats
+printf 'hello\nمرحبا 🌍\n' | ./line-stats
+</code></pre>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\line_stats.ramos -o .\line-stats.exe
+Get-Content .\input.txt -Encoding utf8 | .\line-stats.exe
+</code></pre>
+<p>Redirected stdin must contain UTF-8 for <code>string(raw)</code>; PowerShell's pipe encoding
+varies by version/settings. Native console input still follows the configured
+Windows input code page. Empty and final unterminated lines follow <code>read_line</code>
+semantics. A local Linux probe streamed 100,000 256-byte lines and reported
+<code>lines=100000 characters=25600000 longest=256</code>.</p>
+<p>Validation covers Unicode reference comparisons, immutable copies, bounds and
+type failures, aliases, constructors/calls/returns, active-expression roots,
+reused zeroed buffers, live-heap exhaustion and cyclic graph lifetimes.
+Performance tables remain the historical 0.7.1 measurements; this release makes
+no new comparative speed claim. Libraries shipped in 0.11. Syntax conveniences, floats and formatter/assembly
+tooling remain future work in this 0.13 edition.</p>
+<p>The <a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38041196929">native CI run</a>
+passed 144 Linux tests and 94 Windows tests, with matching self-hosted compiler
+rebuilds on both targets. See <a href="evidence/values-verification.json">recorded validation</a>,
+<a href="evidence/bootstrap-proof.json">Linux proof</a> and <a href="evidence/windows-bootstrap-proof.json">Windows proof</a>.</p></section><section id="04-bytes"><h1 id="04-bytes--working-with-bytes">Working with bytes</h1>
+<pre><code class="language-text">fn main() {
+    let source = &quot;let answer = 42&quot;
+    print(buffer_len(source))
+    print(buffer_get(source, 0))
+    buffer_set(source, 0, 76)
+    print(source)
+}
+</code></pre>
+<p><code>buffer(length)</code> allocates zero-filled bytes. <code>buffer_len</code>, <code>buffer_get</code>, and
+<code>buffer_set</code> provide length, checked reads, and checked writes. Indices count
+bytes; reads return 0..255 and writes accept only that range. String literals
+in expressions allocate fresh buffers. Bindings and function values alias their
+buffer; <code>let</code> protects the binding while allowing content changes.</p>
+<p>Buffers share the reclaiming heap with strings, structs and arrays: 16 MiB of
+allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
+Metadata and alignment count toward the heap limit. Invalid sizes, indices,
+byte values or allocation failures report a runtime error and exit 1.
+Unreachable allocations can be collected automatically or with <code>collect()</code>.
+See <a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/buffers.md">buffer semantics</a>.</p>
+<h2 id="04-bytes--bytes-versus-strings">Bytes versus strings</h2>
+<p><code>"abc"</code> is mutable bytes. <code>s"abc"</code> is an immutable UTF-8 string. A byte index
+is not a Unicode scalar index. Use <code>string(bytes)</code> to validate and copy into a
+string, and <code>to_bytes(string)</code> to produce an independent mutable copy.</p>
+<p>For binary or arbitrary Linux file data, keep bytes. Converting malformed UTF-8
+to a string traps. <code>print(bytes)</code> adds LF; <code>stdout(bytes)</code> writes exactly the
+bytes and returns a fallible status. Check the result before continuing.</p>
+<pre><code class="language-ramos">fn main() {
+    let raw = &quot;cat&quot;
+    buffer_set(raw, 0, 98)
+    print(raw)
+    let immutable = string(raw)
+    buffer_set(raw, 0, 114)
+    print(immutable)
+}
+</code></pre>
+<p>Output is <code>bat</code>, then <code>bat</code>: conversion copied the data before the second edit.
+Use <a href="07-libraries.html">the bytes library</a> for slicing and copying helpers.</p></section><section id="05-input"><h1 id="05-input--stdin-and-number-conversion">Stdin and number conversion</h1>
+<p>These typed native intrinsics work in Linux ELF and Windows PE programs. They
+use the existing <code>bytes</code>, <code>int64</code> and <code>bool</code> types; no new syntax or dependencies.</p>
+<table>
+<thead>
+<tr>
+<th>Intrinsic</th>
+<th>Signature</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read_line</code></td>
+<td><code>() -&gt; bytes</code></td>
+<td>Read one line from stdin, removing LF or CRLF</td>
+</tr>
+<tr>
+<td><code>stdin_eof</code></td>
+<td><code>() -&gt; bool</code></td>
+<td>Whether a read has observed EOF; initially false, then sticky</td>
+</tr>
+<tr>
+<td><code>int_to_text</code></td>
+<td><code>(int64) -&gt; bytes</code></td>
+<td>Fresh mutable minimal signed ASCII decimal</td>
+</tr>
+<tr>
+<td><code>text_to_int</code></td>
+<td><code>(bytes) -&gt; int64</code></td>
+<td>Parse the whole buffer; return zero on failure</td>
+</tr>
+<tr>
+<td><code>parse_error</code></td>
+<td><code>() -&gt; int64</code></td>
+<td>Last <code>text_to_int</code> status; initially zero</td>
+</tr>
+</tbody>
+</table>
+<h2 id="05-input--decimal-conversion">Decimal conversion</h2>
+<p><code>int_to_text</code> supports the entire signed 64-bit range, including
+<code>-9223372036854775808</code>. Zero becomes <code>"0"</code>. It adds neither a terminator nor a
+newline and leaves <code>parse_error</code> and <code>io_error</code> unchanged.</p>
+<p><code>text_to_int</code> accepts ASCII <code>[+-]?[0-9]+</code>, including leading zeroes. It rejects
+empty input, a sign without digits, whitespace, NUL, non-ASCII digits, prefixes,
+decimal points and trailing bytes. Check <code>parse_error()</code> immediately afterward:</p>
+<ul>
+<li><code>0</code>: success, including a valid zero.</li>
+<li><code>-22</code>: invalid decimal syntax.</li>
+<li><code>-34</code>: valid decimal syntax outside the signed 64-bit range.</li>
+</ul>
+<p>Invalid syntax takes precedence over overflow: <code>"999999999999999999999x"</code>
+reports <code>-22</code>. Every byte is validated even after overflow. Parsing does not
+allocate and has no digit limit beyond the existing 1 MiB buffer limit.
+<code>parse_error</code> is independent of I/O status and changes only on <code>text_to_int</code>.</p>
+<h2 id="05-input--line-input-and-eof">Line input and EOF</h2>
+<p><code>read_line</code> blocks until LF, EOF or a read failure. An empty line is a successful
+empty buffer with <code>io_error() == 0</code> and <code>stdin_eof() == false</code>. A final line without
+LF is returned in full and sets EOF true. Subsequent reads return empty bytes
+with status zero. Process a nonempty final line even when EOF is already true:</p>
+<pre><code class="language-ramos">fn main() {
+    var done = false
+    while !done {
+        let line = read_line()
+        if io_error() != 0 {
+            stderr(&quot;cannot read stdin\n&quot;)
+            exit(1)
+        }
+        if buffer_len(line) == 0 &amp;&amp; stdin_eof() {
+            done = true
+        } else {
+            print(line)
+        }
+    }
+}
+</code></pre>
+<p>LF and exactly one CR immediately before LF are removed. A bare CR at EOF is
+retained. Other bytes, including NUL and invalid UTF-8, are preserved.</p>
+<p>Payloads up to 1 MiB excluding LF/CRLF succeed. An oversized line is drained to
+its next LF or EOF, then returns empty bytes with <code>io_error() == -27</code>. The next
+line remains available. OS failures return empty bytes and a negative I/O status;
+a consumed partial line is discarded. Failures do not themselves mark EOF.
+Every <code>read_line</code> updates <code>io_error</code>, including resetting it after successful
+reads or EOF; it does not change decimal parse status or file identity protection.</p>
+<p>Input is read in 4 KiB chunks. A private lazy RW scratch mapping of 1 MiB +
+12 KiB is reused outside the 16 MiB value heap. Returned lines are
+fresh mutable heap allocations sized to their payload, so short lines do not
+each consume 1 MiB. Version 0.10 can reclaim discarded lines; allocation still traps if live
+data exceeds the heap. Do not mix this buffered API with another consumer of stdin.</p>
+<p>Linux reads fd 0 directly and retries EINTR. Windows uses <code>GetStdHandle</code> and
+<code>ReadFile</code>; broken pipe and handle EOF are treated as normal end of input.
+Redirected files and pipes retain raw bytes. Windows console input follows its
+configured input code page, unlike the UTF-8 command-line argument API; Ramos
+does not promise UTF-8 console input. See Microsoft's
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile">ReadFile contract</a>.</p>
+<h2 id="05-input--try-interactive-input">Try interactive input</h2>
+<pre><code class="language-sh">./ramos build examples/input.ramos -o input --force
+./input
+</code></pre>
+<p>On Windows:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\input.ramos -o .\input.exe
+.\input.exe
+</code></pre>
+<p>Type <code>21</code> and press Enter; the program prints <code>42</code>. The example checks input and
+parse errors before arithmetic. Doubling remains checked and traps on overflow.</p>
+<p>The shared tests cover integer boundaries and 180 seeded round trips, invalid
+syntax and overflow precedence, independent statuses, live input before pipe
+closure, binary data, CRLF and refill boundaries, exact limits and oversized
+line recovery, 20,000 short lines, OS failures, preserved input-file protection,
+and the interactive example. Both self-hosting proofs run these tests.</p></section><section id="06-files"><h1 id="06-files--arguments-and-file-io">Arguments and file I/O</h1>
+<p>On Linux these intrinsics use x86-64 syscalls directly; on Windows they use
+the native Windows API boundary described in <a href="10-windows.html">windows.md</a>. They are checked and typed in
+the bootstrap and self-hosted compilers. No C library, shell, subprocess or external compiler is involved.</p>
+<table>
+<thead>
+<tr>
+<th>Intrinsic</th>
+<th>Signature</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>arg_count</code></td>
+<td><code>() -&gt; int64</code></td>
+<td>argc, including the executable name</td>
+</tr>
+<tr>
+<td><code>arg</code></td>
+<td><code>(int64) -&gt; bytes</code></td>
+<td>fresh copy of an argument; invalid index traps</td>
+</tr>
+<tr>
+<td><code>read_file</code></td>
+<td><code>(bytes) -&gt; bytes</code></td>
+<td>bounded regular-file read; empty bytes on failure</td>
+</tr>
+<tr>
+<td><code>write_file</code></td>
+<td><code>(bytes, bytes, int64) -&gt; int64</code></td>
+<td>atomic publication; zero or negative errno</td>
+</tr>
+<tr>
+<td><code>read_line</code></td>
+<td><code>() -&gt; bytes</code></td>
+<td>buffered stdin line read; empty bytes on failure</td>
+</tr>
+<tr>
+<td><code>stdin_eof</code></td>
+<td><code>() -&gt; bool</code></td>
+<td>sticky EOF observed by a stdin read</td>
+</tr>
+<tr>
+<td><code>io_error</code></td>
+<td><code>() -&gt; int64</code></td>
+<td>last read/write status; zero or negative errno</td>
+</tr>
+<tr>
+<td><code>stderr</code></td>
+<td><code>(bytes) -&gt; void</code></td>
+<td>exact bytes to fd 2, with no added newline</td>
+</tr>
+<tr>
+<td><code>platform</code></td>
+<td><code>() -&gt; int64</code></td>
+<td>host OS: 0 Linux, 1 Windows</td>
+</tr>
+<tr>
+<td><code>exit</code></td>
+<td><code>(int64) -&gt; void</code></td>
+<td>terminate with status 0..255; invalid status traps</td>
+</tr>
+</tbody>
+</table>
+<p>On Linux, arguments are raw operating-system bytes and may be empty or invalid
+UTF-8. Windows arguments are UTF-8 copies of the native UTF-16 command line.
+Paths must be nonempty, shorter than 4096 bytes, and contain no NUL. All byte
+buffers retain the 1 MiB payload and 16 MiB live-heap limit (plus an 8 MiB ownership map). Discarded values can be reclaimed in 0.10; allocations
+still trap on resource exhaustion; OS file failures are explicitly fallible.
+<code>arg</code> returns a fresh mutable copy, not a pointer into the kernel argv stack.</p>
+<p>On Linux, <code>read_file</code> opens with nonblocking and close-on-exec flags and checks regular-file
+status before reading, so a FIFO cannot hang the program. It retries interrupted
+reads, allows files that shrink, and fails if a file grows beyond its sampled
+size. The limit is 1 MiB. The descriptor is closed on success and failure. A
+successful empty read is distinguished from failure using <code>io_error()</code>.
+The identity of the most recent successful input (device and inode) is retained
+as an output safeguard. A failed read does not erase that protection.
+Version 0.11's compiler additionally records all root/library identities using
+its internal guard, so a weave build protects every input; ordinary user I/O
+keeps the most-recent-input contract.</p>
+<p><code>write_file</code> flags are bit 0 = executable and bit 1 = replacement. Other values
+are rejected. On Linux, normal output mode is 0644 and executable output mode is 0755. Output
+is first written into a private 0600 temporary file under the opened destination
+directory, with an independently generated short basename. Partial writes and
+EINTR are handled, permissions are set, and the closed file is published using
+<code>renameat2</code>. Without replacement, <code>RENAME_NOREPLACE</code> also protects against a
+concurrent destination appearing. Failures remove the temporary file and leave
+existing output unchanged. Maximum-length destination basenames are supported.</p>
+<p>Source/destination identity is checked before creation and again before
+publication. Hardlink and symlink aliases to the last successful input are
+rejected even with replacement enabled. This contract protects one most recent
+input, not every file ever read by an application. Atomic publication is not a
+power-loss durability guarantee: the implementation does not perform fsync.</p>
+<p>Output failures from <code>print</code> or <code>stderr</code>, invalid argument indices, invalid exit
+statuses and buffer misuse terminate with status 1 as in the existing runtime.</p>
+<p>Windows preserves the signatures and bounds with UTF-8 arguments and UTF-16
+path conversion. <code>io_error</code> maps Windows errors into common negative statuses.
+Publication uses a same-directory temporary file and <code>MoveFileExW</code>; Windows
+does not use POSIX executable permission bits. See <a href="10-windows.html">Windows I/O details</a>.</p>
+<p>Stdin, integer/text conversion, line limits and error precedence are specified
+in <a href="05-input.html">input-text.md</a>. Stdin reads preserve the most recent successful
+file identity, and file writes do not change decimal parse status.</p>
+<p>Version 0.12 adds fallible exact-byte <code>stdout</code>, checked regular-file stream IDs,
+read/write/seek/EOF/close operations and terminal controls. Streams process files
+larger than a single buffer. Append and the atomic publisher protect all active
+stream inputs as well as the prior input/source guards. See
+<a href="08-cli-tui.html">CLI/TUI signatures and lifecycle</a>.</p></section><section id="07-libraries"><h1 id="07-libraries--libraries-with-weave">Libraries with weave</h1>
+<p>Ramos uses <strong><code>weave</code></strong> to add a library at compile time. The name was chosen by
+the project owner instead of the conventional <code>import</code> keyword.</p>
+<pre><code class="language-ramos">weave &quot;stdlib/numbers.ramos&quot;
+weave &quot;stdlib/text.ramos&quot;
+fn main() {
+    print(s&quot;Hello, &quot; + text_repeat(s&quot;🌍&quot;, 2))
+    print(num_text(num_max(7, 42)))
+}
+</code></pre>
+<p>A library is an ordinary UTF-8 <code>.ramos</code> source file containing functions,
+structs and optional further <code>weave</code> statements. Call its functions normally.
+There is no package manager, runtime module loader or separate library backend.
+The Ramos-written compiler reads and lexes every source itself, then resolves
+one set of typed definitions and emits one native executable.</p>
+<h2 id="07-libraries--resolution-and-names">Resolution and names</h2>
+<p>Paths are relative to the file containing the <code>weave</code>, including inside another
+library. They do not depend on the shell's current directory. Use <code>/</code> separators
+on Linux and Windows. Spaces and UTF-8 names are supported. Paths must be
+nonempty and relative; absolute/drive-relative paths, control characters and
+backslashes in directives are rejected. <code>.</code> and <code>..</code> are normalized lexically.
+The root CLI source can still use a normal absolute or relative host path.</p>
+<p>Each normalized source path loads once, so repeated and shared dependencies
+are allowed. ASCII case is folded for path comparison on Windows. Symlink
+paths are not resolved to a universal canonical name; distinct alias paths can
+still produce duplicate-definition errors. File identities are separately
+protected against output overwrites.</p>
+<p>Use one <code>weave "path.ramos"</code> per statement, terminated by newline or EOF.
+It must occur at top level. Comments can surround it; directive-like text inside
+comments/literals is ignored. Dependency cycles are compile errors with a source
+location. Libraries cannot define <code>main</code>; the root executable defines it.</p>
+<p>Definitions share one namespace. Functions/types may refer forward across
+files, but duplicate names are errors. Prefix reusable library functions, as the
+standard library does with <code>num_</code>, <code>text_</code>, <code>bytes_</code>, <code>list_</code> and <code>map_</code>.
+Namespaces, aliases, selective exports and package registries are not part of
+this small first library system. <code>weave</code> is a new reserved keyword; older user
+functions/bindings using that name need renaming.</p>
+<p>Diagnostics identify the original file, line and byte column, including lexer
+and type errors inside libraries. A missing file reports the containing
+<code>weave</code> site and requested path. Failed builds preserve existing output. With
+<code>--force</code>, the compiler still refuses to replace any source identity it loaded,
+including a source's hardlink/symlink alias.</p>
+<h2 id="07-libraries--standard-library-written-in-ramos">Standard library written in Ramos</h2>
+<p>Copy the repository's <code>stdlib</code> folder beside your program, then weave only the
+files you use. These are readable Ramos implementations, not native hidden APIs.
+<code>text.ramos</code> itself weaves <code>bytes.ramos</code>; an explicit second weave of that file
+reuses it. All functions are checked by the ordinary compiler.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Helpers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>numbers.ramos</code></td>
+<td><code>num_min</code>, <code>num_max</code>, <code>num_abs</code>, <code>num_clamp</code>, <code>num_text</code>, <code>num_parse</code></td>
+</tr>
+<tr>
+<td><code>text.ramos</code></td>
+<td><code>text_starts</code>, <code>text_ends</code>, <code>text_find</code>, <code>text_contains</code>, <code>text_join</code>, <code>text_repeat</code></td>
+</tr>
+<tr>
+<td><code>bytes.ramos</code></td>
+<td><code>bytes_copy</code>, <code>bytes_equal</code>, <code>bytes_slice</code>, <code>bytes_put</code></td>
+</tr>
+<tr>
+<td><code>lists.ramos</code></td>
+<td><code>IntList</code>, <code>list_new</code>, <code>list_len</code>, <code>list_push</code>, <code>list_get</code>, <code>list_set</code>, <code>list_pop</code>, <code>list_clear</code></td>
+</tr>
+<tr>
+<td><code>io.ramos</code> (0.12)</td>
+<td>Streamed readers, lines, seeking, copy</td>
+</tr>
+<tr>
+<td><code>cli.ramos</code> (0.12)</td>
+<td>Argument/option scan helpers</td>
+</tr>
+<tr>
+<td><code>tui.ramos</code> (0.12)</td>
+<td>Full-screen terminal, colors, cursor, boxes and key input</td>
+</tr>
+<tr>
+<td><code>gui.ramos</code> (0.13)</td>
+<td>Windows desktop widgets, panels and events</td>
+</tr>
+<tr>
+<td><code>maps.ramos</code></td>
+<td><code>StringMap</code>, <code>map_new</code>, <code>map_len</code>, <code>map_has</code>, <code>map_get</code>, <code>map_set</code>, <code>map_remove</code> (plus <code>map_index</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Number operations keep checked int64 semantics: <code>num_abs(INT64_MIN)</code> traps.
+<code>num_parse</code> uses <code>text_to_int</code> and leaves its status in <code>parse_error()</code>; always
+check that status before using the result. <code>num_clamp</code> rejects reversed bounds.</p>
+<p>Text indices count Unicode scalars. <code>text_find</code> returns -1 for a missing match
+and 0 for an empty needle; empty prefixes/suffixes match. Search uses a simple
+scan and can be quadratic. Join/repeat allocate one result byte buffer and copy
+pieces into it, then validate/copy into an immutable string. Output still has a
+1 MiB payload cap. Repeat rejects negative counts; an empty string repeats to
+empty even for a large count.</p>
+<p>Byte slicing uses <code>[start, end)</code>. <code>bytes_put(destination, start, source)</code> checks
+the destination range and copies forward; overlapping ranges are not a memmove
+operation. String conversions and byte copies produce independent storage.</p>
+<p>Lists hold integers, enforce logical bounds, and grow capacity by doubling
+starting at four. <code>list_pop</code> rejects an empty list; <code>list_clear</code> retains capacity.
+The array limit bounds capacity at 131072 elements, subject to the live heap.
+List handles alias, so changes through one alias are visible through another.</p>
+<p>Maps hold string keys and string values. Keys compare by contents; set replaces
+an existing value without increasing length. <code>map_get(map, key, fallback)</code> avoids
+null or unchecked missing-value defaults. Remove returns bool and releases the
+removed references, using the final entry to fill the gap. Iteration order is
+not promised. Lookup is linear; capacity doubles starting at four. Keys and
+values are immutable strings; map handles alias. Treat collection metadata
+fields as implementation state and mutate through the helper functions.</p>
+<p>All library errors print a diagnostic and exit 1. Ordinary arithmetic, array
+bounds, allocation and UTF-8 checks retain the native Ramos traps. The standard
+library introduces no unbounded allocator or relaxed safety mode.</p>
+<h2 id="07-libraries--run-and-install">Run and install</h2>
+<pre><code class="language-sh">make library-demo
+./ramos build examples/library_demo.ramos -o library-demo --target windows
+</code></pre>
+<p>The 0.13 release's <code>ramos-0.13.0-gui.zip</code> contains both compilers, all nine
+libraries and the example sources. Extract the whole archive so
+source-relative paths keep working. On Windows:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\library_demo.ramos -o .\library-demo.exe
+.\library-demo.exe
+</code></pre>
+<p><code>make install</code> installs the compiler and library files to
+<code>PREFIX/share/ramos/stdlib</code> (default <code>/usr/local/share/ramos/stdlib</code>). Copy that
+folder into a project's source tree. There are no implicit search paths or
+machine-specific paths embedded in binaries.</p>
+<h2 id="07-libraries--checked-limits-and-proof">Checked limits and proof</h2>
+<p>A build allows at most 64 source files including the root, 1 MiB of combined
+source including boundary separators, and 50,000 lexical tokens including EOF.
+Each normalized path is at most 4095 bytes/512 components; all stored paths
+share a 41900-byte pool. Existing function, struct, declaration, output and
+runtime limits still apply. Dependencies are processed with an explicit queue,
+so a 63-library chain does not consume recursive loader call depth.</p>
+<p>The compiler stores source spans/path metadata alongside its token tables.
+The internal <code>_protect_input()</code> binding records up to 64 successfully read file
+identities in a heap-rooted table; the native atomic publisher checks all of
+them before writing. This binding is reserved compiler machinery, not a stable
+standard-library API. Ordinary <code>read_file</code> programs keep their previous contract
+unless that internal guard is invoked.</p>
+<p>The retained assembly seed still has the older surface grammar. The compiler
+source stays compatible with that grammar and implements <code>weave</code> directly in
+Ramos. Library tests run on both self-hosted Linux stages and native Windows.
+Bootstrap fixed points and embedded OS-boundary bytes remain audited. Saved
+0.7.1 speed tables are historical; this release makes no new speed claim.</p>
+<p><a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38043340397">Native CI</a>
+passed 164 Linux tests and 114 Windows tests. See
+<a href="evidence/libraries-verification.json">recorded validation</a>, <a href="evidence/bootstrap-proof.json">Linux proof</a>
+and <a href="evidence/windows-bootstrap-proof.json">Windows proof</a>.</p>
+<p>Version 0.12 expands the bundle with <a href="08-cli-tui.html">CLI and TUI libraries</a>.</p></section><section id="08-cli-tui"><h1 id="08-cli-tui--cli-tools-and-terminal-interfaces">CLI tools and terminal interfaces</h1>
+<p>Ramos 0.12 adds streamed regular-file I/O, exact stdout, command-line helpers,
+and a terminal UI library written in Ramos. These are concrete building blocks
+for native CLI tools on Linux and Windows x64. The compiler remains self-hosted
+and emits ELF/PE directly.</p>
+<h2 id="08-cli-tui--run-the-tools">Run the tools</h2>
+<p>Extract the complete <code>ramos-0.13.0-gui.zip</code> archive; keep <code>stdlib/</code> beside
+<code>examples/</code>. On Linux:</p>
+<pre><code class="language-sh">chmod +x ramos-linux-x86_64
+./ramos-linux-x86_64 build examples/rcopy.ramos -o rcopy
+./ramos-linux-x86_64 build examples/rgrep.ramos -o rgrep
+./ramos-linux-x86_64 build examples/rview.ramos -o rview
+./rcopy source.bin new-copy.bin
+./rgrep needle README.md
+./rview README.md
+</code></pre>
+<p>On Windows (PowerShell, in a real console or Windows Terminal):</p>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\rcopy.ramos -o .\rcopy.exe
+.\ramos.exe build .\examples\rgrep.ramos -o .\rgrep.exe
+.\ramos.exe build .\examples\rview.ramos -o .\rview.exe
+.\rcopy.exe .\source.bin .\new-copy.bin
+.\rgrep.exe needle .\README.md
+.\rview.exe .\README.md
+</code></pre>
+<p>In a repository checkout, <code>make cli-tools</code> builds all three under <code>build/</code>.
+<code>--help</code> describes each tool. Copy refuses an existing destination. Search is a
+literal byte-pattern search, prints <code>file:line:contents</code>, accepts multiple files
+and <code>--</code> before its pattern, and uses exit 0 for matches, 1 for none, 2 for errors.
+It preserves NUL/invalid UTF-8 in matching lines. Viewer shows a colored frame,
+filename, highlighted selection and page/line status. Arrows or j/k select a
+line, Space/n/PageDown advances, p/PageUp goes back, Home/End selects the page's
+first/last line, and q/Escape exits. Ctrl+C exits 130.</p>
+<p>Viewer reads pages of twenty lines and retains only the displayed page, input
+chunk and a bounded list of page offsets; it seeks when going back. It adjusts
+the viewport when resized. File contents are clipped to 240 bytes per displayed
+line; control/non-ASCII bytes become <code>?</code>, preventing embedded terminal escapes
+from taking over the screen. This first example uses an ASCII preview; the TUI
+library itself can write UTF-8 strings. Lines above 1 MiB report an error. The
+page-index limit is 131072 entries, subject to the existing live heap limit.</p>
+<h2 id="08-cli-tui--native-stream-api">Native stream API</h2>
+<p>Paths are <code>bytes</code>, with the existing nonempty/no-NUL/4095-byte contract. Linux
+accepts host path bytes; Windows validates UTF-8 and converts to UTF-16. Stream
+IDs are positive opaque generation numbers, not OS descriptors or addresses.
+At most 64 streams can be open. Closed IDs cannot act on a reused slot.</p>
+<table>
+<thead>
+<tr>
+<th>Intrinsic</th>
+<th>Signature</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stdout</code></td>
+<td><code>(bytes) -&gt; int64</code></td>
+<td>Exact bytes, no added newline; zero or negative status</td>
+</tr>
+<tr>
+<td><code>file_open</code></td>
+<td><code>(bytes, int64) -&gt; int64</code></td>
+<td>Positive ID or negative status</td>
+</tr>
+<tr>
+<td><code>file_read</code></td>
+<td><code>(int64, int64) -&gt; bytes</code></td>
+<td>Up to requested bytes; check <code>io_error()</code></td>
+</tr>
+<tr>
+<td><code>file_write</code></td>
+<td><code>(int64, bytes) -&gt; int64</code></td>
+<td>Full-buffer write; zero or negative status</td>
+</tr>
+<tr>
+<td><code>file_eof</code></td>
+<td><code>(int64) -&gt; bool</code></td>
+<td>Sticky EOF observed by a positive-size read</td>
+</tr>
+<tr>
+<td><code>file_seek</code></td>
+<td><code>(int64, int64) -&gt; int64</code></td>
+<td>Absolute nonnegative read offset, or negative status</td>
+</tr>
+<tr>
+<td><code>file_close</code></td>
+<td><code>(int64) -&gt; int64</code></td>
+<td>Close once; zero or negative status</td>
+</tr>
+</tbody>
+</table>
+<p>Open modes are 0 read-only, 1 create a <strong>new</strong> write-only file, 2 write-only append
+(create if missing). Reads/seek/EOF require read mode; writes require write mode.
+Non-regular files/directories are rejected. Linux opens nonblocking/close-on-exec
+and validates file type, so a FIFO cannot block. Each read is 0..1 MiB; a file's
+total size is not capped at 1 MiB. Short reads are allowed. Zero-length reads do
+not observe EOF. A positive-size zero-byte read sets EOF; a successful seek
+clears it. EOF is observed by reading, not predicted from a sampled file size.</p>
+<p>All stream operations update <code>io_error()</code>, including successful EOF checks.
+Invalid IDs or wrong modes report -9, invalid counts/offsets/modes -22, and a
+full registry -24. Other OS failures use negative statuses; Windows retains
+its common error mapping. Parse status remains independent. Close retires the
+ID even if the OS reports an error, preventing double-close/reuse mistakes.
+Applications must close resources; memory collection does not close a stream.
+The operating system releases remaining handles when the process ends.</p>
+<p>Append and <code>write_file</code> replacement reject identities of <strong>all active input
+streams</strong>, the last successfully opened/read input and compiler-protected source
+files. That includes hardlink aliases. Closing an input removes its active-stream
+protection; most-recent-input protection remains. Creation never truncates an
+existing file. Callers control the destination directory, as with existing I/O.</p>
+<p>Streaming writes are immediate, not atomic transactions. A failed copy may
+leave a partial <strong>new</strong> destination; <code>rcopy</code> reports this and exits 1. Existing
+<code>write_file</code> remains the atomic bounded publisher, with its old flags and
+failure-preservation contract. <code>read_file</code> keeps its 1 MiB whole-file limit.
+Linux ignores SIGPIPE so fallible stdout can report -32; existing print/stderr
+still exit 1 when writing fails. Neither API promises power-loss durability.</p>
+<pre><code class="language-ramos">fn main() {
+    let input = file_open(arg(1), 0)
+    if input &lt; 0 { exit(1) }
+    var done = false
+    while !done {
+        let chunk = file_read(input, 65536)
+        if io_error() != 0 { file_close(input)
+            exit(1) }
+        if buffer_len(chunk) == 0 { done = true }
+        else { if stdout(chunk) != 0 { file_close(input)
+            exit(1) } }
+    }
+    if file_close(input) != 0 { exit(1) }
+}
+</code></pre>
+<h2 id="08-cli-tui--ramos-libraries">Ramos libraries</h2>
+<p><code>weave "stdlib/io.ramos"</code> supplies <code>FileReader</code>, <code>io_reader(path)</code>, <code>io_byte</code>,
+<code>io_line</code>, <code>io_seek</code>, <code>io_close</code> and <code>io_copy(source, destination)</code>. A reader
+keeps a 64 KiB chunk and exposes <code>status</code>, <code>eof</code> and consumed-byte <code>offset</code>.
+<code>io_line</code> strips LF/CRLF, preserves other bytes, and grows a bounded byte builder.
+An oversized line is drained and reports -27; another <code>io_line</code> recovers. OS
+errors remain sticky until a successful seek. Check reader status immediately;
+process a nonempty final line even when EOF is true. <code>io_copy</code> returns its first
+failure rather than relying on a later native operation's global status.
+<code>bytes_find(haystack, needle)</code> adds literal binary search (0 for empty, -1 absent).</p>
+<p><code>weave "stdlib/cli.ramos"</code> adds <code>cli_arg</code>, <code>cli_has</code>, <code>cli_value</code> and <code>cli_fail</code>.
+The first three use UTF-8 strings. <code>cli_has</code> checks an exact option name;
+<code>cli_value</code> accepts <code>--name=value</code> or <code>--name value</code>, returns a supplied fallback,
+and exits 2 for a missing value. Both stop at <code>--</code>. These scan helpers are not a
+schema parser: the application checks unknown options and positional arguments.
+For arbitrary Linux argv/path bytes, use <code>arg</code> directly, as the file tools do.</p>
+<h2 id="08-cli-tui--tui-api-and-lifecycle">TUI API and lifecycle</h2>
+<pre><code class="language-ramos">weave &quot;stdlib/tui.ramos&quot;
+fn main() {
+    if tui_begin() != 0 { stderr(&quot;interactive terminal required\n&quot;)
+        exit(1) }
+    tui_color(6, 0)
+    tui_box(1, 1, 40, 8)
+    tui_at(3, 3, s&quot;Hello from Ramos&quot;)
+    tui_at(6, 3, s&quot;Press q to quit&quot;)
+    var done = false
+    while !done {
+        let key = tui_key(100)
+        if io_error() != 0 { tui_end()
+            exit(1) }
+        if key == 113 || key == 27 || key == 3 { done = true }
+    }
+    if tui_end() != 0 { exit(1) }
+}
+</code></pre>
+<p><code>tui_begin</code> starts native terminal input and enters an alternate screen, hides
+the cursor and clears. <code>tui_end</code> resets color/cursor/screen and restores saved
+native input/output modes; stopping twice succeeds. Additional helpers:
+<code>tui_write</code>, <code>tui_at(row,column,text)</code>, <code>tui_move</code>, <code>tui_color(fg,bg)</code>, <code>tui_reset</code>,
+<code>tui_clear</code>, <code>tui_box(row,column,width,height)</code>, <code>tui_safe(bytes,width)</code> and
+<code>tui_key(timeout_ms)</code>. Coordinates are 1-based. Colors 0..7 are black, red, green,
+yellow, blue, magenta, cyan, white. Text does not add a newline. Callers clip
+layout to the screen; Unicode scalar length is not terminal display-cell width.</p>
+<p>Native primitives are <code>terminal_start/stop() -&gt; int64</code>,
+<code>terminal_width/height() -&gt; int64</code>, and <code>terminal_key(timeout_ms) -&gt; int64</code>.
+Start requires both stdin and stdout to be interactive; failure preserves
+existing modes. Starting twice reports -16. Dimensions report zero with a
+negative I/O status when unavailable. A key timeout is -1 with status zero;
+a read failure is -1 with negative status. Timeout is -1 (block) or
+0..2147483647 milliseconds. Calling key input without start reports -25.</p>
+<p>The first key contract supports ASCII/control keys and navigation. Linux's
+native primitive returns input bytes; <code>tui_key</code> decodes common VT arrow,
+Home/End/Page/Delete sequences with a 30 ms escape-sequence grace period.
+Windows reads native key-down console events and maps navigation directly.
+Codes: Up 256, Down 257, Right 258, Left 259, Home 260, End 261, PageUp 262,
+PageDown 263, Delete 264; Escape 27, Enter 13, Ctrl+C 3. Non-ASCII Windows text
+input is ignored; Linux non-ASCII bytes are not assembled into Unicode keys.
+Unknown/incomplete escape sequences return Escape and may consume their prefix.
+Do not mix this input with <code>read_line</code> or another stdin reader.</p>
+<p>Normal return, explicit exit and Ramos runtime traps restore the terminal.
+Linux also restores on SIGHUP/SIGINT/SIGTERM; Windows installs a console control
+handler that attempts cleanup on OS control termination (tested with Ctrl+Break). Ctrl+C is delivered as a key during raw
+input, so a custom TUI must handle it (the viewer does). Uncatchable termination
+such as SIGKILL cannot run cleanup. Applications must be foreground terminal
+processes. Suspended/background terminal job control is not implemented here.</p>
+<p>Linux uses <a href="https://man7.org/linux/man-pages/man2/TCGETS.2const.html">tty ioctls</a>
+and poll/read syscalls. Windows uses
+<a href="https://learn.microsoft.com/en-us/windows/console/setconsolemode">console modes</a>,
+<a href="https://learn.microsoft.com/en-us/windows/console/key-event-record-str">key events</a>
+and console control callbacks. There is no curses dependency, delegated renderer,
+GUI toolkit or runtime host language. TUI means a terminal interface. Desktop windows and widgets are provided by
+the separate Windows GUI library described in the next chapter.</p>
+<h2 id="08-cli-tui--verification-and-remaining-work">Verification and remaining work</h2>
+<p>The corpus includes a 25.6 MB binary copy, large multi-file search, aliases,
+64-slot exhaustion/generation reuse, 2,000 opens across collections, exact line
+limits/recovery and status/type errors. Real Linux pseudo-terminals verify
+input, arrows, Escape, timeouts, navigation, Ctrl+C, SIGTERM and cleanup after
+normal return, explicit exit and native traps. Native Windows CI additionally
+creates isolated consoles, observes drawing, injects a key event and checks
+restored modes after exit/traps and a control event. Saved results are in
+<a href="evidence/cli-tui-verification.json">cli/tui verification</a> and the bootstrap proof files.</p>
+<p>This milestone makes file-processing CLI tools and keyboard-driven terminal
+interfaces runnable. Further practical-language work remains: syntax
+conveniences, reviewed recursion/stack budgets, directory/environment/process
+APIs, richer diagnostics, floats, generic collections and packaging/tooling.
+See <a href="15-roadmap.html">the staged roadmap</a>. No new speed comparison is claimed.</p>
+<p><a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38051519258">Native release CI</a>
+passed: 192 Linux tests discovered, 190 passed and two Windows-only checks
+skipped; 134 native Windows tests passed, including both isolated-console
+checks. Both self-hosting targets reached their byte-identical fixed points.</p></section><section id="09-gui"><h1 id="09-gui--desktop-gui-on-windows">Desktop GUI on Windows</h1>
+<p><code>weave "stdlib/gui.ramos"</code> adds real desktop windows and native controls. The
+first backend is <strong>Windows x64</strong>. It uses system USER32/GDI32 APIs: no Python,
+interpreter, browser, C runtime or separately installed GUI toolkit is needed.
+The library and application logic are ordinary Ramos; the compiler still emits
+native code itself. Linux compilers can cross-compile these apps to Windows.
+Linux GUI startup returns <code>-38</code> (unsupported); CLI and TUI remain native on both
+platforms. An X11/Wayland backend is future work.</p>
+<h2 id="09-gui--a-complete-app">A complete app</h2>
+<pre><code class="language-ramos">weave &quot;stdlib/gui.ramos&quot;
+fn main() {
+    gui_check(gui_open(s&quot;My first Ramos window&quot;, 360, 180))
+    gui_label(1, 20, 20, 320, 24, s&quot;Hello, desktop!&quot;)
+    gui_button(2, 20, 60, 120, 32, s&quot;Click me&quot;)
+    var running = true
+    while running {
+        let event = gui_event(-1)
+        if event.kind == 1 { running = false }
+        if event.kind == 2 &amp;&amp; event.id == 2 {
+            gui_set(1, s&quot;The button works&quot;)
+        }
+    }
+    gui_check(gui_close())
+}
+</code></pre>
+<p>Keep <code>stdlib/</code> beside the source. On Windows, with the full release extracted:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
+.\notes.exe
+</code></pre>
+<p>From Linux:</p>
+<pre><code class="language-sh">make gui-demo
+# Or:
+./ramos build examples/notes.ramos -o notes.exe --target windows --gui
+</code></pre>
+<p><code>--gui</code> sets the Windows PE subsystem to desktop GUI, so Explorer or PowerShell
+launches a window without a console. Omit it to retain a console for debugging.
+It is rejected for Linux targets or when repeated. Existing output still needs
+<code>--force</code>, and every source remains protected from accidental replacement.
+The console compiler itself is unchanged; stderr/stdout APIs still use inherited
+handles when available. A GUI launched from Explorer should show messages inside
+its controls rather than relying on console output.</p>
+<p>The included <strong>Ramos Notes</strong> app supports Unicode editing, a file-path input,
+Save/Clear buttons, a colored panel and resizing. Save creates a new UTF-8 file
+atomically and refuses to overwrite an existing file. Choose a new filename for
+another save. File errors appear in the status label. It is a small example,
+not an editor with open dialogs, unsaved-change confirmation or autosave.</p>
+<h2 id="09-gui--library-api">Library API</h2>
+<p>Coordinates and dimensions are integer client-area pixels. Windows supplies
+font rendering, focus, Tab navigation, button activation, text selection and
+editing. Native control appearance and available glyphs depend on Windows and
+installed fonts. These are ordinary Windows controls, not terminal escape codes.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gui_open(title, width, height) -&gt; int64</code></td>
+<td>Open one resizable window; zero succeeds, negative status fails</td>
+</tr>
+<tr>
+<td><code>gui_label(id, x, y, w, h, text)</code></td>
+<td>Native text label</td>
+</tr>
+<tr>
+<td><code>gui_button(id, x, y, w, h, text)</code></td>
+<td>Native clickable button</td>
+</tr>
+<tr>
+<td><code>gui_input(id, x, y, w, h, text)</code></td>
+<td>Single-line editable Unicode text</td>
+</tr>
+<tr>
+<td><code>gui_editor(id, x, y, w, h, text)</code></td>
+<td>Multiline editor with vertical scrolling</td>
+</tr>
+<tr>
+<td><code>gui_panel(id, x, y, w, h, color)</code></td>
+<td>Solid colored rectangular panel; Windows repaints it automatically</td>
+</tr>
+<tr>
+<td><code>gui_rgb(r, g, b) -&gt; int64</code></td>
+<td>Construct an opaque color; each component is 0..255</td>
+</tr>
+<tr>
+<td><code>gui_set(id, text)</code></td>
+<td>Update a label, button or editor's text</td>
+</tr>
+<tr>
+<td><code>gui_text(id) -&gt; string</code></td>
+<td>Read label/button/editor text as validated UTF-8</td>
+</tr>
+<tr>
+<td><code>gui_move(id, x, y, w, h)</code></td>
+<td>Move or resize a control</td>
+</tr>
+<tr>
+<td><code>gui_event(timeout_ms) -&gt; GuiEvent</code></td>
+<td>Pump messages and retrieve one typed event</td>
+</tr>
+<tr>
+<td><code>gui_close() -&gt; int64</code></td>
+<td>Destroy the window and its controls; repeated close succeeds</td>
+</tr>
+<tr>
+<td><code>gui_check(status)</code></td>
+<td>Close the GUI and exit 1 with a diagnostic on failure</td>
+</tr>
+</tbody>
+</table>
+<p>Every control gets a unique ID <strong>1..64</strong>. Creation order determines the native
+Tab order. There is one top-level window per process; close it before opening
+another. IDs are local to the current window and can be reused after close;
+applications must not retain old IDs as references to old windows. Call
+<code>gui_event</code> regularly: it dispatches OS painting, keyboard and control messages.
+There are no arbitrary callbacks into Ramos or exposed native handles.</p>
+<p><code>GuiEvent</code> has <code>kind</code>, <code>id</code>, <code>width</code>, <code>height</code> fields:</p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Meaning</th>
+<th>Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Timeout</td>
+<td>Other fields zero</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Close requested</td>
+<td>App should finish its loop and call <code>gui_close</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Button activated</td>
+<td><code>id</code> is the control ID</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Client resized</td>
+<td><code>width</code>, <code>height</code> are current client pixel dimensions</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Parent window key-down</td>
+<td><code>id</code> is a Windows virtual-key code</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Editor text changed</td>
+<td><code>id</code> is the control ID; programmatic <code>gui_set</code> can also cause this</td>
+</tr>
+</tbody>
+</table>
+<p>Text inputs consume normal editing keys themselves; kind 4 is not a global
+keyboard hook. Native controls handle mouse input and activation; raw pointer
+motion, canvas drawing, images, menus, file dialogs and multiple windows are not
+part of this first API. Colored panels provide basic rectangular drawing.
+Resize events include the initial layout and minimization (zero dimensions).
+Control layout is explicit; there is no automatic layout manager or DPI scaling.
+Apps should handle small dimensions without requesting zero-sized controls.
+The Notes example keeps a minimum logical layout of 360x240 and clips when the
+client is smaller. Clipboard/editing behavior belongs to the native controls.</p>
+<p>Timeouts are <code>-1</code> for indefinite wait, <code>0</code> for immediate polling, or
+<code>1..2147483647</code> milliseconds. Waiting uses the native message wait API rather
+than spinning. Calling poll after close is an error. Resize/paint/focus events
+can exist before user input; don't assume the first event is a button press.</p>
+<h2 id="09-gui--limits-statuses-and-lifetime">Limits, statuses and lifetime</h2>
+<p>Window titles are at most 4095 UTF-8 bytes. Text passed to controls is at most
+32767 UTF-8 bytes; edit controls accept at most 32767 UTF-16 units through native
+editing. Reading can therefore produce more than 32767 UTF-8 bytes. Invalid UTF-8
+and embedded NUL are rejected at the native boundary. Strings stay validated;
+empty labels and edits are allowed. Initial client width is 160..4096 and height
+80..4096. Control positions are 0..8192 and dimensions 1..8192; drawing is clipped
+by the native client area. There are at most 64 controls and 64 queued events.
+A full queue fails explicitly instead of silently losing user actions.</p>
+<p><code>gui_open</code> and <code>gui_close</code> return fallible statuses. Widget/event helpers call
+<code>gui_check</code>, so they fail with a diagnostic and exit 1. Low-level <code>_gui_*</code>
+intrinsics are reserved library machinery; they return negative statuses (or
+empty bytes with <code>io_error</code>) and validate every property independently:
+<code>-9</code> inactive window/unknown control, <code>-16</code> second active window, <code>-17</code> duplicate
+ID, <code>-22</code> invalid argument/encoding, <code>-27</code> oversized read, <code>-38</code> missing platform
+backend, <code>-75</code> event queue overflow, and native errors mapped to existing I/O
+statuses. The old checked arithmetic, allocation and bounds contracts remain.</p>
+<p>The reclaiming heap roots the GUI state. Collection does not close native
+windows. Close releases the controls and owned brushes; the default GUI font is
+borrowed, and the two system DLLs are process-owned. Normal main return, <code>exit</code>
+and native Ramos traps attempt GUI cleanup automatically. Process termination
+also releases OS resources; no durability or user-data save is promised on an
+abrupt termination. GUI calls run on the program's single main thread.</p>
+<h2 id="09-gui--validation">Validation</h2>
+<p>The focused corpus checks raw argument/type errors, PE subsystem selection,
+existing-output preservation and static Linux unsupported behavior. Real desktop
+tests create native controls, inspect the actual panel color, inject Unicode text
+and an editing key, activate buttons, change the actual client size, and verify
+relayout, file contents and refusal to overwrite. A stress fixture opens/closes
+12 windows, collects after 40 MiB of temporary allocations and checks cleanup on
+return, explicit exit and arithmetic trap. CI runs these on native Windows;
+Wine is an additional development runner, not a user dependency.</p>
+<p>Use <code>python tools/windows_proof.py</code> on Windows. For development under Wine, set
+<code>RAMOS_GUI_WINE_PYTHON</code> to a Windows Python executable used only by the test
+harness, keep one isolated <code>WINEPREFIX</code> per X display, and set <code>DISPLAY</code>.
+The harness reads another process's editor with <code>WM_GETTEXT</code>, as required by
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw">Microsoft's API contract</a>.
+Native CI passed <strong>194 Linux tests and 140 Windows tests</strong>, including the GUI
+corpus and both compiler fixed points. See <a href="evidence/gui-verification.json">verification evidence</a>
+and <a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38057232751">the successful run</a>.
+No new speed claim is made.</p></section><section id="10-windows"><h1 id="10-windows--windows-and-cross-compilation">Windows and cross-compilation</h1>
+<p>Ramos produces native Windows x64 console executables in PE32+ format. The same
+language supports arithmetic, booleans, scopes, control flow, typed functions,
+recursion, byte buffers, arguments and binary file I/O on Linux and Windows.
+There is no interpreter, Python dependency or C runtime in generated programs.</p>
+<h2 id="10-windows--use-ramos-on-windows">Use Ramos on Windows</h2>
+<p>Download <a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.13.0/ramos.exe">ramos.exe from the 0.13 release</a>
+and open PowerShell in its directory. CI artifacts are also available from the
+<a href="https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml">Self-hosting proof workflow</a>. Save a UTF-8 <code>hello.ramos</code>:</p>
+<pre><code class="language-text">fn main() {
+    print(&quot;Hello, Windows!&quot;)
+}
+</code></pre>
+<p>Compile and run:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\hello.ramos -o .\hello.exe
+.\hello.exe
+</code></pre>
+<p>Windows is the default target when the compiler runs on Windows. Existing output
+requires <code>--force</code>. Use <code>.exe</code> for Windows output filenames. The target is x64;
+32-bit Windows and a native ARM64 backend are not supported by this milestone.
+Programs default to console applications. Version 0.13 adds <code>--gui</code> and the
+<a href="09-gui.html">native desktop GUI library</a>; build the Notes example with:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
+.\notes.exe
+</code></pre>
+<h2 id="10-windows--cross-compile-from-linux">Cross-compile from Linux</h2>
+<pre><code class="language-sh">make
+./ramos build examples/hello.ramos -o hello.exe --target windows
+make windows                 # build the native Windows compiler as build/ramos.exe
+</code></pre>
+<p>The Windows compiler can also emit Linux executables with <code>--target linux</code>.
+No target assembler, linker or cross-toolchain is used to compile Ramos sources.
+Only the initial assembly runtime/bootstrap audit uses GNU binutils.</p>
+<h2 id="10-windows--runtime-and-executable-format">Runtime and executable format</h2>
+<p>The Ramos emitter writes PE headers, sections, imports and a relocation directory
+itself. Code is read/execute, literals are read-only, import slots are read/write,
+and the value heap is read/write. No section is both writable and executable.
+The PE advertises NX compatibility and ASLR, uses position-independent code and
+contains no timestamps or build paths. The imports are Windows' built-in
+<code>KERNEL32.dll</code> and <code>SHELL32.dll</code>; no compiler tool, CRT or interpreter is imported.
+GUI startup loads USER32/GDI32 from System32 through <code>LoadLibraryExW</code>; ordinary
+CLI programs never initialize a GUI. Control creation and rendering use native
+system calls, and the default console subsystem remains unchanged.</p>
+<p>The private Ramos calling convention remains the same. A small native API bridge
+aligns the stack and reserves Windows shadow space for system calls. Function
+frames probe each stack page before reserving larger frames, preserving Windows
+stack guard behavior. Arithmetic, buffer, allocation and call-depth checks remain.</p>
+<p>Arguments use Windows' command-line parsing rules and are converted from UTF-16
+to UTF-8. Paths are converted from UTF-8 to UTF-16 with invalid encodings rejected.
+Whole-file <code>read_file</code> rejects non-disk files/directories and enforces the 1 MiB bound;
+0.12 streams process regular files in bounded chunks. Atomic <code>write_file</code> writes
+use a separate same-directory temporary file, handle partial writes, close the
+file and publish it with <code>MoveFileExW</code>. Existing output requires the replacement
+flag, and source/hardlink aliases are rejected even with replacement enabled.
+Temporary files are cleaned up on failure. Windows output paths are made absolute
+once before publication; unlike the Linux publisher, directory-handle anchoring
+is not implemented. Both publishers assume the caller controls the destination
+directory; neither promises crash durability.</p>
+<p><code>platform()</code> returns 0 on Linux and 1 on Windows. All other intrinsic signatures
+remain unchanged. Windows maps OS errors into common negative statuses: -2
+missing file/path, -13 access denied, -17 already exists, -22 invalid path or
+source alias, -27 oversized/growing input, -36 path too long, and -5 other I/O
+failures. File-operation status stays fallible. The executable flag to
+<code>write_file</code> is accepted on Windows; executable format and <code>.exe</code> naming determine
+how it is launched, rather than POSIX permission bits.</p>
+<h2 id="10-windows--prove-windows-self-hosting">Prove Windows self-hosting</h2>
+<p>Using the native compiler on Windows:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\compiler\ramos.ramos -o .\stage2.exe --force
+.\stage2.exe build .\compiler\ramos.ramos -o .\stage3.exe --force
+(Get-FileHash .\stage2.exe).Hash -eq (Get-FileHash .\stage3.exe).Hash
+</code></pre>
+<p><code>tools/windows_proof.py</code> does this, also compares the Linux-built seed with the
+Windows-built stages, and runs native programs against shared language tests,
+PE permissions, binary I/O, Unicode paths, arguments, source aliases, replacement,
+checked runtime failures and large stack frames. CI runs it on <code>windows-latest</code>
+and uploads <code>windows-bootstrap-proof.json</code> with the executable. Linux developers
+can run the same harness under Wine using <code>make test-windows</code> with an isolated
+<code>WINEPREFIX</code>. Wine is a development test runner; end users do not need it.</p>
+<p>Version 0.9 adds native buffered stdin and signed decimal conversions. Console
+input uses the configured input code page; redirected input preserves bytes.
+See <a href="05-input.html">input and conversion semantics</a>.</p>
+<p>Version 0.10 adds strings, reclaimed heap memory, structs and typed arrays with
+the same contracts as Linux. See <a href="03-values.html">values and memory</a>.</p>
+<p>Version 0.11 supports source-relative <code>weave</code> libraries and the Ramos standard
+library. Extract the libraries archive before building its examples; use <code>/</code> in
+directives even on Windows. See <a href="07-libraries.html">libraries.md</a>.</p>
+<p>Version 0.12 adds regular-file streams and TUI console controls. The Windows
+runtime enables VT output, reads native key events, and restores console modes
+on return, exit and Ramos traps; its control callback also attempts cleanup
+on OS control termination. Use Windows Terminal or a
+real interactive console; redirected handles are rejected for TUI startup.
+See <a href="08-cli-tui.html">file tools and terminal interfaces</a>.</p></section><section id="11-cookbook"><h1 id="11-cookbook--runnable-projects">Runnable projects</h1>
+<p>These are complete programs from Ramos 0.13, not pseudocode. The repository
+includes their exact source under <code>examples/</code> and the matching <code>stdlib/</code>.
+Compile commands below assume you placed the native compiler in this
+repository's root. Add <code>--force</code> when intentionally rebuilding an output.</p>
+<h2 id="11-cookbook--file-copy">File copy</h2>
+<pre><code class="language-sh">./ramos-linux-x86_64 build examples/rcopy.ramos -o rcopy
+./rcopy source.bin new-copy.bin
+</code></pre>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\rcopy.ramos -o .\rcopy.exe
+.\rcopy.exe .\source.bin .\new-copy.bin
+</code></pre>
+<p><a href="examples/rcopy.ramos">Source: rcopy.ramos</a>. Uses streamed I/O, processes files
+larger than the per-buffer limit and refuses existing destinations. Failed
+streaming copies can leave a partial new file; they are not atomic replacement.</p>
+<h2 id="11-cookbook--literal-file-search">Literal file search</h2>
+<pre><code class="language-sh">./ramos-linux-x86_64 build examples/rgrep.ramos -o rgrep
+./rgrep needle book/00-welcome.md book/01-getting-started.md
+</code></pre>
+<p><a href="examples/rgrep.ramos">Source: rgrep.ramos</a>. Matches literal bytes, reports
+file and line, and returns 0 for a match, 1 for none and 2 for errors. It does
+not traverse directories or interpret regular expressions.</p>
+<h2 id="11-cookbook--full-screen-file-viewer">Full-screen file viewer</h2>
+<pre><code class="language-sh">./ramos-linux-x86_64 build examples/rview.ramos -o rview
+./rview book/00-welcome.md
+</code></pre>
+<p><a href="examples/rview.ramos">Source: rview.ramos</a>. Run in an interactive terminal;
+use arrows, j/k, Space/n, p and q. The viewer deliberately sanitizes non-ASCII
+and control bytes. It is not a complete Unicode text editor.</p>
+<h2 id="11-cookbook--desktop-notes-windows">Desktop Notes — Windows</h2>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
+.\notes.exe
+</code></pre>
+<p><a href="examples/notes.ramos">Source: notes.ramos</a>. Unicode editor, Save/Clear
+buttons, status messages and resizing. Save creates a new file and refuses an
+existing path. This version has no open dialog or unsaved-change prompt.</p>
+<h2 id="11-cookbook--a-small-gui-event-loop">A small GUI event loop</h2>
+<p><a href="examples/gui_hello.ramos">Source: gui_hello.ramos</a>:</p>
+<pre><code class="language-ramos">weave &quot;stdlib/gui.ramos&quot;
+weave &quot;stdlib/numbers.ramos&quot;
+
+fn main() {
+    gui_check(gui_open(s&quot;Hello, Ramos&quot;, 360, 180))
+    gui_label(1, 20, 20, 320, 24, s&quot;A real window, written in Ramos&quot;)
+    gui_button(2, 20, 60, 120, 32, s&quot;Click me&quot;)
+    var count = 0
+    var running = true
+    while running {
+        let event = gui_event(-1)
+        if event.kind == 1 { running = false }
+        if event.kind == 2 &amp;&amp; event.id == 2 {
+            count = count + 1
+            gui_set(1, s&quot;Clicks: &quot; + num_text(count))
+        }
+    }
+    gui_check(gui_close())
+}
+
+</code></pre>
+<p>The code above is intended as a root-level source file. The checked-in example
+is inside <code>examples/</code> and therefore uses <code>../stdlib/</code>. Build for Windows with
+<code>--gui</code>; Linux can cross-compile this source but cannot run its GUI backend.</p>
+<h2 id="11-cookbook--more-complete-sources">More complete sources</h2>
+<ul>
+<li><a href="examples/input.ramos">Interactive number input</a></li>
+<li><a href="examples/line_stats.ramos">Streaming Unicode line statistics</a></li>
+<li><a href="examples/library_demo.ramos">Library, list and map demo</a></li>
+<li><a href="examples/calculator.ramos">Checked calculator</a></li>
+</ul>
+<p>The shell and PowerShell versions of a build follow the same structure:
+<code>COMPILER build SOURCE -o OUTPUT</code>. Windows outputs should use <code>.exe</code>.</p></section><section id="12-self-hosting"><h1 id="12-self-hosting--how-the-compiler-builds-itself">How the compiler builds itself</h1>
+<p>The compiler implementation is <a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/ramos.ramos">compiler/ramos.ramos</a>.
+It reads source files, lexes and checks tokens, discovers typed signatures,
+resolves scoped symbols, emits native x86-64 instructions, resolves labels,
+writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
+interpret Ramos, launch another compiler, or delegate machine-code generation.</p>
+<h2 id="12-self-hosting--reproduce-from-a-clean-checkout">Reproduce from a clean checkout</h2>
+<p>On x86-64 Linux with GNU binutils, Make and Python 3:</p>
+<pre><code class="language-sh">make clean all selfhost
+</code></pre>
+<p>The actual compilation chain is:</p>
+<pre><code class="language-sh">as --64 -o build/stage0.o bootstrap/src/ramos.s
+ld -z noexecstack --build-id=none -o build/stage0 build/stage0.o
+./build/stage0 build compiler/ramos.ramos -o build/stage1 --force
+./build/stage1 build compiler/ramos.ramos -o build/stage2 --force
+./build/stage2 build compiler/ramos.ramos -o build/stage3 --force
+cmp build/stage2 build/stage3
+sha256sum build/stage2 build/stage3
+</code></pre>
+<p>Stage 0 is the retained assembly bootstrap with the new typed OS intrinsics.
+Stages 1, 2 and 3 are compiled from the same Ramos compiler source. Stage 1 can
+differ in instruction selection from stage 2; the required fixed point is
+<strong>stage 2 = stage 3</strong>. <code>make all</code> copies stage 2 to the normal <code>ramos</code> executable.</p>
+<p>The proof harness additionally runs stage 2 with <code>PATH=/nonexistent</code>, verifies
+that its output still matches stage 3, and runs the language/I/O corpus (the retained seed skips post-0.7 grammar tests)
+with stages 0, 2 and 3 (the Linux-only assembly bootstrap skips target selection).
+It writes hashes and checks to <code>build/bootstrap-proof.json</code>.
+The GitHub Actions workflow rebuilds this chain and preserves the report and
+native compiler as artifacts. A local proof snapshot is in
+<a href="evidence/bootstrap-proof.json">bootstrap-proof.json</a>; CI is the reproducible authority.</p>
+<h2 id="12-self-hosting--implementation-boundary">Implementation boundary</h2>
+<p>The entire compiler pipeline is Ramos source, including the machine-code and
+ELF/PE emitters. The private native runtime is represented as a hexadecimal literal
+inside that source. It provides checked arithmetic diagnostics, integer/boolean
+printing, reclaimed values, string/aggregate operations, and native OS boundaries for arguments and file I/O.
+The literal is instruction data, not an embedded compiler executable.</p>
+<p>The runtime's assembly source remains in <code>bootstrap/src/runtime.inc</code>,
+<code>buffer_runtime.inc</code>, <code>heap_runtime.inc</code>, <code>values_runtime.inc</code>, <code>io_runtime.inc</code>,
+<code>text_runtime.inc</code>, <code>stdin_runtime.inc</code>, <code>source_guard.inc</code>,
+<code>stream_runtime.inc</code>, <code>stream_os.inc</code>, <code>terminal_os.inc</code> and <code>gui_os.inc</code>. The proof verifies every embedded byte
+and native entry offset against the bootstrap's emitted runtime. Retaining an
+assembly OS boundary does not mean the Ramos compiler invokes assembly at run
+time; once stage 1 is seeded, the next stages require no assembler or linker.</p>
+<p>The compiler uses byte buffers as packed token, function, symbol, operator,
+block and fixup tables. A bounded iterative expression parser and explicit block
+stack avoid depending on the generated runtime's 64-call limit for deep syntax.
+The compiler deliberately retains byte-buffer source so the old grammar can
+seed it. User programs can use the new structs and typed arrays; no preprocessing
+or host-language parser is required.</p>
+<p>The self-hosted compiler has tighter token/output limits than the bootstrap,
+which are documented in <a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/README.md">compiler/README.md</a>. Diagnostics
+preserve filename, line and byte-column formatting and give specific reasons.
+Native behavior, traps, output preservation, scopes, calls and ELF permissions
+are covered by the shared corpus.</p>
+<h2 id="12-self-hosting--githubs-language-label">GitHub's language label</h2>
+<p>Self-hosting is a compiler property. GitHub's language sidebar is a separate
+Linguist classification service; it does not yet include Ramos. See
+<a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/github-language.md">GitHub language recognition</a>. The bootstrap and Python test
+harness are retained honestly rather than relabeled as Ramos.</p>
+<h2 id="12-self-hosting--windows-fixed-point">Windows fixed point</h2>
+<p>The same Ramos source builds the Windows compiler. <code>make windows</code> produces
+<code>build/ramos.exe</code>; <code>tools/windows_proof.py</code> compiles it twice on Windows and
+requires identical seed/stage-2/stage-3 PE binaries. The CI Windows job runs
+shared language tests and records the native Windows proof. See
+<a href="10-windows.html">Windows bootstrap instructions</a>.</p>
+<p>The retained assembly seed implements the 0.7 grammar. The compiler source uses
+compatible surface syntax while implementing the full 0.13 API and grammar itself. Tests
+for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
+the seed explicitly skips them. The proof JSON records both discovered counts
+and these skips. No source preprocessing or external backend is required.</p>
+<p>Version 0.9 extends the seed with the same five typed input/text intrinsics.
+The Ramos compiler itself uses <code>int_to_text</code> for decimal diagnostics. These
+contracts run on the retained seed as well as both self-hosted stages. Linux
+and Windows runtime bytes, entry offsets and fixed points are audited.</p>
+<p>Version 0.10 adds shared heap collection, audited value operations and checked
+struct/array typing. The retained seed shares the heap but explicitly skips the
+new syntax tests; the proof records that separate count.</p>
+<p>Version 0.11 reads library graphs using the Ramos-written <code>load_sources</code> pipeline.
+The retained seed supplies the private source-identity guard but skips weave/stdlib
+tests; both self-hosted stages and native Windows run them.</p></section><section id="13-reference"><h1 id="13-reference--limits-and-standard-library-reference">Limits and standard library reference</h1>
+<p>The self-hosted compiler accepts up to 64 regular source files totaling 1 MiB
+(with boundary separators), at most 50,000
+tokens including EOF, 4,096 total declarations including parameters and ended
+blocks, 256 functions and 16 parameters per function. Structs are limited to 64
+types with 16 fields each; array type nesting to 16. Expression and block
+depth remain bounded at 128; generated programs allow 64 active calls.
+Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
+have a 40,000-entry bound. These are checked limits. The retained bootstrap has
+the older 4 MiB output and IR limits. See <a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/README.md">compiler representation limits</a>.</p>
+<p>The compiler is self-hosted; namespaces, more library types, floats, syntax conveniences, wrapping arithmetic,
+broader optimization and additional targets remain future work. Performance claims need
+new repeatable measurements. The runtime provides checked arithmetic and bounded
+buffers, but generated programs execute with the caller's operating-system
+permissions. General canvas graphics, games, a Linux GUI backend and browser support need further platform work.</p>
+<h2 id="13-reference--standard-library-signatures">Standard library signatures</h2>
+<p>These are the complete function signatures defined in the bundled source.
+Follow the chapter APIs for the supported application-facing helpers; some
+other prefixed functions are implementation helpers. These declarations are
+reference entries, not standalone compilable programs. Follow the source links
+for bodies, structs and exact status/lifetime contracts.</p>
+<h3 id="13-reference--bytesramos">bytes.ramos</h3>
+<p><a href="stdlib/bytes.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn bytes_copy(source: bytes) -&gt; bytes
+fn bytes_equal(a: bytes, b: bytes) -&gt; bool
+fn bytes_slice(source: bytes, start: int64, end: int64) -&gt; bytes
+fn bytes_put(out: bytes, start: int64, source: bytes)
+fn bytes_find(haystack: bytes, needle: bytes) -&gt; int64
+</code></pre>
+<h3 id="13-reference--cliramos">cli.ramos</h3>
+<p><a href="stdlib/cli.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn cli_arg(index: int64) -&gt; string
+fn cli_has(name: string) -&gt; bool
+fn cli_value(name: string, fallback: string) -&gt; string
+fn cli_fail(message: string)
+</code></pre>
+<h3 id="13-reference--guiramos">gui.ramos</h3>
+<p><a href="stdlib/gui.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn gui_word(out: bytes, at: int64, value: int64)
+fn gui_number(raw: bytes, at: int64) -&gt; int64
+fn gui_check(status: int64)
+fn gui_open(title: string, width: int64, height: int64) -&gt; int64
+fn gui_close() -&gt; int64
+fn gui_rgb(red: int64, green: int64, blue: int64) -&gt; int64
+fn gui_properties(kind: int64, id: int64, x: int64, y: int64, width: int64, height: int64, color: int64) -&gt; bytes
+fn gui_label(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_button(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_input(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_editor(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_panel(id: int64, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn gui_set(id: int64, text: string)
+fn gui_move(id: int64, x: int64, y: int64, width: int64, height: int64)
+fn gui_text(id: int64) -&gt; string
+fn gui_event(timeout_ms: int64) -&gt; GuiEvent
+</code></pre>
+<h3 id="13-reference--ioramos">io.ramos</h3>
+<p><a href="stdlib/io.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn io_reader(path: bytes) -&gt; FileReader
+fn io_close(reader: FileReader) -&gt; int64
+fn io_byte(reader: FileReader) -&gt; int64
+fn io_append(builder: ByteBuilder, value: int64)
+fn io_line(reader: FileReader) -&gt; bytes
+fn io_copy(source: bytes, destination: bytes) -&gt; int64
+fn io_seek(reader: FileReader, offset: int64) -&gt; int64
+</code></pre>
+<h3 id="13-reference--listsramos">lists.ramos</h3>
+<p><a href="stdlib/lists.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn list_new() -&gt; IntList
+fn list_len(list: IntList) -&gt; int64
+fn list_push(list: IntList, value: int64)
+fn list_get(list: IntList, index: int64) -&gt; int64
+fn list_set(list: IntList, index: int64, value: int64)
+fn list_pop(list: IntList) -&gt; int64
+fn list_clear(list: IntList)
+</code></pre>
+<h3 id="13-reference--mapsramos">maps.ramos</h3>
+<p><a href="stdlib/maps.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn map_new() -&gt; StringMap
+fn map_len(map: StringMap) -&gt; int64
+fn map_index(map: StringMap, key: string) -&gt; int64
+fn map_has(map: StringMap, key: string) -&gt; bool
+fn map_get(map: StringMap, key: string, fallback: string) -&gt; string
+fn map_set(map: StringMap, key: string, value: string)
+fn map_remove(map: StringMap, key: string) -&gt; bool
+</code></pre>
+<h3 id="13-reference--numbersramos">numbers.ramos</h3>
+<p><a href="stdlib/numbers.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn num_min(a: int64, b: int64) -&gt; int64
+fn num_max(a: int64, b: int64) -&gt; int64
+fn num_abs(n: int64) -&gt; int64
+fn num_clamp(n: int64, low: int64, high: int64) -&gt; int64
+fn num_text(n: int64) -&gt; string
+fn num_parse(text: string) -&gt; int64
+</code></pre>
+<h3 id="13-reference--textramos">text.ramos</h3>
+<p><a href="stdlib/text.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn text_starts(text: string, prefix: string) -&gt; bool
+fn text_ends(text: string, suffix: string) -&gt; bool
+fn text_find(text: string, needle: string) -&gt; int64
+fn text_contains(text: string, needle: string) -&gt; bool
+fn text_join(parts: [string], separator: string) -&gt; string
+fn text_repeat(text: string, count: int64) -&gt; string
+</code></pre>
+<h3 id="13-reference--tuiramos">tui.ramos</h3>
+<p><a href="stdlib/tui.ramos">Read the source</a>.</p>
+<pre><code class="language-ramos">fn tui_escape() -&gt; string
+fn tui_write(value: string)
+fn tui_control(value: string)
+fn tui_begin() -&gt; int64
+fn tui_end() -&gt; int64
+fn tui_clear()
+fn tui_move(row: int64, column: int64)
+fn tui_color(foreground: int64, background: int64)
+fn tui_reset()
+fn tui_at(row: int64, column: int64, value: string)
+fn tui_box(row: int64, column: int64, width: int64, height: int64)
+fn tui_safe(value: bytes, width: int64) -&gt; string
+fn tui_key(timeout_ms: int64) -&gt; int64
+</code></pre></section><section id="14-performance"><h1 id="14-performance--performance-and-evidence">Performance and evidence</h1>
+<p>Ramos 0.7.1 has a reproducible eight-task comparison with optimized checked C,
+Rust and CPython. On the recorded Linux VM, the execution index is <strong>Ramos 40.82,
+C 100, Rust 119.77 and Python 2.53</strong> (higher is faster). Ramos is <strong>16.16× faster
+than Python</strong> across this suite and takes <strong>2.45× C's time</strong>. These are geometric
+means of per-task median ratios, not a general language ranking.</p>
+<p>The suite checks outputs against independent references, runs nine randomized
+samples per task, and records raw timings, build commands and source hashes.
+Startup and build times are reported separately. See the
+<a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/benchmarks/report.md">full report and methodology</a>, <a href="evidence/results.json">raw samples</a>
+and <a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/benchmarks/fixtures">workload sources</a>. The saved 0.7.0 baseline and
+<a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/benchmarks/optimization.md">interleaved old/new comparison</a> show a <strong>2.05× overall
+speedup</strong>. Version 0.8 emits <a href="evidence/codegen-continuity.json">identical benchmark executable bytes</a>
+for both targets. Versions 0.9–0.11 expand the native runtime; the timings above
+remain the recorded 0.7.1 measurements, not a current-version performance claim.</p>
+<pre><code class="language-sh">make
+python3 benchmarks/run_suite.py                 # measure all eight tasks
+python3 benchmarks/run_suite.py --validate-only # output checks without timing
+</code></pre>
+<p>The <a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/benchmarks/report-0.2.md">historical 0.2 comparison</a> used another machine
+and one unrolled workload; it is not directly comparable. Its legacy script
+still requires the 0.2 compiler and writes to <code>work/results-0.2</code> by default.</p>
+<h2 id="14-performance--read-the-results-correctly">Read the results correctly</h2>
+<p>The 0.7.1 index is historical, not a speed measurement of Ramos 0.13. C is
+normalized to 100; higher is faster on the recorded workloads. The historical
+Ramos score of 40.82 means roughly 2.45 times C's execution time on that suite,
+not 2.45 times faster than C. It says nothing about all possible programs.</p>
+<p>The development roadmap requires fresh measurements before new release speed
+claims. Run benchmark commands from the compiler repository, where the harness
+and workload sources live, rather than from this documentation repository.</p></section><section id="15-roadmap"><h1 id="15-roadmap--what-comes-next">What comes next</h1>
+<p><strong>Goal:</strong> make Ramos a simple native language for useful CLI, TUI and desktop
+applications on Windows x64 and Linux x64. A beginner should be able to build
+and run a small tool from a short example; larger tools should have the libraries,
+diagnostics and resource handling needed to keep working.</p>
+<p>This is a development plan starting from 0.13, not a claim that these features
+have shipped. Proposed version labels below describe order, not deadlines.
+Keep each release small enough to implement and verify completely; split a
+milestone if necessary. Python-like ease and Rust/C-like native performance
+are design aims, not promises of ecosystem parity or benchmark superiority.</p>
+<h2 id="15-roadmap--the-users-rules">The user's rules</h2>
+<p><strong>1. Simple.</strong> Keep a small, readable syntax and one clear way to perform common
+tasks. Preserve <code>weave</code> for libraries. Put ordinary helpers in Ramos libraries
+instead of growing the compiler for every convenience. Prefer inferred local
+types, useful defaults and examples over configuration. Common text, file and
+GUI operations should not require hand-written byte manipulation.</p>
+<p><strong>3. Fast.</strong> Keep direct native ELF/PE generation and the self-hosted compiler.
+Measure speed rather than infer it from native output. Avoid needless copying,
+allocations and idle polling. Optimize costs observed in real applications;
+performance claims must identify the release, machine, workload and measurement.</p>
+<p>No rule 2 was supplied. Correctness remains a release prerequisite: preserve
+checked arithmetic, bounds, UTF-8 contracts, resource cleanup and deterministic
+self-hosting. Any change in those contracts must be explicit and tested.</p>
+<h2 id="15-roadmap--starting-point">Starting point</h2>
+<p>0.13 already has immutable strings, reusable managed memory, structs, typed
+arrays, <code>weave</code>, a small standard library, streamed files, stdin, CLI/TUI tools
+and a Windows GUI library. Those foundations should be extended, not rebuilt.
+The Linux desktop backend is still missing. Live memory, individual values,
+recursion and source size have documented limits. The published comparative
+timings are historical; they are not a performance result for 0.13.</p>
+<h2 id="15-roadmap--ordered-milestones">Ordered milestones</h2>
+<table>
+<thead>
+<tr>
+<th>Proposed milestone</th>
+<th>Work</th>
+<th>Runnable acceptance example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.14: easier code</td>
+<td><code>else if</code>, exclusive-range <code>for</code>, <code>+=</code> and <code>-=</code>; updated syntax documentation and highlighting</td>
+<td>Simplify an existing search/viewer example while preserving its output and behavior on both OSes</td>
+</tr>
+<tr>
+<td>0.15: useful OS libraries</td>
+<td>Directory iteration, paths, environment access and direct child-process execution</td>
+<td>Recursive file search and a copy/backup tool; a command runner that reports child exit status</td>
+</tr>
+<tr>
+<td>0.16: easier development</td>
+<td>Source-line/caret errors, a formatter and a compile-and-run command</td>
+<td>A new user can run a file, correct a reported error and format it using the documented commands</td>
+</tr>
+<tr>
+<td>0.17: data and math</td>
+<td><code>float64</code>, conversions and essential math; string builders and better collection growth; reviewed memory/recursion limits</td>
+<td>A numerical renderer and a streaming text tool that builds output without repeated whole-string copies</td>
+</tr>
+<tr>
+<td>0.18: portable GUI</td>
+<td>Linux backend, layout/DPI handling, file dialogs and basic drawing behind the GUI library</td>
+<td>The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux</td>
+</tr>
+<tr>
+<td>1.0 candidate: reliability and measured speed</td>
+<td>Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility</td>
+<td>Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="15-roadmap--014-specify-the-small-syntax-changes-first">0.14: specify the small syntax changes first</h3>
+<p>Define range bounds as evaluated once, with the upper bound excluded. Specify
+loop-variable scope, <code>break</code>, <code>continue</code> and checked iteration overflow. Define
+compound assignment so its destination is evaluated once, including fields and
+array indices. Retain checked arithmetic and useful errors.</p>
+<p>Start with <code>+=</code> and <code>-=</code>; do not also add <code>++</code> merely to duplicate the same task.
+Review per-function stack requirements before increasing recursion depth. A
+larger constant alone does not solve stack safety.</p>
+<p>Record a fresh 0.13 performance baseline before compiler changes. Existing
+programs must still compile, and the simplified example must have matching
+output. Measure compile time as well as the affected runtime workloads.</p>
+<h3 id="15-roadmap--015-file-tools-as-the-first-practical-application-target">0.15: file tools as the first practical application target</h3>
+<p>Directory iteration must stream entries and release handles when stopped early.
+Specify Unicode paths, missing files, permission failures and traversal policy,
+including symbolic links, so recursive tools cannot accidentally loop forever.
+Use fallible results for expected OS failures, consistent with existing I/O.</p>
+<p>Child processes receive an executable and argument values directly. Shell
+interpretation should require an explicit separate choice. Specify inherited
+or redirected stdin/stdout/stderr, waiting and exit status. Avoid capturing
+unbounded output into the managed heap.</p>
+<p>Test empty directories, Unicode filenames, large streamed files, failed copies,
+early exit and child failures on native Windows and Linux.</p>
+<h3 id="15-roadmap--016-make-common-mistakes-easy-to-fix">0.16: make common mistakes easy to fix</h3>
+<p>Errors should show filename, line, column, the relevant source line and a caret,
+with the expected construct or type. Preserve original library locations.
+The formatter must preserve comments and program meaning and be idempotent.</p>
+<p>Design <code>ramos run app.ramos</code> as compile-and-run using a temporary native binary,
+with program arguments, exit-status forwarding and cleanup. Keep <code>build</code> for
+distributable executables. Update editor support alongside new syntax. Evaluate
+<code>--emit-asm</code> after the core authoring work; an inspection feature needs a clear
+contract and should not become a second code-generation backend.</p>
+<h3 id="15-roadmap--017-remove-the-walls-using-measured-application-needs">0.17: remove the walls using measured application needs</h3>
+<p>Specify floating-point literals, IEEE-754 behavior, comparisons, conversions,
+NaN/infinity handling, division and printing before implementation. Keep integer
+overflow checks intact. Verify numerical results against independent references
+on both targets.</p>
+<p>Add a string builder and amortized collection growth with clear aliasing and
+lifetime rules. Keep immutable string values and low-level bytes available.
+Profile collection and heap behavior before redesigning the allocator or GC.
+Use long-running allocation tests and actual live-data workloads to choose
+larger or configurable limits; do not silently remove checks. Ordinary code
+should not need manual freeing. Explicit release remains necessary for OS
+resources such as files, processes and windows.</p>
+<p>Generics and broader containers come later if concrete apps need them; they
+should not block useful strings, arrays and number handling.</p>
+<h3 id="15-roadmap--018-one-gui-api-with-real-desktop-evidence">0.18: one GUI API with real desktop evidence</h3>
+<p>Choose and document the initial Linux display backend and its OS dependencies.
+Keep platform details behind <code>stdlib/gui.ramos</code>. Add layout, scaling, dialogs
+and drawing in small tested slices. Verify events, focus, input, close, resize,
+resource lifetime and Unicode on actual desktop sessions, including Windows.
+Cross-compilation alone is not proof that a GUI works.</p>
+<p>Retain an idle-blocking event loop. Multi-window support, menus, images and
+advanced widgets can follow demonstrated app needs.</p>
+<h2 id="15-roadmap--performance-evidence">Performance evidence</h2>
+<p>Use at least eight workloads spanning integer arithmetic, recursion, arrays,
+strings, allocation, file streaming, parsing/search and numerical rendering.
+Compare equivalent C, Rust and Python implementations on the same machine;
+verify results before timing, record toolchain versions and build flags, repeat
+runs and report medians and variability. Explain semantic differences, including
+checked arithmetic. Benchmark input must be large enough to separate useful
+work from process startup.</p>
+<p>For a C-relative execution index, define C as 100 and each Ramos task score as
+<code>100 * C_time / Ramos_time</code>; the overall score is the geometric mean of the
+task scores. Report per-task results and Rust/Python ratios too. A score above
+100 means faster on this suite, not a better language. Track startup time,
+compile time, binary size and peak memory separately from the speed index.</p>
+<p>Investigate regressions outside measured variability and explain any deliberate
+tradeoff. Never reuse old benchmark numbers as evidence for a new release.
+Documentation-only edits do not require rerunning the performance suite.</p>
+<h2 id="15-roadmap--completion-checks">Completion checks</h2>
+<p>A feature milestone is complete when its behavior is specified, an application
+uses it, relevant success/failure tests pass natively on Windows and Linux,
+both deterministic self-hosting proofs still match, and the downloadable package
+contains the working compiler, libraries, examples and instructions. Platform
+features additionally need execution on the platform they target.</p>
+<p>The 1.0 goal is complete when a clean-install user can build and run recursive
+file tools, an interactive TUI and the portable Notes GUI; a numerical example
+exercises the math support; long-running examples stay within their documented
+resource behavior; and current performance measurements and remaining limits
+are published. This is useful application capability, not all of Python or Rust.</p>
+<p>Package registries, async runtimes, advanced generics and ecosystem expansion
+remain follow-up goals. GitHub Linguist recognition is independent of language
+correctness and application readiness.</p></section><section id="16-agent-guide"><h1 id="16-agent-guide--guide-for-ai-coding-agents">Guide for AI coding agents</h1>
+<p>This chapter is a compact capability contract for agents generating Ramos
+programs. Target <strong>0.13.0</strong> unless the task explicitly provides a newer compiler
+and verified documentation. Read the relevant chapter rather than guessing
+from Python, C or Rust syntax.</p>
+<h2 id="16-agent-guide--read-in-this-order">Read in this order</h2>
+<ol>
+<li><a href="02-language.html">Language</a>: statements, types, operators and functions.</li>
+<li><a href="03-values.html">Values</a>: immutable strings, aliases, arrays and heap behavior.</li>
+<li><a href="07-libraries.html">Libraries</a> and <a href="13-reference.html">signatures</a>.</li>
+<li><a href="06-files.html">Files</a>, <a href="08-cli-tui.html">CLI/TUI</a> or <a href="09-gui.html">GUI</a> for the task.</li>
+</ol>
+<p><code>BOOK.md</code> is a generated single-file edition if loading the whole reference is
+useful. Individual chapters are smaller and have stable relative links.</p>
+<h2 id="16-agent-guide--supported-source-patterns">Supported source patterns</h2>
+<ul>
+<li>One parameterless <code>fn main()</code> returning void per executable; none in libraries.</li>
+<li>Newline-separated statements and braces; no semicolons.</li>
+<li><code>let</code> for an immutable binding, <code>var</code> for a reassignable binding. Inferred local
+  types cannot change. Mutating a field/array/byte value through <code>let</code> is allowed.</li>
+<li>Function parameters use explicit types; omitted return type is void.</li>
+<li><code>if</code>/<code>else</code>, <code>while</code>, <code>break</code>, <code>continue</code>, <code>&amp;&amp;</code>, <code>||</code>, <code>!</code>; boolean conditions.</li>
+<li><code>int64</code>, <code>bool</code>, <code>bytes</code>, <code>string</code>, named structs and <code>[T]</code> arrays.</li>
+<li><code>"bytes"</code> and <code>s"UTF-8 string"</code> have different types. Conversions copy.</li>
+<li><code>weave "relative/path.ramos"</code> is top-level and resolves relative to its file.</li>
+<li>Use normal reassignment such as <code>i = i + 1</code>.</li>
+</ul>
+<h2 id="16-agent-guide--do-not-invent-these-features">Do not invent these features</h2>
+<p>No <code>import</code>, <code>for</code>, <code>else if</code>, <code>+=</code>, <code>++</code>, floats, bitwise/shift operators,
+exceptions, nullable pointers, generics, methods, closures, namespaces, package
+manager, direct child-process API or directory iteration. A nested <code>if</code> inside
+an <code>else</code> block is supported. Planned features in the roadmap are not current
+capabilities. Do not substitute Python or C as a hidden backend for Ramos code.</p>
+<h2 id="16-agent-guide--error-and-lifetime-contracts">Error and lifetime contracts</h2>
+<p>Integer overflow, divide-by-zero, invalid bounds and malformed string UTF-8
+trap with a diagnostic and exit 1. Expected file failures are fallible instead.
+Check <code>io_error()</code> immediately after operations that use it; another operation
+can change it. Check <code>parse_error()</code> after <code>text_to_int</code> or <code>num_parse</code>; zero
+as a return value alone does not distinguish a successful parse from failure.</p>
+<p><code>arg_count()</code> includes the executable name. Use <code>arg()</code> for bytes, <code>cli_arg()</code>
+for validated strings. Process the final nonempty stdin line even if EOF is set.
+Close file streams explicitly; GC reclaims memory, not OS handles. Do not mix
+buffered stdin reading with raw terminal input.</p>
+<p>For GUI, support is Windows-only. Pump events regularly, use blocking waits
+when idle and close the window. Do not promise dialogs, canvas APIs or a Linux
+backend. For TUI, require an interactive terminal and restore it before exit.</p>
+<h2 id="16-agent-guide--build-and-verify">Build and verify</h2>
+<p>For a native downloaded compiler on Linux:</p>
+<pre><code class="language-sh">./ramos-linux-x86_64 build app.ramos -o app
+./app
+</code></pre>
+<p>For Windows:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\app.ramos -o .\app.exe
+.\app.exe
+</code></pre>
+<p>Preserve existing user files; <code>--force</code> intentionally replaces outputs. Compile
+before reporting working syntax. Check expected output, exit status and failure
+paths relevant to the app. Cross-compiling proves emission, not native GUI/TUI
+interaction. Do not claim a speedup without equivalent workloads and timings.</p>
+<p>When changing compiler internals, use the main repository's native suites and
+Linux/Windows fixed-point proofs. This book repository only builds and checks
+documentation. Its build dependency is not a Ramos runtime dependency.</p></section></article><nav class="pager" aria-label="Chapter navigation"></nav><footer>Ramos 0.13.0 · <a href="book/BOOK.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

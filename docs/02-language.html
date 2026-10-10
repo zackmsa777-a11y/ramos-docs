@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>The language · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html" aria-current="page"><span>02</span>The language</a><a href="03-values.html"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html"><span>05</span>Stdin and number conversion</a><a href="06-files.html"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="the-language">The language</h1>
+<h2 id="syntax">Syntax</h2>
+<pre><code class="language-text">fn main() {
+    let price = 20
+    var count = 3
+    print(price * count)
+
+    count = count + 2
+    print(&quot;Updated total:&quot;)
+    print(price * count)
+}
+</code></pre>
+<ul>
+<li>Exactly one parameterless <code>main</code> returning void is required. Other top-level
+  functions and structs may appear before or after it. <code>weave</code> adds library
+  definitions at top level.</li>
+<li><code>print</code> accepts a string literal, buffer, integer expression, or boolean expression
+  and adds a newline. Booleans print as <code>true</code> or <code>false</code>.</li>
+<li>Integer expressions support <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code>, unary <code>+</code>/<code>-</code>, and
+  parentheses. Multiplication, division, and remainder bind more tightly than
+  addition and subtraction. Binary operators at the same precedence associate
+  left to right.</li>
+<li>Integers range from <code>-9223372036854775808</code> to <code>9223372036854775807</code>.
+  <code>-9223372036854775808</code> is accepted as a directly negated literal; its positive
+  magnitude cannot be used as an ordinary positive literal.</li>
+<li><code>let</code> declares an immutable binding; <code>var</code> declares a mutable
+  binding. Every binding must have an initializer. <code>int64</code>, <code>bool</code>, <code>bytes</code>, <code>string</code>, struct and array types
+  are inferred and fixed for the lifetime of the binding.</li>
+<li>Binding reassignment is supported only for <code>var</code>; fields and array elements can be mutated through <code>let</code>. Names must be declared before use;
+  duplicate declarations in the same block are errors. Inner blocks may
+  shadow outer names, and their bindings are invisible after the block ends.
+  Identifiers use ASCII letters,
+  underscores, and digits, with a letter or underscore first. Keywords are
+  reserved. <code>"..."</code> produces bytes; <code>s"..."</code> produces immutable UTF-8 strings.</li>
+<li>Separate statements with newlines; the final statement may directly precede
+  <code>}</code>. Newlines after operators and opening parentheses are allowed. Semicolons
+  are not implemented. Comments use <code>//</code> or non-nesting <code>/* ... */</code>; newlines
+  in block comments retain their statement-separator meaning.</li>
+<li>Input is UTF-8. String escapes are <code>\n</code>, <code>\t</code>, <code>\r</code>, <code>\"</code>, <code>\\</code>, and <code>\0</code>.</li>
+<li>Empty bodies, empty strings, LF, and CRLF are supported.</li>
+<li>Raw NUL source bytes, malformed UTF-8, unsupported escapes, and raw newlines inside
+  strings are rejected. Diagnostics contain filename, line, and byte column.</li>
+</ul>
+<h2 id="booleans-and-control-flow">Booleans and control flow</h2>
+<pre><code class="language-text">fn main() {
+    var running = true
+    var count = 0
+    while running {
+        count = count + 1
+        if count == 5 {
+            running = false
+        } else {
+            print(count)
+        }
+    }
+    print(!running)
+}
+</code></pre>
+<ul>
+<li><code>true</code> and <code>false</code> are distinct boolean literals; <code>!</code> negates a boolean.</li>
+<li><code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code> compare signed integers. <code>==</code> and <code>!=</code> compare
+  two integers, two booleans or two strings. Mixing types is a compile-time error.</li>
+<li><code>&amp;&amp;</code> and <code>||</code> require booleans and short-circuit left to right; skipped operands
+  still undergo type checking.</li>
+<li>From lowest to highest precedence: <code>||</code>, <code>&amp;&amp;</code>, equality, ordering, addition/subtraction,
+  multiplication/division/remainder, unary signs/<code>!</code>, and primary expressions.
+  Operators at one level associate left to right. <code>1 &lt; 2 &lt; 3</code> is rejected;
+  combine pairwise comparisons with <code>&amp;&amp;</code>. Arithmetic requires integers; <code>+</code> also concatenates strings.</li>
+<li><code>if condition { ... } else { ... }</code> and <code>while condition { ... }</code> require
+  a boolean condition. <code>else</code> is optional and may follow on a new line.
+  Branches use braces, including for a nested <code>if</code> in an <code>else</code> body.</li>
+<li><code>while</code> reevaluates its condition before every iteration. <code>break</code> exits the
+  innermost loop; <code>continue</code> reevaluates its condition. Both require a loop.
+  <code>while true</code> runs until a <code>break</code> or a runtime failure; there is no implicit
+  iteration limit. Code in skipped branches is type-checked but not executed.</li>
+<li>Bindings initialize whenever execution reaches their declaration. A shadowing
+  initializer can refer to the outer binding. Blocks do not expose their locals.</li>
+<li><code>else if</code> and <code>for</code> are not implemented.
+  Separate statements with newlines, including after a compound statement.</li>
+</ul>
+<p>Run <code>make control-flow</code> for a native Fibonacci/loop example.</p>
+<h2 id="functions">Functions</h2>
+<pre><code class="language-text">fn factorial(n: int64) -&gt; int64 {
+    if n == 0 {
+        return 1
+    } else {
+        return n * factorial(n - 1)
+    }
+}
+
+fn main() {
+    print(factorial(10))
+    announce()
+}
+
+fn announce() {
+    print(&quot;Functions work!&quot;)
+}
+</code></pre>
+<p>Parameters require non-void type annotations and their bindings are immutable.
+Results can declare any value type or <code>void</code>; omitting the result means void.
+Calls evaluate arguments left to right and require exactly matching types and
+argument counts. Functions may call later definitions, themselves or each other.
+A lexical binding can shadow a function name; that name then cannot be called.
+<code>main</code> is the process entry and cannot be called by user code.</p>
+<p><code>return expression</code> must match the declared value type; bare <code>return</code> is for void
+functions, including <code>main</code>. A value function must return on every statically
+checked path. Both arms of an <code>if</code>/<code>else</code> may establish that guarantee. Loops are
+checked conservatively, so even a <code>while true</code> needs a return after it for a
+value function. Unreachable statements are still type-checked. Void calls may
+be statements; value calls used as statements discard their result.</p>
+<p>Every call has its own local frame. At most 64 Ramos calls may be active,
+including <code>main</code>; attempting the next call reports a runtime error and exits 1.
+Normal returns release the frame and restore the active-call counter. This
+check assumes an ordinary Linux process stack; it cannot compensate for an
+unusually small stack limit selected by the caller.</p>
+<p>Run <code>make functions</code> for factorial, a digit classifier and a void helper.
+See <a href="https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/functions.md">the native calling convention</a> for compiler details.</p>
+<h2 id="arithmetic-behavior">Arithmetic behavior</h2>
+<p>Generated native instructions check signed overflow for addition, subtraction,
+multiplication, and negation. Division truncates toward zero; a remainder has the
+dividend's sign. Division or remainder by zero, and either operation on
+<code>INT64_MIN</code> with divisor <code>-1</code>, fail explicitly.</p>
+<p>A failed arithmetic operation writes a runtime diagnostic to stderr and exits
+with status 1. It never silently wraps or depends on an unhandled CPU divide
+fault. Successfully completed programs exit with status 0. Earlier output is
+retained if a later operation fails.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="01-getting-started.html">← Install, build and run</a><a href="03-values.html">Strings, structs, arrays and memory →</a></nav><footer>Ramos 0.13.0 · <a href="book/02-language.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

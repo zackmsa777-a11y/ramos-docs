@@ -1,0 +1,28 @@
+{
+  "version": "0.13.0",
+  "target": "x86_64-linux",
+  "compiler_source": "compiler/ramos.ramos",
+  "source_sha256": "02359779e4eea47ab51c295bc08154db916045f6f88c68a55d06013d54608f9a",
+  "executables": {
+    "stage0": "dc8c0626f8d816fcd18a8b26b52c1e666d08f86b78f1d7d57bc9b61bbcbec61e",
+    "stage1": "6c9753b2d23dff57b8465cd61143643e3c028b81b255d6e966999e9b549754bd",
+    "stage2": "8bebdd629aebe439e1f4f29b5190a1efcc46c61182e69bf958e90d1c554ea822",
+    "stage3": "8bebdd629aebe439e1f4f29b5190a1efcc46c61182e69bf958e90d1c554ea822"
+  },
+  "stage2_equals_stage3": true,
+  "isolated_path_rebuild_matches": true,
+  "embedded_runtime_matches_bootstrap": true,
+  "tests_discovered_per_stage": 198,
+  "bootstrap_skips_linux_only_target_selection_tests": 4,
+  "bootstrap_skips_post_0_7_grammar_tests": 10,
+  "bootstrap_skips_values_tests": 23,
+  "bootstrap_skips_library_tests": 20,
+  "bootstrap_skips_stream_tests": 15,
+  "bootstrap_skips_terminal_tests": 11,
+  "bootstrap_skips_gui_tests": 4,
+  "corpus_passed_with": [
+    "stage0",
+    "stage2",
+    "stage3"
+  ]
+}

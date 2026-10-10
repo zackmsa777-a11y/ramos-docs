@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>What comes next · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="03-values.html"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html"><span>05</span>Stdin and number conversion</a><a href="06-files.html"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html" aria-current="page"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="what-comes-next">What comes next</h1>
+<p><strong>Goal:</strong> make Ramos a simple native language for useful CLI, TUI and desktop
+applications on Windows x64 and Linux x64. A beginner should be able to build
+and run a small tool from a short example; larger tools should have the libraries,
+diagnostics and resource handling needed to keep working.</p>
+<p>This is a development plan starting from 0.13, not a claim that these features
+have shipped. Proposed version labels below describe order, not deadlines.
+Keep each release small enough to implement and verify completely; split a
+milestone if necessary. Python-like ease and Rust/C-like native performance
+are design aims, not promises of ecosystem parity or benchmark superiority.</p>
+<h2 id="the-users-rules">The user's rules</h2>
+<p><strong>1. Simple.</strong> Keep a small, readable syntax and one clear way to perform common
+tasks. Preserve <code>weave</code> for libraries. Put ordinary helpers in Ramos libraries
+instead of growing the compiler for every convenience. Prefer inferred local
+types, useful defaults and examples over configuration. Common text, file and
+GUI operations should not require hand-written byte manipulation.</p>
+<p><strong>3. Fast.</strong> Keep direct native ELF/PE generation and the self-hosted compiler.
+Measure speed rather than infer it from native output. Avoid needless copying,
+allocations and idle polling. Optimize costs observed in real applications;
+performance claims must identify the release, machine, workload and measurement.</p>
+<p>No rule 2 was supplied. Correctness remains a release prerequisite: preserve
+checked arithmetic, bounds, UTF-8 contracts, resource cleanup and deterministic
+self-hosting. Any change in those contracts must be explicit and tested.</p>
+<h2 id="starting-point">Starting point</h2>
+<p>0.13 already has immutable strings, reusable managed memory, structs, typed
+arrays, <code>weave</code>, a small standard library, streamed files, stdin, CLI/TUI tools
+and a Windows GUI library. Those foundations should be extended, not rebuilt.
+The Linux desktop backend is still missing. Live memory, individual values,
+recursion and source size have documented limits. The published comparative
+timings are historical; they are not a performance result for 0.13.</p>
+<h2 id="ordered-milestones">Ordered milestones</h2>
+<table>
+<thead>
+<tr>
+<th>Proposed milestone</th>
+<th>Work</th>
+<th>Runnable acceptance example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.14: easier code</td>
+<td><code>else if</code>, exclusive-range <code>for</code>, <code>+=</code> and <code>-=</code>; updated syntax documentation and highlighting</td>
+<td>Simplify an existing search/viewer example while preserving its output and behavior on both OSes</td>
+</tr>
+<tr>
+<td>0.15: useful OS libraries</td>
+<td>Directory iteration, paths, environment access and direct child-process execution</td>
+<td>Recursive file search and a copy/backup tool; a command runner that reports child exit status</td>
+</tr>
+<tr>
+<td>0.16: easier development</td>
+<td>Source-line/caret errors, a formatter and a compile-and-run command</td>
+<td>A new user can run a file, correct a reported error and format it using the documented commands</td>
+</tr>
+<tr>
+<td>0.17: data and math</td>
+<td><code>float64</code>, conversions and essential math; string builders and better collection growth; reviewed memory/recursion limits</td>
+<td>A numerical renderer and a streaming text tool that builds output without repeated whole-string copies</td>
+</tr>
+<tr>
+<td>0.18: portable GUI</td>
+<td>Linux backend, layout/DPI handling, file dialogs and basic drawing behind the GUI library</td>
+<td>The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux</td>
+</tr>
+<tr>
+<td>1.0 candidate: reliability and measured speed</td>
+<td>Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility</td>
+<td>Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="014-specify-the-small-syntax-changes-first">0.14: specify the small syntax changes first</h3>
+<p>Define range bounds as evaluated once, with the upper bound excluded. Specify
+loop-variable scope, <code>break</code>, <code>continue</code> and checked iteration overflow. Define
+compound assignment so its destination is evaluated once, including fields and
+array indices. Retain checked arithmetic and useful errors.</p>
+<p>Start with <code>+=</code> and <code>-=</code>; do not also add <code>++</code> merely to duplicate the same task.
+Review per-function stack requirements before increasing recursion depth. A
+larger constant alone does not solve stack safety.</p>
+<p>Record a fresh 0.13 performance baseline before compiler changes. Existing
+programs must still compile, and the simplified example must have matching
+output. Measure compile time as well as the affected runtime workloads.</p>
+<h3 id="015-file-tools-as-the-first-practical-application-target">0.15: file tools as the first practical application target</h3>
+<p>Directory iteration must stream entries and release handles when stopped early.
+Specify Unicode paths, missing files, permission failures and traversal policy,
+including symbolic links, so recursive tools cannot accidentally loop forever.
+Use fallible results for expected OS failures, consistent with existing I/O.</p>
+<p>Child processes receive an executable and argument values directly. Shell
+interpretation should require an explicit separate choice. Specify inherited
+or redirected stdin/stdout/stderr, waiting and exit status. Avoid capturing
+unbounded output into the managed heap.</p>
+<p>Test empty directories, Unicode filenames, large streamed files, failed copies,
+early exit and child failures on native Windows and Linux.</p>
+<h3 id="016-make-common-mistakes-easy-to-fix">0.16: make common mistakes easy to fix</h3>
+<p>Errors should show filename, line, column, the relevant source line and a caret,
+with the expected construct or type. Preserve original library locations.
+The formatter must preserve comments and program meaning and be idempotent.</p>
+<p>Design <code>ramos run app.ramos</code> as compile-and-run using a temporary native binary,
+with program arguments, exit-status forwarding and cleanup. Keep <code>build</code> for
+distributable executables. Update editor support alongside new syntax. Evaluate
+<code>--emit-asm</code> after the core authoring work; an inspection feature needs a clear
+contract and should not become a second code-generation backend.</p>
+<h3 id="017-remove-the-walls-using-measured-application-needs">0.17: remove the walls using measured application needs</h3>
+<p>Specify floating-point literals, IEEE-754 behavior, comparisons, conversions,
+NaN/infinity handling, division and printing before implementation. Keep integer
+overflow checks intact. Verify numerical results against independent references
+on both targets.</p>
+<p>Add a string builder and amortized collection growth with clear aliasing and
+lifetime rules. Keep immutable string values and low-level bytes available.
+Profile collection and heap behavior before redesigning the allocator or GC.
+Use long-running allocation tests and actual live-data workloads to choose
+larger or configurable limits; do not silently remove checks. Ordinary code
+should not need manual freeing. Explicit release remains necessary for OS
+resources such as files, processes and windows.</p>
+<p>Generics and broader containers come later if concrete apps need them; they
+should not block useful strings, arrays and number handling.</p>
+<h3 id="018-one-gui-api-with-real-desktop-evidence">0.18: one GUI API with real desktop evidence</h3>
+<p>Choose and document the initial Linux display backend and its OS dependencies.
+Keep platform details behind <code>stdlib/gui.ramos</code>. Add layout, scaling, dialogs
+and drawing in small tested slices. Verify events, focus, input, close, resize,
+resource lifetime and Unicode on actual desktop sessions, including Windows.
+Cross-compilation alone is not proof that a GUI works.</p>
+<p>Retain an idle-blocking event loop. Multi-window support, menus, images and
+advanced widgets can follow demonstrated app needs.</p>
+<h2 id="performance-evidence">Performance evidence</h2>
+<p>Use at least eight workloads spanning integer arithmetic, recursion, arrays,
+strings, allocation, file streaming, parsing/search and numerical rendering.
+Compare equivalent C, Rust and Python implementations on the same machine;
+verify results before timing, record toolchain versions and build flags, repeat
+runs and report medians and variability. Explain semantic differences, including
+checked arithmetic. Benchmark input must be large enough to separate useful
+work from process startup.</p>
+<p>For a C-relative execution index, define C as 100 and each Ramos task score as
+<code>100 * C_time / Ramos_time</code>; the overall score is the geometric mean of the
+task scores. Report per-task results and Rust/Python ratios too. A score above
+100 means faster on this suite, not a better language. Track startup time,
+compile time, binary size and peak memory separately from the speed index.</p>
+<p>Investigate regressions outside measured variability and explain any deliberate
+tradeoff. Never reuse old benchmark numbers as evidence for a new release.
+Documentation-only edits do not require rerunning the performance suite.</p>
+<h2 id="completion-checks">Completion checks</h2>
+<p>A feature milestone is complete when its behavior is specified, an application
+uses it, relevant success/failure tests pass natively on Windows and Linux,
+both deterministic self-hosting proofs still match, and the downloadable package
+contains the working compiler, libraries, examples and instructions. Platform
+features additionally need execution on the platform they target.</p>
+<p>The 1.0 goal is complete when a clean-install user can build and run recursive
+file tools, an interactive TUI and the portable Notes GUI; a numerical example
+exercises the math support; long-running examples stay within their documented
+resource behavior; and current performance measurements and remaining limits
+are published. This is useful application capability, not all of Python or Rust.</p>
+<p>Package registries, async runtimes, advanced generics and ecosystem expansion
+remain follow-up goals. GitHub Linguist recognition is independent of language
+correctness and application readiness.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="14-performance.html">← Performance and evidence</a><a href="16-agent-guide.html">Guide for AI coding agents →</a></nav><footer>Ramos 0.13.0 · <a href="book/15-roadmap.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

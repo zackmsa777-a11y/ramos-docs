@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>Runnable projects · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="03-values.html"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html"><span>05</span>Stdin and number conversion</a><a href="06-files.html"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html" aria-current="page"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="runnable-projects">Runnable projects</h1>
+<p>These are complete programs from Ramos 0.13, not pseudocode. The repository
+includes their exact source under <code>examples/</code> and the matching <code>stdlib/</code>.
+Compile commands below assume you placed the native compiler in this
+repository's root. Add <code>--force</code> when intentionally rebuilding an output.</p>
+<h2 id="file-copy">File copy</h2>
+<pre><code class="language-sh">./ramos-linux-x86_64 build examples/rcopy.ramos -o rcopy
+./rcopy source.bin new-copy.bin
+</code></pre>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\rcopy.ramos -o .\rcopy.exe
+.\rcopy.exe .\source.bin .\new-copy.bin
+</code></pre>
+<p><a href="examples/rcopy.ramos">Source: rcopy.ramos</a>. Uses streamed I/O, processes files
+larger than the per-buffer limit and refuses existing destinations. Failed
+streaming copies can leave a partial new file; they are not atomic replacement.</p>
+<h2 id="literal-file-search">Literal file search</h2>
+<pre><code class="language-sh">./ramos-linux-x86_64 build examples/rgrep.ramos -o rgrep
+./rgrep needle book/00-welcome.md book/01-getting-started.md
+</code></pre>
+<p><a href="examples/rgrep.ramos">Source: rgrep.ramos</a>. Matches literal bytes, reports
+file and line, and returns 0 for a match, 1 for none and 2 for errors. It does
+not traverse directories or interpret regular expressions.</p>
+<h2 id="full-screen-file-viewer">Full-screen file viewer</h2>
+<pre><code class="language-sh">./ramos-linux-x86_64 build examples/rview.ramos -o rview
+./rview book/00-welcome.md
+</code></pre>
+<p><a href="examples/rview.ramos">Source: rview.ramos</a>. Run in an interactive terminal;
+use arrows, j/k, Space/n, p and q. The viewer deliberately sanitizes non-ASCII
+and control bytes. It is not a complete Unicode text editor.</p>
+<h2 id="desktop-notes-windows">Desktop Notes — Windows</h2>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
+.\notes.exe
+</code></pre>
+<p><a href="examples/notes.ramos">Source: notes.ramos</a>. Unicode editor, Save/Clear
+buttons, status messages and resizing. Save creates a new file and refuses an
+existing path. This version has no open dialog or unsaved-change prompt.</p>
+<h2 id="a-small-gui-event-loop">A small GUI event loop</h2>
+<p><a href="examples/gui_hello.ramos">Source: gui_hello.ramos</a>:</p>
+<pre><code class="language-ramos">weave &quot;stdlib/gui.ramos&quot;
+weave &quot;stdlib/numbers.ramos&quot;
+
+fn main() {
+    gui_check(gui_open(s&quot;Hello, Ramos&quot;, 360, 180))
+    gui_label(1, 20, 20, 320, 24, s&quot;A real window, written in Ramos&quot;)
+    gui_button(2, 20, 60, 120, 32, s&quot;Click me&quot;)
+    var count = 0
+    var running = true
+    while running {
+        let event = gui_event(-1)
+        if event.kind == 1 { running = false }
+        if event.kind == 2 &amp;&amp; event.id == 2 {
+            count = count + 1
+            gui_set(1, s&quot;Clicks: &quot; + num_text(count))
+        }
+    }
+    gui_check(gui_close())
+}
+
+</code></pre>
+<p>The code above is intended as a root-level source file. The checked-in example
+is inside <code>examples/</code> and therefore uses <code>../stdlib/</code>. Build for Windows with
+<code>--gui</code>; Linux can cross-compile this source but cannot run its GUI backend.</p>
+<h2 id="more-complete-sources">More complete sources</h2>
+<ul>
+<li><a href="examples/input.ramos">Interactive number input</a></li>
+<li><a href="examples/line_stats.ramos">Streaming Unicode line statistics</a></li>
+<li><a href="examples/library_demo.ramos">Library, list and map demo</a></li>
+<li><a href="examples/calculator.ramos">Checked calculator</a></li>
+</ul>
+<p>The shell and PowerShell versions of a build follow the same structure:
+<code>COMPILER build SOURCE -o OUTPUT</code>. Windows outputs should use <code>.exe</code>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="10-windows.html">← Windows and cross-compilation</a><a href="12-self-hosting.html">How the compiler builds itself →</a></nav><footer>Ramos 0.13.0 · <a href="book/11-cookbook.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>Welcome to the Ramos Book · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html" aria-current="page"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="03-values.html"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html"><span>05</span>Stdin and number conversion</a><a href="06-files.html"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="welcome-to-the-ramos-book">Welcome to the Ramos Book</h1>
+<p>Ramos is a small, self-hosted language that compiles directly to native
+Linux x64 and Windows x64 executables. Its two guiding rules are <strong>simple
+programming</strong> and <strong>measured speed</strong>.</p>
+<p>This book describes <strong>Ramos 0.13.0</strong>. Markdown chapters are the canonical edition
+for AI agents, review and offline reading. The HTML edition is generated from
+those same chapters for comfortable human reading. Historical version labels
+identify when a feature arrived; they do not change this book's baseline.</p>
+<h2 id="choose-your-path">Choose your path</h2>
+<ul>
+<li>New to Ramos? Start with <a href="01-getting-started.html">install, build and run</a>, then
+  <a href="02-language.html">the language</a> and <a href="03-values.html">values</a>.</li>
+<li>Building a tool? Read <a href="06-files.html">files</a>, <a href="07-libraries.html">libraries</a> and
+  <a href="08-cli-tui.html">CLI/TUI</a>, then try the <a href="11-cookbook.html">projects</a>.</li>
+<li>Building a desktop window? Read <a href="09-gui.html">Windows GUI</a>. The Linux GUI backend
+  is not available in 0.13.</li>
+<li>Writing Ramos with an AI agent? Start with the <a href="16-agent-guide.html">agent guide</a>
+  and <a href="13-reference.html">API reference</a>.</li>
+<li>Working on the compiler? Read <a href="12-self-hosting.html">self-hosting</a>.</li>
+</ul>
+<h2 id="what-you-can-use-today">What you can use today</h2>
+<p>Checked int64 arithmetic, booleans, functions, comments, while loops, immutable
+UTF-8 strings, mutable bytes, structs, typed arrays, reclaiming managed memory,
+compile-time <code>weave</code>, stdin, streamed files, terminal interfaces and Windows
+native GUI controls.</p>
+<p>There are no floats, range-for loops, <code>else if</code>, compound assignment, directory
+iteration, child-process API, namespaces or package registry in 0.13. See the
+<a href="13-reference.html">limits</a> and <a href="15-roadmap.html">proposed roadmap</a>. Planned syntax
+must not be used in programs targeting this version.</p>
+<p>You compile a <code>.ramos</code> source and run the resulting executable. Ramos does not
+currently interpret a source file or provide <code>ramos run</code>.</p>
+<h2 id="project-links">Project links</h2>
+<ul>
+<li><a href="https://github.com/zackmsa777-a11y/ramos">Compiler and source</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.13.0">Ramos 0.13.0 release</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation source</a></li>
+</ul>
+<p>The limits and negative results matter as much as working features. Native
+output is not proof of speed, and compiling for an OS is not proof that its
+interactive applications have been tested there.</p></article><nav class="pager" aria-label="Chapter navigation"><span></span><a href="01-getting-started.html">Install, build and run →</a></nav><footer>Ramos 0.13.0 · <a href="book/00-welcome.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>Windows and cross-compilation · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="03-values.html"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html"><span>05</span>Stdin and number conversion</a><a href="06-files.html"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html" aria-current="page"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="windows-and-cross-compilation">Windows and cross-compilation</h1>
+<p>Ramos produces native Windows x64 console executables in PE32+ format. The same
+language supports arithmetic, booleans, scopes, control flow, typed functions,
+recursion, byte buffers, arguments and binary file I/O on Linux and Windows.
+There is no interpreter, Python dependency or C runtime in generated programs.</p>
+<h2 id="use-ramos-on-windows">Use Ramos on Windows</h2>
+<p>Download <a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.13.0/ramos.exe">ramos.exe from the 0.13 release</a>
+and open PowerShell in its directory. CI artifacts are also available from the
+<a href="https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml">Self-hosting proof workflow</a>. Save a UTF-8 <code>hello.ramos</code>:</p>
+<pre><code class="language-text">fn main() {
+    print(&quot;Hello, Windows!&quot;)
+}
+</code></pre>
+<p>Compile and run:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\hello.ramos -o .\hello.exe
+.\hello.exe
+</code></pre>
+<p>Windows is the default target when the compiler runs on Windows. Existing output
+requires <code>--force</code>. Use <code>.exe</code> for Windows output filenames. The target is x64;
+32-bit Windows and a native ARM64 backend are not supported by this milestone.
+Programs default to console applications. Version 0.13 adds <code>--gui</code> and the
+<a href="09-gui.html">native desktop GUI library</a>; build the Notes example with:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
+.\notes.exe
+</code></pre>
+<h2 id="cross-compile-from-linux">Cross-compile from Linux</h2>
+<pre><code class="language-sh">make
+./ramos build examples/hello.ramos -o hello.exe --target windows
+make windows                 # build the native Windows compiler as build/ramos.exe
+</code></pre>
+<p>The Windows compiler can also emit Linux executables with <code>--target linux</code>.
+No target assembler, linker or cross-toolchain is used to compile Ramos sources.
+Only the initial assembly runtime/bootstrap audit uses GNU binutils.</p>
+<h2 id="runtime-and-executable-format">Runtime and executable format</h2>
+<p>The Ramos emitter writes PE headers, sections, imports and a relocation directory
+itself. Code is read/execute, literals are read-only, import slots are read/write,
+and the value heap is read/write. No section is both writable and executable.
+The PE advertises NX compatibility and ASLR, uses position-independent code and
+contains no timestamps or build paths. The imports are Windows' built-in
+<code>KERNEL32.dll</code> and <code>SHELL32.dll</code>; no compiler tool, CRT or interpreter is imported.
+GUI startup loads USER32/GDI32 from System32 through <code>LoadLibraryExW</code>; ordinary
+CLI programs never initialize a GUI. Control creation and rendering use native
+system calls, and the default console subsystem remains unchanged.</p>
+<p>The private Ramos calling convention remains the same. A small native API bridge
+aligns the stack and reserves Windows shadow space for system calls. Function
+frames probe each stack page before reserving larger frames, preserving Windows
+stack guard behavior. Arithmetic, buffer, allocation and call-depth checks remain.</p>
+<p>Arguments use Windows' command-line parsing rules and are converted from UTF-16
+to UTF-8. Paths are converted from UTF-8 to UTF-16 with invalid encodings rejected.
+Whole-file <code>read_file</code> rejects non-disk files/directories and enforces the 1 MiB bound;
+0.12 streams process regular files in bounded chunks. Atomic <code>write_file</code> writes
+use a separate same-directory temporary file, handle partial writes, close the
+file and publish it with <code>MoveFileExW</code>. Existing output requires the replacement
+flag, and source/hardlink aliases are rejected even with replacement enabled.
+Temporary files are cleaned up on failure. Windows output paths are made absolute
+once before publication; unlike the Linux publisher, directory-handle anchoring
+is not implemented. Both publishers assume the caller controls the destination
+directory; neither promises crash durability.</p>
+<p><code>platform()</code> returns 0 on Linux and 1 on Windows. All other intrinsic signatures
+remain unchanged. Windows maps OS errors into common negative statuses: -2
+missing file/path, -13 access denied, -17 already exists, -22 invalid path or
+source alias, -27 oversized/growing input, -36 path too long, and -5 other I/O
+failures. File-operation status stays fallible. The executable flag to
+<code>write_file</code> is accepted on Windows; executable format and <code>.exe</code> naming determine
+how it is launched, rather than POSIX permission bits.</p>
+<h2 id="prove-windows-self-hosting">Prove Windows self-hosting</h2>
+<p>Using the native compiler on Windows:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\compiler\ramos.ramos -o .\stage2.exe --force
+.\stage2.exe build .\compiler\ramos.ramos -o .\stage3.exe --force
+(Get-FileHash .\stage2.exe).Hash -eq (Get-FileHash .\stage3.exe).Hash
+</code></pre>
+<p><code>tools/windows_proof.py</code> does this, also compares the Linux-built seed with the
+Windows-built stages, and runs native programs against shared language tests,
+PE permissions, binary I/O, Unicode paths, arguments, source aliases, replacement,
+checked runtime failures and large stack frames. CI runs it on <code>windows-latest</code>
+and uploads <code>windows-bootstrap-proof.json</code> with the executable. Linux developers
+can run the same harness under Wine using <code>make test-windows</code> with an isolated
+<code>WINEPREFIX</code>. Wine is a development test runner; end users do not need it.</p>
+<p>Version 0.9 adds native buffered stdin and signed decimal conversions. Console
+input uses the configured input code page; redirected input preserves bytes.
+See <a href="05-input.html">input and conversion semantics</a>.</p>
+<p>Version 0.10 adds strings, reclaimed heap memory, structs and typed arrays with
+the same contracts as Linux. See <a href="03-values.html">values and memory</a>.</p>
+<p>Version 0.11 supports source-relative <code>weave</code> libraries and the Ramos standard
+library. Extract the libraries archive before building its examples; use <code>/</code> in
+directives even on Windows. See <a href="07-libraries.html">libraries.md</a>.</p>
+<p>Version 0.12 adds regular-file streams and TUI console controls. The Windows
+runtime enables VT output, reads native key events, and restores console modes
+on return, exit and Ramos traps; its control callback also attempts cleanup
+on OS control termination. Use Windows Terminal or a
+real interactive console; redirected handles are rejected for TUI startup.
+See <a href="08-cli-tui.html">file tools and terminal interfaces</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="09-gui.html">← Desktop GUI on Windows</a><a href="11-cookbook.html">Runnable projects →</a></nav><footer>Ramos 0.13.0 · <a href="book/10-windows.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>Arguments and file I/O · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="03-values.html"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html"><span>05</span>Stdin and number conversion</a><a href="06-files.html" aria-current="page"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="arguments-and-file-io">Arguments and file I/O</h1>
+<p>On Linux these intrinsics use x86-64 syscalls directly; on Windows they use
+the native Windows API boundary described in <a href="10-windows.html">windows.md</a>. They are checked and typed in
+the bootstrap and self-hosted compilers. No C library, shell, subprocess or external compiler is involved.</p>
+<table>
+<thead>
+<tr>
+<th>Intrinsic</th>
+<th>Signature</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>arg_count</code></td>
+<td><code>() -&gt; int64</code></td>
+<td>argc, including the executable name</td>
+</tr>
+<tr>
+<td><code>arg</code></td>
+<td><code>(int64) -&gt; bytes</code></td>
+<td>fresh copy of an argument; invalid index traps</td>
+</tr>
+<tr>
+<td><code>read_file</code></td>
+<td><code>(bytes) -&gt; bytes</code></td>
+<td>bounded regular-file read; empty bytes on failure</td>
+</tr>
+<tr>
+<td><code>write_file</code></td>
+<td><code>(bytes, bytes, int64) -&gt; int64</code></td>
+<td>atomic publication; zero or negative errno</td>
+</tr>
+<tr>
+<td><code>read_line</code></td>
+<td><code>() -&gt; bytes</code></td>
+<td>buffered stdin line read; empty bytes on failure</td>
+</tr>
+<tr>
+<td><code>stdin_eof</code></td>
+<td><code>() -&gt; bool</code></td>
+<td>sticky EOF observed by a stdin read</td>
+</tr>
+<tr>
+<td><code>io_error</code></td>
+<td><code>() -&gt; int64</code></td>
+<td>last read/write status; zero or negative errno</td>
+</tr>
+<tr>
+<td><code>stderr</code></td>
+<td><code>(bytes) -&gt; void</code></td>
+<td>exact bytes to fd 2, with no added newline</td>
+</tr>
+<tr>
+<td><code>platform</code></td>
+<td><code>() -&gt; int64</code></td>
+<td>host OS: 0 Linux, 1 Windows</td>
+</tr>
+<tr>
+<td><code>exit</code></td>
+<td><code>(int64) -&gt; void</code></td>
+<td>terminate with status 0..255; invalid status traps</td>
+</tr>
+</tbody>
+</table>
+<p>On Linux, arguments are raw operating-system bytes and may be empty or invalid
+UTF-8. Windows arguments are UTF-8 copies of the native UTF-16 command line.
+Paths must be nonempty, shorter than 4096 bytes, and contain no NUL. All byte
+buffers retain the 1 MiB payload and 16 MiB live-heap limit (plus an 8 MiB ownership map). Discarded values can be reclaimed in 0.10; allocations
+still trap on resource exhaustion; OS file failures are explicitly fallible.
+<code>arg</code> returns a fresh mutable copy, not a pointer into the kernel argv stack.</p>
+<p>On Linux, <code>read_file</code> opens with nonblocking and close-on-exec flags and checks regular-file
+status before reading, so a FIFO cannot hang the program. It retries interrupted
+reads, allows files that shrink, and fails if a file grows beyond its sampled
+size. The limit is 1 MiB. The descriptor is closed on success and failure. A
+successful empty read is distinguished from failure using <code>io_error()</code>.
+The identity of the most recent successful input (device and inode) is retained
+as an output safeguard. A failed read does not erase that protection.
+Version 0.11's compiler additionally records all root/library identities using
+its internal guard, so a weave build protects every input; ordinary user I/O
+keeps the most-recent-input contract.</p>
+<p><code>write_file</code> flags are bit 0 = executable and bit 1 = replacement. Other values
+are rejected. On Linux, normal output mode is 0644 and executable output mode is 0755. Output
+is first written into a private 0600 temporary file under the opened destination
+directory, with an independently generated short basename. Partial writes and
+EINTR are handled, permissions are set, and the closed file is published using
+<code>renameat2</code>. Without replacement, <code>RENAME_NOREPLACE</code> also protects against a
+concurrent destination appearing. Failures remove the temporary file and leave
+existing output unchanged. Maximum-length destination basenames are supported.</p>
+<p>Source/destination identity is checked before creation and again before
+publication. Hardlink and symlink aliases to the last successful input are
+rejected even with replacement enabled. This contract protects one most recent
+input, not every file ever read by an application. Atomic publication is not a
+power-loss durability guarantee: the implementation does not perform fsync.</p>
+<p>Output failures from <code>print</code> or <code>stderr</code>, invalid argument indices, invalid exit
+statuses and buffer misuse terminate with status 1 as in the existing runtime.</p>
+<p>Windows preserves the signatures and bounds with UTF-8 arguments and UTF-16
+path conversion. <code>io_error</code> maps Windows errors into common negative statuses.
+Publication uses a same-directory temporary file and <code>MoveFileExW</code>; Windows
+does not use POSIX executable permission bits. See <a href="10-windows.html">Windows I/O details</a>.</p>
+<p>Stdin, integer/text conversion, line limits and error precedence are specified
+in <a href="05-input.html">input-text.md</a>. Stdin reads preserve the most recent successful
+file identity, and file writes do not change decimal parse status.</p>
+<p>Version 0.12 adds fallible exact-byte <code>stdout</code>, checked regular-file stream IDs,
+read/write/seek/EOF/close operations and terminal controls. Streams process files
+larger than a single buffer. Append and the atomic publisher protect all active
+stream inputs as well as the prior input/source guards. See
+<a href="08-cli-tui.html">CLI/TUI signatures and lifecycle</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="05-input.html">← Stdin and number conversion</a><a href="07-libraries.html">Libraries with weave →</a></nav><footer>Ramos 0.13.0 · <a href="book/06-files.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

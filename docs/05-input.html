@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.13.0, with Markdown for agents and HTML for people.">
+<title>Stdin and number conversion · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.13.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="02-language.html"><span>02</span>The language</a><a href="03-values.html"><span>03</span>Strings, structs, arrays and memory</a><a href="04-bytes.html"><span>04</span>Working with bytes</a><a href="05-input.html" aria-current="page"><span>05</span>Stdin and number conversion</a><a href="06-files.html"><span>06</span>Arguments and file I/O</a><a href="07-libraries.html"><span>07</span>Libraries with weave</a><a href="08-cli-tui.html"><span>08</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>09</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>10</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>11</span>Runnable projects</a><a href="12-self-hosting.html"><span>12</span>How the compiler builds itself</a><a href="13-reference.html"><span>13</span>Limits and standard library reference</a><a href="14-performance.html"><span>14</span>Performance and evidence</a><a href="15-roadmap.html"><span>15</span>What comes next</a><a href="16-agent-guide.html"><span>16</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="stdin-and-number-conversion">Stdin and number conversion</h1>
+<p>These typed native intrinsics work in Linux ELF and Windows PE programs. They
+use the existing <code>bytes</code>, <code>int64</code> and <code>bool</code> types; no new syntax or dependencies.</p>
+<table>
+<thead>
+<tr>
+<th>Intrinsic</th>
+<th>Signature</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read_line</code></td>
+<td><code>() -&gt; bytes</code></td>
+<td>Read one line from stdin, removing LF or CRLF</td>
+</tr>
+<tr>
+<td><code>stdin_eof</code></td>
+<td><code>() -&gt; bool</code></td>
+<td>Whether a read has observed EOF; initially false, then sticky</td>
+</tr>
+<tr>
+<td><code>int_to_text</code></td>
+<td><code>(int64) -&gt; bytes</code></td>
+<td>Fresh mutable minimal signed ASCII decimal</td>
+</tr>
+<tr>
+<td><code>text_to_int</code></td>
+<td><code>(bytes) -&gt; int64</code></td>
+<td>Parse the whole buffer; return zero on failure</td>
+</tr>
+<tr>
+<td><code>parse_error</code></td>
+<td><code>() -&gt; int64</code></td>
+<td>Last <code>text_to_int</code> status; initially zero</td>
+</tr>
+</tbody>
+</table>
+<h2 id="decimal-conversion">Decimal conversion</h2>
+<p><code>int_to_text</code> supports the entire signed 64-bit range, including
+<code>-9223372036854775808</code>. Zero becomes <code>"0"</code>. It adds neither a terminator nor a
+newline and leaves <code>parse_error</code> and <code>io_error</code> unchanged.</p>
+<p><code>text_to_int</code> accepts ASCII <code>[+-]?[0-9]+</code>, including leading zeroes. It rejects
+empty input, a sign without digits, whitespace, NUL, non-ASCII digits, prefixes,
+decimal points and trailing bytes. Check <code>parse_error()</code> immediately afterward:</p>
+<ul>
+<li><code>0</code>: success, including a valid zero.</li>
+<li><code>-22</code>: invalid decimal syntax.</li>
+<li><code>-34</code>: valid decimal syntax outside the signed 64-bit range.</li>
+</ul>
+<p>Invalid syntax takes precedence over overflow: <code>"999999999999999999999x"</code>
+reports <code>-22</code>. Every byte is validated even after overflow. Parsing does not
+allocate and has no digit limit beyond the existing 1 MiB buffer limit.
+<code>parse_error</code> is independent of I/O status and changes only on <code>text_to_int</code>.</p>
+<h2 id="line-input-and-eof">Line input and EOF</h2>
+<p><code>read_line</code> blocks until LF, EOF or a read failure. An empty line is a successful
+empty buffer with <code>io_error() == 0</code> and <code>stdin_eof() == false</code>. A final line without
+LF is returned in full and sets EOF true. Subsequent reads return empty bytes
+with status zero. Process a nonempty final line even when EOF is already true:</p>
+<pre><code class="language-ramos">fn main() {
+    var done = false
+    while !done {
+        let line = read_line()
+        if io_error() != 0 {
+            stderr(&quot;cannot read stdin\n&quot;)
+            exit(1)
+        }
+        if buffer_len(line) == 0 &amp;&amp; stdin_eof() {
+            done = true
+        } else {
+            print(line)
+        }
+    }
+}
+</code></pre>
+<p>LF and exactly one CR immediately before LF are removed. A bare CR at EOF is
+retained. Other bytes, including NUL and invalid UTF-8, are preserved.</p>
+<p>Payloads up to 1 MiB excluding LF/CRLF succeed. An oversized line is drained to
+its next LF or EOF, then returns empty bytes with <code>io_error() == -27</code>. The next
+line remains available. OS failures return empty bytes and a negative I/O status;
+a consumed partial line is discarded. Failures do not themselves mark EOF.
+Every <code>read_line</code> updates <code>io_error</code>, including resetting it after successful
+reads or EOF; it does not change decimal parse status or file identity protection.</p>
+<p>Input is read in 4 KiB chunks. A private lazy RW scratch mapping of 1 MiB +
+12 KiB is reused outside the 16 MiB value heap. Returned lines are
+fresh mutable heap allocations sized to their payload, so short lines do not
+each consume 1 MiB. Version 0.10 can reclaim discarded lines; allocation still traps if live
+data exceeds the heap. Do not mix this buffered API with another consumer of stdin.</p>
+<p>Linux reads fd 0 directly and retries EINTR. Windows uses <code>GetStdHandle</code> and
+<code>ReadFile</code>; broken pipe and handle EOF are treated as normal end of input.
+Redirected files and pipes retain raw bytes. Windows console input follows its
+configured input code page, unlike the UTF-8 command-line argument API; Ramos
+does not promise UTF-8 console input. See Microsoft's
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile">ReadFile contract</a>.</p>
+<h2 id="try-interactive-input">Try interactive input</h2>
+<pre><code class="language-sh">./ramos build examples/input.ramos -o input --force
+./input
+</code></pre>
+<p>On Windows:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\input.ramos -o .\input.exe
+.\input.exe
+</code></pre>
+<p>Type <code>21</code> and press Enter; the program prints <code>42</code>. The example checks input and
+parse errors before arithmetic. Doubling remains checked and traps on overflow.</p>
+<p>The shared tests cover integer boundaries and 180 seeded round trips, invalid
+syntax and overflow precedence, independent statuses, live input before pipe
+closure, binary data, CRLF and refill boundaries, exact limits and oversized
+line recovery, 20,000 short lines, OS failures, preserved input-file protection,
+and the interactive example. Both self-hosting proofs run these tests.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="04-bytes.html">← Working with bytes</a><a href="06-files.html">Arguments and file I/O →</a></nav><footer>Ramos 0.13.0 · <a href="book/05-input.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

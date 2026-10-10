@@ -1,0 +1,92 @@
+{
+  "version": "0.13.0",
+  "source_repository": "https://github.com/zackmsa777-a11y/ramos",
+  "source_commit": "c94ff2d1cd9211e63e2466f053de21d3b7ad3955",
+  "chapters": [
+    {
+      "slug": "00-welcome",
+      "title": "Welcome to the Ramos Book",
+      "source": null
+    },
+    {
+      "slug": "01-getting-started",
+      "title": "Install, build and run",
+      "source": null
+    },
+    {
+      "slug": "02-language",
+      "title": "The language",
+      "source": null
+    },
+    {
+      "slug": "03-values",
+      "title": "Strings, structs, arrays and memory",
+      "source": "docs/values.md"
+    },
+    {
+      "slug": "04-bytes",
+      "title": "Working with bytes",
+      "source": null
+    },
+    {
+      "slug": "05-input",
+      "title": "Stdin and number conversion",
+      "source": "docs/input-text.md"
+    },
+    {
+      "slug": "06-files",
+      "title": "Arguments and file I/O",
+      "source": "docs/io.md"
+    },
+    {
+      "slug": "07-libraries",
+      "title": "Libraries with weave",
+      "source": "docs/libraries.md"
+    },
+    {
+      "slug": "08-cli-tui",
+      "title": "CLI tools and terminal interfaces",
+      "source": "docs/cli-tui.md"
+    },
+    {
+      "slug": "09-gui",
+      "title": "Desktop GUI on Windows",
+      "source": "docs/gui.md"
+    },
+    {
+      "slug": "10-windows",
+      "title": "Windows and cross-compilation",
+      "source": "docs/windows.md"
+    },
+    {
+      "slug": "11-cookbook",
+      "title": "Runnable projects",
+      "source": null
+    },
+    {
+      "slug": "12-self-hosting",
+      "title": "How the compiler builds itself",
+      "source": "docs/self-hosting.md"
+    },
+    {
+      "slug": "13-reference",
+      "title": "Limits and standard library reference",
+      "source": null
+    },
+    {
+      "slug": "14-performance",
+      "title": "Performance and evidence",
+      "source": null
+    },
+    {
+      "slug": "15-roadmap",
+      "title": "What comes next",
+      "source": "docs/roadmap-1.0.md"
+    },
+    {
+      "slug": "16-agent-guide",
+      "title": "Guide for AI coding agents",
+      "source": null
+    }
+  ]
+}

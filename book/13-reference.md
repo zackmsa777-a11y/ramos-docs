@@ -1,0 +1,160 @@
+# Limits and standard library reference
+
+The self-hosted compiler accepts up to 64 regular source files totaling 1 MiB
+(with boundary separators), at most 50,000
+tokens including EOF, 4,096 total declarations including parameters and ended
+blocks, 256 functions and 16 parameters per function. Structs are limited to 64
+types with 16 fields each; array type nesting to 16. Expression and block
+depth remain bounded at 128; generated programs allow 64 active calls.
+Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
+have a 40,000-entry bound. These are checked limits. The retained bootstrap has
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/README.md).
+
+The compiler is self-hosted; namespaces, more library types, floats, syntax conveniences, wrapping arithmetic,
+broader optimization and additional targets remain future work. Performance claims need
+new repeatable measurements. The runtime provides checked arithmetic and bounded
+buffers, but generated programs execute with the caller's operating-system
+permissions. General canvas graphics, games, a Linux GUI backend and browser support need further platform work.
+
+## Standard library signatures
+
+These are the complete function signatures defined in the bundled source.
+Follow the chapter APIs for the supported application-facing helpers; some
+other prefixed functions are implementation helpers. These declarations are
+reference entries, not standalone compilable programs. Follow the source links
+for bodies, structs and exact status/lifetime contracts.
+
+### bytes.ramos
+
+[Read the source](../stdlib/bytes.ramos).
+
+```ramos
+fn bytes_copy(source: bytes) -> bytes
+fn bytes_equal(a: bytes, b: bytes) -> bool
+fn bytes_slice(source: bytes, start: int64, end: int64) -> bytes
+fn bytes_put(out: bytes, start: int64, source: bytes)
+fn bytes_find(haystack: bytes, needle: bytes) -> int64
+```
+
+### cli.ramos
+
+[Read the source](../stdlib/cli.ramos).
+
+```ramos
+fn cli_arg(index: int64) -> string
+fn cli_has(name: string) -> bool
+fn cli_value(name: string, fallback: string) -> string
+fn cli_fail(message: string)
+```
+
+### gui.ramos
+
+[Read the source](../stdlib/gui.ramos).
+
+```ramos
+fn gui_word(out: bytes, at: int64, value: int64)
+fn gui_number(raw: bytes, at: int64) -> int64
+fn gui_check(status: int64)
+fn gui_open(title: string, width: int64, height: int64) -> int64
+fn gui_close() -> int64
+fn gui_rgb(red: int64, green: int64, blue: int64) -> int64
+fn gui_properties(kind: int64, id: int64, x: int64, y: int64, width: int64, height: int64, color: int64) -> bytes
+fn gui_label(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_button(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_input(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_editor(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
+fn gui_panel(id: int64, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn gui_set(id: int64, text: string)
+fn gui_move(id: int64, x: int64, y: int64, width: int64, height: int64)
+fn gui_text(id: int64) -> string
+fn gui_event(timeout_ms: int64) -> GuiEvent
+```
+
+### io.ramos
+
+[Read the source](../stdlib/io.ramos).
+
+```ramos
+fn io_reader(path: bytes) -> FileReader
+fn io_close(reader: FileReader) -> int64
+fn io_byte(reader: FileReader) -> int64
+fn io_append(builder: ByteBuilder, value: int64)
+fn io_line(reader: FileReader) -> bytes
+fn io_copy(source: bytes, destination: bytes) -> int64
+fn io_seek(reader: FileReader, offset: int64) -> int64
+```
+
+### lists.ramos
+
+[Read the source](../stdlib/lists.ramos).
+
+```ramos
+fn list_new() -> IntList
+fn list_len(list: IntList) -> int64
+fn list_push(list: IntList, value: int64)
+fn list_get(list: IntList, index: int64) -> int64
+fn list_set(list: IntList, index: int64, value: int64)
+fn list_pop(list: IntList) -> int64
+fn list_clear(list: IntList)
+```
+
+### maps.ramos
+
+[Read the source](../stdlib/maps.ramos).
+
+```ramos
+fn map_new() -> StringMap
+fn map_len(map: StringMap) -> int64
+fn map_index(map: StringMap, key: string) -> int64
+fn map_has(map: StringMap, key: string) -> bool
+fn map_get(map: StringMap, key: string, fallback: string) -> string
+fn map_set(map: StringMap, key: string, value: string)
+fn map_remove(map: StringMap, key: string) -> bool
+```
+
+### numbers.ramos
+
+[Read the source](../stdlib/numbers.ramos).
+
+```ramos
+fn num_min(a: int64, b: int64) -> int64
+fn num_max(a: int64, b: int64) -> int64
+fn num_abs(n: int64) -> int64
+fn num_clamp(n: int64, low: int64, high: int64) -> int64
+fn num_text(n: int64) -> string
+fn num_parse(text: string) -> int64
+```
+
+### text.ramos
+
+[Read the source](../stdlib/text.ramos).
+
+```ramos
+fn text_starts(text: string, prefix: string) -> bool
+fn text_ends(text: string, suffix: string) -> bool
+fn text_find(text: string, needle: string) -> int64
+fn text_contains(text: string, needle: string) -> bool
+fn text_join(parts: [string], separator: string) -> string
+fn text_repeat(text: string, count: int64) -> string
+```
+
+### tui.ramos
+
+[Read the source](../stdlib/tui.ramos).
+
+```ramos
+fn tui_escape() -> string
+fn tui_write(value: string)
+fn tui_control(value: string)
+fn tui_begin() -> int64
+fn tui_end() -> int64
+fn tui_clear()
+fn tui_move(row: int64, column: int64)
+fn tui_color(foreground: int64, background: int64)
+fn tui_reset()
+fn tui_at(row: int64, column: int64, value: string)
+fn tui_box(row: int64, column: int64, width: int64, height: int64)
+fn tui_safe(value: bytes, width: int64) -> string
+fn tui_key(timeout_ms: int64) -> int64
+```
+
