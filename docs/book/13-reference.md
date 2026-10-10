@@ -157,4 +157,3 @@ fn tui_box(row: int64, column: int64, width: int64, height: int64)
 fn tui_safe(value: bytes, width: int64) -> string
 fn tui_key(timeout_ms: int64) -> int64
 ```
-
