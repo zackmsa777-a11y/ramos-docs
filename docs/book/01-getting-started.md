@@ -1,7 +1,7 @@
 # Install, build and run
 
 Use the complete
-[0.13.0 GUI bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.13.0/ramos-0.13.0-gui.zip),
+[0.14.0 syntax bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.14.0/ramos-0.14.0-syntax.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all nine
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.

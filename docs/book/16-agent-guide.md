@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.13.0** unless the task explicitly provides a newer compiler
+programs. Target **0.14.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -22,18 +22,21 @@ useful. Individual chapters are smaller and have stable relative links.
 - `let` for an immutable binding, `var` for a reassignable binding. Inferred local
   types cannot change. Mutating a field/array/byte value through `let` is allowed.
 - Function parameters use explicit types; omitted return type is void.
-- `if`/`else`, `while`, `break`, `continue`, `&&`, `||`, `!`; boolean conditions.
+- `if`/`else if`/`else`, `while`, `for`, `break`, `continue`, `&&`, `||`, `!`;
+  boolean conditions. Range bounds are int64, evaluated once and end-exclusive;
+  loop counters are immutable and local to the body.
 - `int64`, `bool`, `bytes`, `string`, named structs and `[T]` arrays.
 - `"bytes"` and `s"UTF-8 string"` have different types. Conversions copy.
 - `weave "relative/path.ramos"` is top-level and resolves relative to its file.
-- Use normal reassignment such as `i = i + 1`.
+- Use `+=` for matching int64/string values and `-=` for int64. These are
+  statements, with destinations evaluated once before the RHS. Local bindings
+  must be `var`; a for counter cannot be reassigned.
 
 ## Do not invent these features
 
-No `import`, `for`, `else if`, `+=`, `++`, floats, bitwise/shift operators,
+No `import`, `++`, `*=`, `/=`, floats, bitwise/shift operators,
 exceptions, nullable pointers, generics, methods, closures, namespaces, package
-manager, direct child-process API or directory iteration. A nested `if` inside
-an `else` block is supported. Planned features in the roadmap are not current
+manager, direct child-process API or directory iteration. Both `else if` chains and nested `if` blocks are supported. Planned features in the roadmap are not current
 capabilities. Do not substitute Python or C as a hidden backend for Ramos code.
 
 ## Error and lifetime contracts

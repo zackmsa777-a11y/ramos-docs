@@ -4,7 +4,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.13.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.14.0**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -16,20 +16,21 @@ identify when a feature arrived; they do not change this book's baseline.
 - Building a tool? Read [files](06-files.md), [libraries](07-libraries.md) and
   [CLI/TUI](08-cli-tui.md), then try the [projects](11-cookbook.md).
 - Building a desktop window? Read [Windows GUI](09-gui.md). The Linux GUI backend
-  is not available in 0.13.
+  is not available in 0.14.
 - Writing Ramos with an AI agent? Start with the [agent guide](16-agent-guide.md)
   and [API reference](13-reference.md).
 - Working on the compiler? Read [self-hosting](12-self-hosting.md).
 
 ## What you can use today
 
-Checked int64 arithmetic, booleans, functions, comments, while loops, immutable
+Checked int64 arithmetic, booleans, functions, comments, while/range loops, else-if chains, compound assignment, immutable
 UTF-8 strings, mutable bytes, structs, typed arrays, reclaiming managed memory,
 compile-time `weave`, stdin, streamed files, terminal interfaces and Windows
 native GUI controls.
 
-There are no floats, range-for loops, `else if`, compound assignment, directory
-iteration, child-process API, namespaces or package registry in 0.13. See the
+There are no floats, directory iteration, child-process API, namespaces or
+package registry in 0.14. See [the new syntax](17-easier-syntax.md) for ranges,
+else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
 must not be used in programs targeting this version.
 
@@ -39,7 +40,7 @@ currently interpret a source file or provide `ramos run`.
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.13.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.13.0)
+- [Ramos 0.14.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.14.0)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 
 The limits and negative results matter as much as working features. Native

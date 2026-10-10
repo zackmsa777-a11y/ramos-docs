@@ -7,7 +7,7 @@ and emits ELF/PE directly.
 
 ## Run the tools
 
-Extract the complete `ramos-0.13.0-gui.zip` archive; keep `stdlib/` beside
+Extract the complete `ramos-0.14.0-syntax.zip` archive; keep `stdlib/` beside
 `examples/`. On Linux:
 
 ```sh

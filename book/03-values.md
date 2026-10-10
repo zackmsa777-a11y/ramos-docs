@@ -158,7 +158,7 @@ type failures, aliases, constructors/calls/returns, active-expression roots,
 reused zeroed buffers, live-heap exhaustion and cyclic graph lifetimes.
 Performance tables remain the historical 0.7.1 measurements; this release makes
 no new comparative speed claim. Libraries shipped in 0.11. Syntax conveniences, floats and formatter/assembly
-tooling remain future work in this 0.13 edition.
+tooling remain future work in this 0.14 edition.
 
 The [native CI run](https://github.com/zackmsa777-a11y/ramos/actions/runs/38041196929)
 passed 144 Linux tests and 94 Windows tests, with matching self-hosted compiler

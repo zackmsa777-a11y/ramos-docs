@@ -3,14 +3,14 @@
 The self-hosted compiler accepts up to 64 regular source files totaling 1 MiB
 (with boundary separators), at most 50,000
 tokens including EOF, 4,096 total declarations including parameters and ended
-blocks, 256 functions and 16 parameters per function. Structs are limited to 64
+blocks and hidden range-bound slots, 256 functions and 16 parameters per function. Structs are limited to 64
 types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/compiler/README.md).
 
-The compiler is self-hosted; namespaces, more library types, floats, syntax conveniences, wrapping arithmetic,
+The compiler is self-hosted; namespaces, more library types, floats, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system

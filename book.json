@@ -1,7 +1,7 @@
 {
-  "version": "0.13.0",
+  "version": "0.14.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "c94ff2d1cd9211e63e2466f053de21d3b7ad3955",
+  "source_commit": "c1c495307331dbba96d04b4befe4bb8b412d782a",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -17,6 +17,11 @@
       "slug": "02-language",
       "title": "The language",
       "source": null
+    },
+    {
+      "slug": "17-easier-syntax",
+      "title": "Easier syntax: branches, ranges and assignment",
+      "source": "docs/syntax.md"
     },
     {
       "slug": "03-values",
@@ -76,7 +81,7 @@
     {
       "slug": "14-performance",
       "title": "Performance and evidence",
-      "source": null
+      "source": "benchmarks/0.14.0/report.md"
     },
     {
       "slug": "15-roadmap",

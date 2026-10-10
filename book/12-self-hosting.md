@@ -1,6 +1,6 @@
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -63,7 +63,7 @@ seed it. User programs can use the new structs and typed arrays; no preprocessin
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -72,7 +72,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -84,7 +84,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.13 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.14 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.

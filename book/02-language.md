@@ -73,14 +73,19 @@ fn main() {
   combine pairwise comparisons with `&&`. Arithmetic requires integers; `+` also concatenates strings.
 - `if condition { ... } else { ... }` and `while condition { ... }` require
   a boolean condition. `else` is optional and may follow on a new line.
-  Branches use braces, including for a nested `if` in an `else` body.
+  Branches use braces; `else if` chains test later conditions only when prior arms fail.
 - `while` reevaluates its condition before every iteration. `break` exits the
   innermost loop; `continue` reevaluates its condition. Both require a loop.
   `while true` runs until a `break` or a runtime failure; there is no implicit
   iteration limit. Code in skipped branches is type-checked but not executed.
 - Bindings initialize whenever execution reaches their declaration. A shadowing
   initializer can refer to the outer binding. Blocks do not expose their locals.
-- `else if` and `for` are not implemented.
+- `for name in start..end { ... }` evaluates int64 bounds once, then counts
+  upward with an excluded end. The counter is immutable and local to the body;
+  empty/reversed ranges do not run. `break`/`continue` target the innermost loop.
+- `+=` accepts int64/string, `-=` accepts int64, and both are statements with
+  matching operand types. Destinations and indices evaluate once, before the RHS.
+  Bindings require `var`; fields/elements retain mutation through `let`.
   Separate statements with newlines, including after a compound statement.
 
 Run `make control-flow` for a native Fibonacci/loop example.
@@ -127,7 +132,7 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c94ff2d1cd9211e63e2466f053de21d3b7ad3955/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c1c495307331dbba96d04b4befe4bb8b412d782a/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 

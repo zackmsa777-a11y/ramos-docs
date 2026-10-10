@@ -109,7 +109,7 @@ make library-demo
 ./ramos build examples/library_demo.ramos -o library-demo --target windows
 ```
 
-The 0.13 release's `ramos-0.13.0-gui.zip` contains both compilers, all nine
+The 0.14 release's `ramos-0.14.0-syntax.zip` contains both compilers, all nine
 libraries and the example sources. Extract the whole archive so
 source-relative paths keep working. On Windows:
 
