@@ -70,8 +70,11 @@ this release does not raise it without a reviewed stack budget.
 
 | Statement | Allowed destination/result |
 | --- | --- |
-| `destination += expression` | int64 addition or string concatenation |
-| `destination -= expression` | int64 subtraction |
+| `destination += expression` | int64/float64 addition or string concatenation |
+| `destination -= expression` | int64/float64 subtraction |
+
+Float64 support extends the original 0.14 operators in 0.18. It uses the
+[finite arithmetic policy](21-math.md); integer overflow checks remain.
 
 The operand types must match exactly. These are statements, not expressions;
 `print(n += 1)` is invalid. `++`, `*=`, `/=` and wrapping arithmetic are not
@@ -100,7 +103,7 @@ pending write. The original aggregate/value stays rooted across allocations and
 collection. String addition allocates a new immutable value; it is not an
 amortized string-builder operation.
 
-Overflow reports the ordinary arithmetic runtime error and exits 1. String
+Integer overflow reports the ordinary arithmetic runtime error and exits 1. String
 limits, UTF-8 validation, array bounds and heap limits are unchanged.
 
 ## Compatibility and a real tool

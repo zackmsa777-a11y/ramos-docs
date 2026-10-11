@@ -77,14 +77,16 @@ this release does not raise it without a reviewed stack budget.</p>
 <tbody>
 <tr>
 <td><code>destination += expression</code></td>
-<td>int64 addition or string concatenation</td>
+<td>int64/float64 addition or string concatenation</td>
 </tr>
 <tr>
 <td><code>destination -= expression</code></td>
-<td>int64 subtraction</td>
+<td>int64/float64 subtraction</td>
 </tr>
 </tbody>
 </table>
+<p>Float64 support extends the original 0.14 operators in 0.18. It uses the
+<a href="21-math.html">finite arithmetic policy</a>; integer overflow checks remain.</p>
 <p>The operand types must match exactly. These are statements, not expressions;
 <code>print(n += 1)</code> is invalid. <code>++</code>, <code>*=</code>, <code>/=</code> and wrapping arithmetic are not
 added. Bytes and typed arrays do not acquire concatenation or arithmetic.</p>
@@ -107,7 +109,7 @@ A right-hand call that replaces an aggregate reference does not redirect the
 pending write. The original aggregate/value stays rooted across allocations and
 collection. String addition allocates a new immutable value; it is not an
 amortized string-builder operation.</p>
-<p>Overflow reports the ordinary arithmetic runtime error and exits 1. String
+<p>Integer overflow reports the ordinary arithmetic runtime error and exits 1. String
 limits, UTF-8 validation, array bounds and heap limits are unchanged.</p>
 <h2 id="compatibility-and-a-real-tool">Compatibility and a real tool</h2>
 <p><code>for</code> and <code>in</code> are newly reserved words. Older user definitions/bindings with
