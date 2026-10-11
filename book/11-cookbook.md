@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.17, not pseudocode. The repository
+These are complete programs from Ramos 0.18, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -138,3 +138,17 @@ cover preserved comments/newlines, error previews and cleanup.
 [Source](../examples/rnumber.ramos). Streams input, reuses one text builder and
 normalizes LF/CRLF output. [Text builder contracts](20-text-builder.md) cover
 size/error behavior and immutable snapshots.
+
+## Render a numerical image
+
+```sh
+./ramos-linux-x86_64 run examples/mandelbrot.ramos -- image.pgm 320 240 100
+```
+
+```powershell
+.\ramos.exe run .\examples\mandelbrot.ramos -- image.pgm 320 240 100
+```
+
+[Source](../examples/mandelbrot.ramos). Native float64 computes P5 grayscale
+pixels; an image viewer opens the result. Existing output is preserved. Read
+[math and renderer contracts](21-math.md) for argument and size limits.

@@ -8,9 +8,9 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/compiler/README.md).
 
-The compiler is self-hosted; namespaces, more library types, floats, wrapping arithmetic,
+The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
@@ -23,13 +23,20 @@ executable. `run SOURCE [-- ARG...]` compiles and runs for the native OS.
 `fmt SOURCE [--check | -o FILE [--force]]` formats one file. See
 [complete authoring contracts](19-devtools.md).
 
+## Float limits
+
+[Float64 contracts](21-math.md) specify 768 mantissa digits and written decimal
+exponents -400..400, finite values, explicit conversions and fixed formatting
+precision 0..18. These extend numeric types without raising collection, memory
+or active-call limits.
+
 ## Standard library signatures
 
-These are the complete function signatures defined in the bundled source.
-Follow the chapter APIs for supported application-facing helpers; some
-prefixed functions are implementation helpers. Read source for structs and
-exact status/lifetime contracts. [Text builders](20-text-builder.md) document
-reusable text assembly; [OS APIs](18-system.md) document system/path/process.
+These are the complete function signatures defined in the thirteen bundled
+libraries. Follow the chapter APIs for supported application-facing helpers;
+some prefixed functions are implementation helpers. Read source for structs and
+exact status/lifetime contracts. [Math](21-math.md), [text builders](20-text-builder.md)
+and [OS APIs](18-system.md) document their respective application contracts.
 
 ### bytes.ramos
 
@@ -117,6 +124,19 @@ fn map_has(map: StringMap, key: string) -> bool
 fn map_get(map: StringMap, key: string, fallback: string) -> string
 fn map_set(map: StringMap, key: string, value: string)
 fn map_remove(map: StringMap, key: string) -> bool
+```
+
+### math.ramos
+
+[Read the source](../stdlib/math.ramos).
+
+```ramos
+fn math_abs(value: float64) -> float64
+fn math_min(a: float64, b: float64) -> float64
+fn math_max(a: float64, b: float64) -> float64
+fn math_clamp(value: float64, low: float64, high: float64) -> float64
+fn math_sqrt(value: float64) -> float64
+fn math_text(value: float64, places: int64) -> string
 ```
 
 ### numbers.ramos

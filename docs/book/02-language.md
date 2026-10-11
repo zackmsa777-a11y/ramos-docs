@@ -17,8 +17,8 @@ fn main() {
 - Exactly one parameterless `main` returning void is required. Other top-level
   functions and structs may appear before or after it. `weave` adds library
   definitions at top level.
-- `print` accepts a string literal, buffer, integer expression, or boolean expression
-  and adds a newline. Booleans print as `true` or `false`.
+- `print` accepts a string literal, buffer, integer, float64 or boolean expression
+  and adds a newline. Booleans print as `true` or `false`; floats use six fractional digits.
 - Integer expressions support `+`, `-`, `*`, `/`, `%`, unary `+`/`-`, and
   parentheses. Multiplication, division, and remainder bind more tightly than
   addition and subtraction. Binary operators at the same precedence associate
@@ -27,7 +27,7 @@ fn main() {
   `-9223372036854775808` is accepted as a directly negated literal; its positive
   magnitude cannot be used as an ordinary positive literal.
 - `let` declares an immutable binding; `var` declares a mutable
-  binding. Every binding must have an initializer. `int64`, `bool`, `bytes`, `string`, struct and array types
+  binding. Every binding must have an initializer. `int64`, `float64`, `bool`, `bytes`, `string`, struct and array types
   are inferred and fixed for the lifetime of the binding.
 - Binding reassignment is supported only for `var`; fields and array elements can be mutated through `let`. Names must be declared before use;
   duplicate declarations in the same block are errors. Inner blocks may
@@ -63,14 +63,14 @@ fn main() {
 ```
 
 - `true` and `false` are distinct boolean literals; `!` negates a boolean.
-- `<`, `<=`, `>`, and `>=` compare signed integers. `==` and `!=` compare
-  two integers, two booleans or two strings. Mixing types is a compile-time error.
+- `<`, `<=`, `>`, and `>=` compare two signed integers or two floats. `==` and `!=` compare
+  two integers, two floats, two booleans or two strings. Mixing types is a compile-time error.
 - `&&` and `||` require booleans and short-circuit left to right; skipped operands
   still undergo type checking.
 - From lowest to highest precedence: `||`, `&&`, equality, ordering, addition/subtraction,
   multiplication/division/remainder, unary signs/`!`, and primary expressions.
   Operators at one level associate left to right. `1 < 2 < 3` is rejected;
-  combine pairwise comparisons with `&&`. Arithmetic requires integers; `+` also concatenates strings.
+  combine pairwise comparisons with `&&`. Arithmetic requires matching numeric types; `+` also concatenates strings.
 - `if condition { ... } else { ... }` and `while condition { ... }` require
   a boolean condition. `else` is optional and may follow on a new line.
   Branches use braces; `else if` chains test later conditions only when prior arms fail.
@@ -83,7 +83,7 @@ fn main() {
 - `for name in start..end { ... }` evaluates int64 bounds once, then counts
   upward with an excluded end. The counter is immutable and local to the body;
   empty/reversed ranges do not run. `break`/`continue` target the innermost loop.
-- `+=` accepts int64/string, `-=` accepts int64, and both are statements with
+- `+=` accepts int64/float64/string, `-=` accepts int64/float64, and both are statements with
   matching operand types. Destinations and indices evaluate once, before the RHS.
   Bindings require `var`; fields/elements retain mutation through `let`.
   Separate statements with newlines, including after a compound statement.
@@ -132,9 +132,12 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
+
+The overflow rules below apply to int64. [Float64](21-math.md) uses a finite-value
+policy, explicit conversions and gradual underflow.
 
 Generated native instructions check signed overflow for addition, subtraction,
 multiplication, and negation. Division truncates toward zero; a remainder has the

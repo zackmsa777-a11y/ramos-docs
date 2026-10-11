@@ -1,8 +1,8 @@
 # Install, build and run
 
 Use the complete
-[0.17.0 text-builders bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.17.0/ramos-0.17.0-text-builders.zip),
-which also includes the CLI/TUI tools, both compilers, examples and all twelve
+[0.18.0 math bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.18.0/ramos-0.18.0-math.zip),
+which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.
 

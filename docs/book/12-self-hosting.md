@@ -1,6 +1,6 @@
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -45,13 +45,13 @@ native compiler as artifacts. A local proof snapshot is in
 
 The entire compiler pipeline is Ramos source, including the machine-code and
 ELF/PE emitters. The private native runtime is represented as a hexadecimal literal
-inside that source. It provides checked arithmetic diagnostics, integer/boolean
+inside that source. It provides checked arithmetic diagnostics, integer/boolean/float
 printing, reclaimed values, string/aggregate operations, and native OS boundaries for arguments and file I/O.
 The literal is instruction data, not an embedded compiler executable.
 
 The runtime's assembly source remains in `bootstrap/src/runtime.inc`,
 `buffer_runtime.inc`, `heap_runtime.inc`, `values_runtime.inc`, `io_runtime.inc`,
-`text_runtime.inc`, `stdin_runtime.inc`, `source_guard.inc`,
+`text_runtime.inc`, `stdin_runtime.inc`, `float_runtime.inc`, `source_guard.inc`,
 `stream_runtime.inc`, `stream_os.inc` and `terminal_os.inc`. The proof verifies every embedded byte
 and native entry offset against the bootstrap's emitted runtime. Retaining an
 assembly OS boundary does not mean the Ramos compiler invokes assembly at run
@@ -65,7 +65,7 @@ seed it. User programs can use the new structs and typed arrays; no preprocessin
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -74,7 +74,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -86,7 +86,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.17 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.18 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.
@@ -112,3 +112,10 @@ self-hosted stages and Windows run them. See [devtools.md](19-devtools.md).
 Version 0.17 adds only Ramos-written text helpers and the rnumber example.
 Its six shared acceptance tests run on native self-hosted stages and Windows;
 the retained seed skips the unsupported weave/struct grammar.
+
+Version 0.18 implements exact decimal-to-binary literal conversion in Ramos,
+adds typed float code generation and embeds the shared SSE2/decimal runtime.
+The compiler source itself stays within the seed grammar; the seed skips the
+12 float application tests. Native self-hosted stages and Windows run them.
+The independent Python references exist only in the test harness, never in the
+compiler pipeline. See [math contracts and verification](21-math.md).

@@ -2,21 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.17.0, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.18.0, with Markdown for agents and HTML for people.">
 <title>What comes next · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.17.0</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.18.0</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="03-values.html"><span>05</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>06</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>07</span>Working with bytes</a><a href="05-input.html"><span>08</span>Stdin and number conversion</a><a href="06-files.html"><span>09</span>Arguments and file I/O</a><a href="07-libraries.html"><span>10</span>Libraries with weave</a><a href="18-system.html"><span>11</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>12</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>13</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>14</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>15</span>Runnable projects</a><a href="12-self-hosting.html"><span>16</span>How the compiler builds itself</a><a href="13-reference.html"><span>17</span>Limits and standard library reference</a><a href="14-performance.html"><span>18</span>Performance and evidence</a><a href="15-roadmap.html" aria-current="page"><span>19</span>What comes next</a><a href="16-agent-guide.html"><span>20</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="03-values.html"><span>06</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>07</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>08</span>Working with bytes</a><a href="05-input.html"><span>09</span>Stdin and number conversion</a><a href="06-files.html"><span>10</span>Arguments and file I/O</a><a href="07-libraries.html"><span>11</span>Libraries with weave</a><a href="18-system.html"><span>12</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>13</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>14</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>15</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>16</span>Runnable projects</a><a href="12-self-hosting.html"><span>17</span>How the compiler builds itself</a><a href="13-reference.html"><span>18</span>Limits and standard library reference</a><a href="14-performance.html"><span>19</span>Performance and evidence</a><a href="15-roadmap.html" aria-current="page"><span>20</span>What comes next</a><a href="16-agent-guide.html"><span>21</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
 <main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="what-comes-next">What comes next</h1>
 <p><strong>Goal:</strong> make Ramos a simple native language for useful CLI, TUI and desktop
 applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.</p>
-<p>This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools and 0.17 text builders are now
+<p>This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -72,9 +72,14 @@ timings are historical; they are not a performance result for 0.13.</p>
 <td>Streamed UTF-8 line numbering with a reusable builder; exact-size/rejection and long-running memory checks</td>
 </tr>
 <tr>
-<td>0.18: data and math</td>
-<td><code>float64</code>, conversions and essential math; better collection growth; reviewed memory/recursion limits</td>
-<td>A numerical renderer and bounded collection workloads</td>
+<td>0.18: native math (implemented; see <a href="21-math.html">contracts</a>)</td>
+<td>Finite <code>float64</code>, explicit conversions, square root, exact fixed formatting and Ramos math helpers</td>
+<td>Native Mandelbrot image renderer, independently checked numerical results on both OSes</td>
+</tr>
+<tr>
+<td>Follow-up: collections and limits</td>
+<td>Profile collection growth and review memory/recursion limits before changing contracts</td>
+<td>Bounded collection workloads and long-running live-memory checks</td>
 </tr>
 <tr>
 <td>0.19: portable GUI</td>
@@ -120,10 +125,10 @@ distributable executables. Update editor support alongside new syntax. Evaluate
 <code>--emit-asm</code> after the core authoring work; an inspection feature needs a clear
 contract and should not become a second code-generation backend.</p>
 <h3 id="018-remove-the-walls-using-measured-application-needs">0.18: remove the walls using measured application needs</h3>
-<p>Specify floating-point literals, IEEE-754 behavior, comparisons, conversions,
-NaN/infinity handling, division and printing before implementation. Keep integer
-overflow checks intact. Verify numerical results against independent references
-on both targets.</p>
+<p>0.18 now specifies and implements finite binary64 literals, comparisons, conversions,
+division, square root and fixed printing. Integer overflow checks stay intact.
+Numerical results are verified against independent references on both targets.
+See <a href="21-math.html">the exact contracts</a>; trig/log functions and text-to-float parsing remain future work.</p>
 <p>0.17 delivered a string builder; next review amortized collection growth with clear aliasing and
 lifetime rules. Keep immutable string values and low-level bytes available.
 Profile collection and heap behavior before redesigning the allocator or GC.
@@ -170,5 +175,5 @@ resource behavior; and current performance measurements and remaining limits
 are published. This is useful application capability, not all of Python or Rust.</p>
 <p>Package registries, async runtimes, advanced generics and ecosystem expansion
 remain follow-up goals. GitHub Linguist recognition is independent of language
-correctness and application readiness.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="14-performance.html">← Performance and evidence</a><a href="16-agent-guide.html">Guide for AI coding agents →</a></nav><footer>Ramos 0.17.0 · <a href="book/15-roadmap.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+correctness and application readiness.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="14-performance.html">← Performance and evidence</a><a href="16-agent-guide.html">Guide for AI coding agents →</a></nav><footer>Ramos 0.18.0 · <a href="book/15-roadmap.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

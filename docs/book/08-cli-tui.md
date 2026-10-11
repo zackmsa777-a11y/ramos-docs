@@ -7,7 +7,7 @@ and emits ELF/PE directly.
 
 ## Run the tools
 
-Extract the complete `ramos-0.17.0-text-builders.zip` archive; keep `stdlib/` beside
+Extract the complete `ramos-0.18.0-math.zip` archive; keep `stdlib/` beside
 `examples/`. On Linux:
 
 ```sh
@@ -191,8 +191,8 @@ and poll/read syscalls. Windows uses
 [console modes](https://learn.microsoft.com/en-us/windows/console/setconsolemode),
 [key events](https://learn.microsoft.com/en-us/windows/console/key-event-record-str)
 and console control callbacks. There is no curses dependency, delegated renderer,
-GUI toolkit or runtime host language. TUI means a terminal interface. Desktop windows and widgets are provided by
-the separate Windows GUI library described in the next chapter.
+GUI toolkit or runtime host language. TUI means a terminal interface; desktop
+windows/widgets use the [Windows GUI API](09-gui.md), added in 0.13.
 
 ## Verification and remaining work
 
@@ -206,9 +206,9 @@ restored modes after exit/traps and a control event. Saved results are in
 [cli/tui verification](../evidence/cli-tui-verification.json) and the bootstrap proof files.
 
 This milestone makes file-processing CLI tools and keyboard-driven terminal
-interfaces runnable. Further practical-language work remains: syntax
-conveniences, reviewed recursion/stack budgets, directory/environment/process
-APIs, richer diagnostics, floats, generic collections and packaging/tooling.
+interfaces runnable. Later releases add syntax conveniences, OS libraries,
+authoring tools and [float64](21-math.md). Reviewed recursion/stack budgets,
+generic collections and broader packaging/tooling remain future work.
 See [the staged roadmap](15-roadmap.md). No new speed comparison is claimed.
 
 [Native release CI](https://github.com/zackmsa777-a11y/ramos/actions/runs/38051519258)

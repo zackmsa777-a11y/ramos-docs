@@ -1,7 +1,7 @@
 {
-  "version": "0.17.0",
+  "version": "0.18.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7",
+  "source_commit": "61cb3a92affa20afe018594bc00740b75dec200d",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -27,6 +27,11 @@
       "slug": "17-easier-syntax",
       "title": "Easier syntax: branches, ranges and assignment",
       "source": "docs/syntax.md"
+    },
+    {
+      "slug": "21-math",
+      "title": "Native float64 and essential math",
+      "source": "docs/math.md"
     },
     {
       "slug": "03-values",

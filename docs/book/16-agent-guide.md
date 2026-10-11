@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.17.0** unless the task explicitly provides a newer compiler
+programs. Target **0.18.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -25,16 +25,16 @@ useful. Individual chapters are smaller and have stable relative links.
 - `if`/`else if`/`else`, `while`, `for`, `break`, `continue`, `&&`, `||`, `!`;
   boolean conditions. Range bounds are int64, evaluated once and end-exclusive;
   loop counters are immutable and local to the body.
-- `int64`, `bool`, `bytes`, `string`, named structs and `[T]` arrays.
+- `int64`, `float64`, `bool`, `bytes`, `string`, named structs and `[T]` arrays.
 - `"bytes"` and `s"UTF-8 string"` have different types. Conversions copy.
 - `weave "relative/path.ramos"` is top-level and resolves relative to its file.
-- Use `+=` for matching int64/string values and `-=` for int64. These are
+- Use `+=` for matching int64/float64/string values and `-=` for int64/float64. These are
   statements, with destinations evaluated once before the RHS. Local bindings
   must be `var`; a for counter cannot be reassigned.
 
 ## Do not invent these features
 
-No `import`, `++`, `*=`, `/=`, floats, bitwise/shift operators,
+No `import`, `++`, `*=`, `/=`, bitwise/shift operators,
 exceptions, nullable pointers, generics, methods, closures, namespaces, package
 manager, asynchronous child spawning, environment mutation or recursive backup. Both `else if` chains and nested `if` blocks are supported. Planned features in the roadmap are not current
 capabilities. Do not substitute Python or C as a hidden backend for Ramos code.
@@ -67,6 +67,13 @@ For incremental text, use the [text builder](20-text-builder.md). Check append
 status (0 or -27); byte count differs from Unicode scalar count. Snapshot
 strings are independent; clear reuses capacity and release drops storage for
 normal collection. Do not access backing fields to bypass UTF-8 checks.
+
+For numerical code, read [float64 and math](21-math.md). Use explicit
+`float64(int64)` and `float_to_int(float64)`; mixed numeric operations fail.
+Float overflow/non-finite results, division by zero, invalid conversion and
+negative nonzero square root trap; gradual underflow is allowed. Printing uses
+six fractional digits; `float_to_text`/`math_text` allow 0..18 fixed digits,
+not lossless round trips. Do not invent NaN/infinity or text-to-float input APIs.
 
 ## Build and verify
 

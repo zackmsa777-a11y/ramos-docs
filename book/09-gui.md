@@ -156,7 +156,7 @@ Use `python tools/windows_proof.py` on Windows. For development under Wine, set
 harness, keep one isolated `WINEPREFIX` per X display, and set `DISPLAY`.
 The harness reads another process's editor with `WM_GETTEXT`, as required by
 [Microsoft's API contract](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw).
-The original 0.13 GUI milestone passed **194 Linux tests and 140 Windows tests**, including the GUI
+Native CI passed **194 Linux tests and 140 Windows tests**, including the GUI
 corpus and both compiler fixed points. See [verification evidence](../evidence/gui-verification.json)
 and [the successful run](https://github.com/zackmsa777-a11y/ramos/actions/runs/38057232751).
 No new speed claim is made.
