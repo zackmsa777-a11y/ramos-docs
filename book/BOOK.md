@@ -2473,7 +2473,7 @@ This 0.17 edition retains measured **0.14** cross-language results below.
 They are historical; no C/Rust/Python comparison or overall language score
 for 0.17 is claimed. A separate focused text-assembly workload follows.
 
-These are recorded **Ramos 0.17.0** measurements, including exact outputs,
+These are recorded **Ramos 0.14.0** measurements, including exact outputs,
 source/compiler hashes, flags and raw samples. The shared VM and selected
 workloads limit the conclusions. This is an execution index, not a score for
 language quality or all possible applications.
