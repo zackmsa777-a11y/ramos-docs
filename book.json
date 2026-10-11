@@ -1,7 +1,7 @@
 {
-  "version": "0.18.1",
+  "version": "0.19.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a",
+  "source_commit": "c8a209124cc877c572a28e23da406fa5869f6bbd",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -80,7 +80,7 @@
     },
     {
       "slug": "09-gui",
-      "title": "Desktop GUI on Windows",
+      "title": "Desktop GUI on Windows and Linux",
       "source": "docs/gui.md"
     },
     {

@@ -2,23 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.18.1, with Markdown for agents and HTML for people.">
-<title>Desktop GUI on Windows · The Ramos Book</title>
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.19.0, with Markdown for agents and HTML for people.">
+<title>Desktop GUI on Windows and Linux · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.18.1</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.19.0</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="09-gui.html" aria-current="page"><span>15</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>16</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>17</span>Runnable projects</a><a href="12-self-hosting.html"><span>18</span>How the compiler builds itself</a><a href="13-reference.html"><span>19</span>Limits and standard library reference</a><a href="14-performance.html"><span>20</span>Performance and evidence</a><a href="15-roadmap.html"><span>21</span>What comes next</a><a href="16-agent-guide.html"><span>22</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
-<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="desktop-gui-on-windows">Desktop GUI on Windows</h1>
-<p><code>weave "stdlib/gui.ramos"</code> adds real desktop windows and native controls. The
-first backend is <strong>Windows x64</strong>. It uses system USER32/GDI32 APIs: no Python,
-interpreter, browser, C runtime or separately installed GUI toolkit is needed.
-The library and application logic are ordinary Ramos; the compiler still emits
-native code itself. Linux compilers can cross-compile these apps to Windows.
-Linux GUI startup returns <code>-38</code> (unsupported); CLI and TUI remain native on both
-platforms. An X11/Wayland backend is future work.</p>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="09-gui.html" aria-current="page"><span>15</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>16</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>17</span>Runnable projects</a><a href="12-self-hosting.html"><span>18</span>How the compiler builds itself</a><a href="13-reference.html"><span>19</span>Limits and standard library reference</a><a href="14-performance.html"><span>20</span>Performance and evidence</a><a href="15-roadmap.html"><span>21</span>What comes next</a><a href="16-agent-guide.html"><span>22</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="desktop-gui-on-windows-and-linux">Desktop GUI on Windows and Linux</h1>
+<p><code>weave "stdlib/gui.ramos"</code> adds real desktop windows and native controls on
+<strong>Windows x64 and Linux x64</strong>, using the same application source. Windows uses
+system USER32/GDI32 APIs and needs no C runtime or extra toolkit. Linux GUI
+executables dynamically link system <strong>GTK3, GObject, GLib and Cairo</strong>, including
+their libc/platform dependencies. The library and application logic are ordinary
+Ramos; its compiler emits x86-64 instructions and ELF/PE imports directly, with
+no C/Python helper, external linker or delegated compiler backend.</p>
+<p>The compilers and ordinary Linux CLI/TUI output remain static. Linux GUI is
+opt-in with <code>--gui</code>; GUI startup in a static build still returns <code>-38</code>.
+Install GTK3 before launching a Linux GUI executable: on Ubuntu 24.04,
+<code>sudo apt install libgtk-3-0t64</code>; on Debian 12, <code>sudo apt install libgtk-3-0</code>.
+Development headers are not required. A running desktop display and installed
+fonts are required. Missing shared libraries are reported by the system loader
+before Ramos starts; a missing display returns <code>-19</code> from <code>gui_open</code>.
+Verification covers X11/Xvfb on Ubuntu 24.04 and native Windows. GTK chooses its
+available display backend; Wayland has not been verified for this release.</p>
 <h2 id="a-complete-app">A complete app</h2>
 <pre><code class="language-ramos">weave &quot;stdlib/gui.ramos&quot;
 fn main() {
@@ -40,28 +49,30 @@ fn main() {
 <pre><code class="language-powershell">.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
 .\notes.exe
 </code></pre>
-<p>From Linux:</p>
-<pre><code class="language-sh">make gui-demo
-# Or:
+<p>On Linux with GTK3 installed:</p>
+<pre><code class="language-sh">./ramos run examples/notes.ramos --gui
+./ramos build examples/notes.ramos -o notes --gui
+./notes
+# Cross-compile the same source for Windows:
 ./ramos build examples/notes.ramos -o notes.exe --target windows --gui
 </code></pre>
-<p><code>--gui</code> sets the Windows PE subsystem to desktop GUI, so Explorer or PowerShell
-launches a window without a console. Omit it to retain a console for debugging.
-It is rejected for Linux targets or when repeated. Existing output still needs
-<code>--force</code>, and every source remains protected from accidental replacement.
-The console compiler itself is unchanged; stderr/stdout APIs still use inherited
-handles when available. A GUI launched from Explorer should show messages inside
-its controls rather than relying on console output.</p>
+<p><code>ramos run SOURCE.ramos --gui [-- ARG...]</code> compiles for the host, waits for the
+app and removes its temporary binary. <code>build --gui</code> selects a desktop PE subsystem
+on Windows (no console) or a GTK3-linked ELF on Linux. Linux builds without that
+flag retain the unsupported GUI stub. Repeated flags are rejected. Existing
+output still needs <code>--force</code>, and every source remains protected from accidental
+replacement. Windows GUI apps launched from Explorer should report errors in
+controls instead of relying on inherited stdout/stderr handles.</p>
 <p>The included <strong>Ramos Notes</strong> app supports Unicode editing, a file-path input,
 Save/Clear buttons, a colored panel and resizing. Save creates a new UTF-8 file
 atomically and refuses to overwrite an existing file. Choose a new filename for
 another save. File errors appear in the status label. It is a small example,
 not an editor with open dialogs, unsaved-change confirmation or autosave.</p>
 <h2 id="library-api">Library API</h2>
-<p>Coordinates and dimensions are integer client-area pixels. Windows supplies
+<p>Coordinates and dimensions are integer client-area pixels. The native toolkit supplies
 font rendering, focus, Tab navigation, button activation, text selection and
-editing. Native control appearance and available glyphs depend on Windows and
-installed fonts. These are ordinary Windows controls, not terminal escape codes.</p>
+editing. Native control appearance and available glyphs depend on the OS/toolkit and
+installed fonts. These are native desktop controls, not terminal escape codes.</p>
 <table>
 <thead>
 <tr>
@@ -92,7 +103,7 @@ installed fonts. These are ordinary Windows controls, not terminal escape codes.
 </tr>
 <tr>
 <td><code>gui_panel(id, x, y, w, h, color)</code></td>
-<td>Solid colored rectangular panel; Windows repaints it automatically</td>
+<td>Solid colored rectangular panel; The toolkit repaints it automatically</td>
 </tr>
 <tr>
 <td><code>gui_rgb(r, g, b) -&gt; int64</code></td>
@@ -163,7 +174,7 @@ There are no arbitrary callbacks into Ramos or exposed native handles.</p>
 <tr>
 <td>4</td>
 <td>Parent window key-down</td>
-<td><code>id</code> is a Windows virtual-key code</td>
+<td><code>id</code> is a Windows virtual-key code on Windows; Linux uses GDK keyvals with common letters, arrows, Backspace, Tab, Enter and Escape normalized to those codes</td>
 </tr>
 <tr>
 <td>5</td>
@@ -176,7 +187,7 @@ There are no arbitrary callbacks into Ramos or exposed native handles.</p>
 keyboard hook. Native controls handle mouse input and activation; raw pointer
 motion, canvas drawing, images, menus, file dialogs and multiple windows are not
 part of this first API. Colored panels provide basic rectangular drawing.
-Resize events include the initial layout and minimization (zero dimensions).
+Resize events include the initial layout; Windows also reports minimization as zero dimensions.
 Control layout is explicit; there is no automatic layout manager or DPI scaling.
 Apps should handle small dimensions without requesting zero-sized controls.
 The Notes example keeps a minimum logical layout of 360x240 and clips when the
@@ -187,8 +198,8 @@ than spinning. Calling poll after close is an error. Resize/paint/focus events
 can exist before user input; don't assume the first event is a button press.</p>
 <h2 id="limits-statuses-and-lifetime">Limits, statuses and lifetime</h2>
 <p>Window titles are at most 4095 UTF-8 bytes. Text passed to controls is at most
-32767 UTF-8 bytes; edit controls accept at most 32767 UTF-16 units through native
-editing. Reading can therefore produce more than 32767 UTF-8 bytes. Invalid UTF-8
+32767 UTF-8 bytes. Native editing is capped at 32767 UTF-16 units on Windows
+and 32767 Unicode scalars on GTK. Reading can therefore produce more than 32767 UTF-8 bytes. Invalid UTF-8
 and embedded NUL are rejected at the native boundary. Strings stay validated;
 empty labels and edits are allowed. Initial client width is 160..4096 and height
 80..4096. Control positions are 0..8192 and dimensions 1..8192; drawing is clipped
@@ -198,17 +209,34 @@ A full queue fails explicitly instead of silently losing user actions.</p>
 <code>gui_check</code>, so they fail with a diagnostic and exit 1. Low-level <code>_gui_*</code>
 intrinsics are reserved library machinery; they return negative statuses (or
 empty bytes with <code>io_error</code>) and validate every property independently:
-<code>-9</code> inactive window/unknown control, <code>-16</code> second active window, <code>-17</code> duplicate
+<code>-9</code> inactive window/unknown control, <code>-19</code> unavailable Linux display, <code>-16</code> second active window, <code>-17</code> duplicate
 ID, <code>-22</code> invalid argument/encoding, <code>-27</code> oversized read, <code>-38</code> missing platform
 backend, <code>-75</code> event queue overflow, and native errors mapped to existing I/O
 statuses. The old checked arithmetic, allocation and bounds contracts remain.</p>
 <p>The reclaiming heap roots the GUI state. Collection does not close native
-windows. Close releases the controls and owned brushes; the default GUI font is
-borrowed, and the two system DLLs are process-owned. Normal main return, <code>exit</code>
+windows. Close releases each native widget tree and owned Windows brushes. System DLLs,
+GTK libraries, font caches and toolkit worker threads are process-owned. GTK
+allocations are separate from the 16 MiB Ramos managed heap; that cap does not
+limit total process memory. Linux exits terminate all process threads. Normal main return, <code>exit</code>
 and native Ramos traps attempt GUI cleanup automatically. Process termination
 also releases OS resources; no durability or user-data save is promised on an
 abrupt termination. GUI calls run on the program's single main thread.</p>
 <h2 id="validation">Validation</h2>
+<p>0.19 tests the same Notes source on Linux and Windows. The Linux desktop corpus
+creates real GTK widgets, checks panel pixels, pastes Arabic/emoji via the native
+clipboard, types an editing key, activates Save/Clear, resizes and closes through
+WM_DELETE_WINDOW. It verifies exact saved bytes, exclusive overwrite refusal,
+empty saves after resize, 12 open/close cycles, GC after 40 MiB cumulative
+allocations, queue overflow, timeout/headless errors and cleanup on return/exit/trap.
+It also exercises <code>run --gui</code> with real windows and temporary-file cleanup.
+ELF checks validate loader/import segments, ordering, alignment and W^X.
+Test-only tools: <code>Xvfb</code>, <code>xdotool</code>, <code>xclip</code>, Python and libX11; none are application
+runtime dependencies. CI installs them and runs the corpus against stages 2/3.
+Native CI passed <strong>271 Linux tests</strong> (276 discovered, five platform skips)
+and <strong>212 Windows tests</strong> (213 discovered, one Linux fixture skip), with both
+compiler fixed points matching. See <a href="evidence/portable-gui-verification.json">0.19 verification</a> and the current
+<a href="evidence/bootstrap-proof.json">Linux/Windows self-hosting proofs</a>. No new speed claim.</p>
+<h3 id="retained-windows-acceptance-introduced-in-013">Retained Windows acceptance (introduced in 0.13)</h3>
 <p>The focused corpus checks raw argument/type errors, PE subsystem selection,
 existing-output preservation and static Linux unsupported behavior. Real desktop
 tests create native controls, inspect the actual panel color, inject Unicode text
@@ -225,5 +253,5 @@ The harness reads another process's editor with <code>WM_GETTEXT</code>, as requ
 Native CI passed <strong>194 Linux tests and 140 Windows tests</strong>, including the GUI
 corpus and both compiler fixed points. See <a href="evidence/gui-verification.json">verification evidence</a>
 and <a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38057232751">the successful run</a>.
-No new speed claim is made.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="08-cli-tui.html">← CLI tools and terminal interfaces</a><a href="10-windows.html">Windows and cross-compilation →</a></nav><footer>Ramos 0.18.1 · <a href="book/09-gui.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+No new speed claim is made.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="08-cli-tui.html">← CLI tools and terminal interfaces</a><a href="10-windows.html">Windows and cross-compilation →</a></nav><footer>Ramos 0.19.0 · <a href="book/09-gui.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

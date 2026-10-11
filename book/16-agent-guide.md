@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.18.1** unless the task explicitly provides a newer compiler
+programs. Target **0.19.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -59,9 +59,13 @@ there is no shell or PATH lookup. Supply an executable path; at most 256 argumen
 values and 32767 packed UTF-8 bytes. Child input/output is inherited, not captured.
 `system_env` returns bytes and distinguishes missing (-2) from empty success.
 
-For GUI, support is Windows-only. Pump events regularly, use blocking waits
-when idle and close the window. Do not promise dialogs, canvas APIs or a Linux
-backend. For TUI, require an interactive terminal and restore it before exit.
+For GUI, use `run app.ramos --gui` or `build app.ramos -o PROGRAM --gui`.
+Windows uses system controls; Linux requires GTK3 and a display. A static Linux
+build returns -38 from GUI startup, a missing display returns -19, and missing
+shared libraries prevent loader startup. X11 is verified; Wayland is unverified.
+GTK memory is outside the Ramos managed heap. Pump events regularly, use blocking
+waits when idle and close the window. Do not invent file dialogs, automatic
+layout/DPI handling, multiple windows or general canvas APIs. For TUI, require an interactive terminal and restore it before exit.
 
 For incremental text, use the [text builder](20-text-builder.md). Check append
 status (0 or -27); byte count differs from Unicode scalar count. Snapshot
@@ -83,7 +87,7 @@ text_to_float intrinsic or silently trim input; parsing consumes the whole buffe
 
 Use `ramos run app.ramos -- ARG...` for local native execution; stdin, stdout
 and stderr are inherited and child exit codes are forwarded. Use `build` for
-saved or cross-target executables and `--gui`. `ramos fmt app.ramos --check`
+saved or cross-target executables. `run` also accepts `--gui` before `--`. `ramos fmt app.ramos --check`
 checks formatting; `fmt app.ramos -o copy.ramos` writes an atomic copy and
 protects source aliases. It validates lexical syntax only, not full types.
 Errors show an escaped source line and caret with byte-column locations. Read

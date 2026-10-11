@@ -1,7 +1,7 @@
 # Install, build and run
 
 Use the complete
-[0.18.1 math-input bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.18.1/ramos-0.18.1-math-input.zip),
+[0.19.0 portable-GUI bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.19.0/ramos-0.19.0-portable-gui.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.
@@ -26,7 +26,9 @@ fn main() {
 ```
 
 Expected output: `Hello, Ramos!`. Python, a C compiler and a separate runtime
-are not required to compile or run programs with the downloaded compiler.
+are not required for Windows/CLI programs with the downloaded compiler.
+Linux `--gui` programs additionally require system GTK3 and a desktop display;
+see [GUI setup](09-gui.md).
 
 ## Linux x64 — shell
 

@@ -7,7 +7,7 @@ There is no interpreter, Python dependency or C runtime in generated programs.
 
 ## Use Ramos on Windows
 
-Download [ramos.exe from the 0.18.1 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.18.1/ramos.exe)
+Download [ramos.exe from the 0.19.0 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.19.0/ramos.exe)
 and open PowerShell in its directory. CI artifacts are also available from the
 [Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
 
@@ -133,3 +133,7 @@ decimal formatting on the same Windows runtime. See [math.md](21-math.md).
 
 Version 0.18.1 adds a Ramos-written decimal parser and streamed numerical
 statistics on stdin/files. See [math-input.md](22-math-input.md).
+
+Version 0.19 adds `run SOURCE.ramos --gui` and Linux GTK3 cross-compilation
+via `build SOURCE.ramos -o PROGRAM --target linux --gui`. Windows GUI stays
+on native USER32/GDI32. See [portable GUI setup](09-gui.md).

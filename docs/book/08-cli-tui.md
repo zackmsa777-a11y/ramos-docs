@@ -7,7 +7,7 @@ and emits ELF/PE directly.
 
 ## Run the tools
 
-Extract the complete `ramos-0.18.1-math-input.zip` archive; keep `stdlib/` beside
+Extract the complete `ramos-0.12.0-cli-tui.zip` archive; keep `stdlib/` beside
 `examples/`. On Linux:
 
 ```sh
@@ -192,7 +192,7 @@ and poll/read syscalls. Windows uses
 [key events](https://learn.microsoft.com/en-us/windows/console/key-event-record-str)
 and console control callbacks. There is no curses dependency, delegated renderer,
 GUI toolkit or runtime host language. TUI means a terminal interface; desktop
-windows/widgets use the [Windows GUI API](09-gui.md), added in 0.13.
+windows/widgets use the [desktop GUI API](09-gui.md), added for Windows in 0.13 and Linux in 0.19.
 
 ## Verification and remaining work
 

@@ -8,18 +8,20 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
-permissions. General canvas graphics, games, a Linux GUI backend and browser support need further platform work.
+permissions. General canvas graphics, file dialogs, automatic layout/DPI policy, games and
+browser support need further work. Linux GUI requires GTK3; X11 is verified,
+Wayland remains unverified.
 
 ## Compiler commands
 
 `build SOURCE -o PROGRAM [--force] [--target linux|windows] [--gui]` writes an
-executable. `run SOURCE [-- ARG...]` compiles and runs for the native OS.
+executable. `run SOURCE [--gui] [-- ARG...]` compiles and runs for the native OS.
 `fmt SOURCE [--check | -o FILE [--force]]` formats one file. See
 [complete authoring contracts](19-devtools.md).
 

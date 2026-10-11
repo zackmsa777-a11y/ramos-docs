@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.18.1, not pseudocode. The repository
+These are complete programs from Ramos 0.19.0, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -43,7 +43,7 @@ not traverse directories or interpret regular expressions.
 use arrows, j/k, Space/n, p and q. The viewer deliberately sanitizes non-ASCII
 and control bytes. It is not a complete Unicode text editor.
 
-## Desktop Notes — Windows
+## Desktop Notes — Windows and Linux
 
 ```powershell
 .\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
@@ -83,7 +83,13 @@ fn main() {
 
 The code above is intended as a root-level source file. The checked-in example
 is inside `examples/` and therefore uses `../stdlib/`. Build for Windows with
-`--gui`; Linux can cross-compile this source but cannot run its GUI backend.
+`--gui`; Linux can run the same source with GTK3 installed:
+
+```sh
+./ramos-linux-x86_64 run examples/notes.ramos --gui
+```
+
+See [desktop GUI setup and limits](09-gui.md).
 
 ## More complete sources
 
