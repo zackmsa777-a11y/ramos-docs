@@ -1,4 +1,4 @@
-# The Ramos Book — 0.18.0
+# The Ramos Book — 0.18.1
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.18.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.18.1**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -18,7 +18,7 @@ identify when a feature arrived; they do not change this book's baseline.
 - Building a tool? Read [files](06-files.md), [libraries](07-libraries.md) and
   [OS libraries](18-system.md) and [CLI/TUI](08-cli-tui.md), then try the [projects](11-cookbook.md).
 - Building a desktop window? Read [Windows GUI](09-gui.md). The Linux GUI backend
-  is not available in 0.18.
+  is not available in 0.18.1.
 - Writing Ramos with an AI agent? Start with the [agent guide](16-agent-guide.md)
   and [API reference](13-reference.md).
 - Working on the compiler? Read [self-hosting](12-self-hosting.md).
@@ -34,8 +34,9 @@ environment lookup, direct child execution and reusable UTF-8 text builders.
 reuse/release for streamed tools.
 
 [Native math](21-math.md) adds explicit conversions, square root and fixed
-decimal formatting. There are no namespaces, networking APIs or package registry
-in 0.18. Read
+decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
+for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
+in 0.18.1. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -48,7 +49,7 @@ Use `ramos run app.ramos` to compile and execute a source file directly, or
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.18.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.18.0)
+- [Ramos 0.18.1 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.18.1)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 
 The limits and negative results matter as much as working features. Native
@@ -61,7 +62,7 @@ interactive applications have been tested there.
 # Install, build and run
 
 Use the complete
-[0.18.0 math bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.18.0/ramos-0.18.0-math.zip),
+[0.18.1 math-input bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.18.1/ramos-0.18.1-math-input.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.
@@ -274,7 +275,7 @@ remain byte-based rather than terminal display-cell positions.
 
 ## Verification and limits
 
-The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/tests/test_devtools.py) check caret/type
+The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/tests/test_devtools.py) check caret/type
 messages, original library locations, EOF/control escaping, formatter idempotence,
 comments/literals/CRLF, byte-identical compiled output before/after formatting,
 atomic publication and source protection, argument quoting, inherited I/O,
@@ -428,7 +429,7 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 
@@ -702,7 +703,8 @@ Wrap with `string(...)` for UTF-8 string operations, or use `math_text`.
 
 Fixed printing is not a shortest-decimal, scientific or lossless round-trip
 format. Tiny values may print as zero at the chosen precision. Text-to-float
-parsing, trig/log/power functions and arbitrary precision are not provided yet.
+parsing is added by the [0.18.1 math library](22-math-input.md); trig/log/power
+functions and arbitrary precision remain future work.
 
 ## Ramos math library
 
@@ -743,12 +745,155 @@ both targets. It is an acceptance example, not a comparative speed benchmark.
 The twelve shared float tests cover independent binary literal encodings (95
 cases), exact fixed formatting (256 cases), arithmetic (200 cases), recursion,
 arrays/fields/GC, invalid operations, type/literal limits, formatting and the
-renderer. Release evidence is in [math-verification.json](../evidence/math-verification.json),
+renderer. The 0.18 milestone evidence is in [math-verification.json](../evidence/math-verification.json),
 with [Linux](../evidence/bootstrap-proof.json) and [native Windows](../evidence/windows-bootstrap-proof.json)
 compiler fixed points. Existing memory, collection growth, call-depth and source
 limits remain enforced; this release does not raise them. Networking APIs,
 Linux desktop GUI and broader tooling remain future work. No new 0.18 comparative
 performance score is claimed.
+
+
+---
+
+# Decimal input and streamed numerical tools
+
+Weave `stdlib/math.ramos` to parse numbers from arguments, stdin or files. The
+parser is ordinary Ramos code and uses the existing native float64 operations.
+This release adds no syntax, native intrinsic, delegated backend or dependency.
+The compiler, runtime and thirteen-library structure retain their 0.18 contracts.
+
+## A complete input program
+
+```ramos
+weave "stdlib/math.ramos"
+fn main() {
+    let line = read_line()
+    if io_error() != 0 { stderr("input failed\n")
+        exit(2) }
+    let parsed = math_parse_bytes(line)
+    if parsed.status != 0 { stderr("expected a decimal number\n")
+        exit(2) }
+    print(math_text(parsed.value * 2.0, 3))
+}
+```
+
+Keep `stdlib/` beside this source, build with `ramos build double.ramos -o double`
+and enter `1.25` followed by Enter. Output is `2.500`. On Windows use
+`ramos.exe` and `-o double.exe`. As with every float operation, doubling a very
+large finite value may trigger the checked non-finite-result trap.
+
+## Typed results
+
+| API | Contract |
+| --- | --- |
+| `math_parse(text: string) -> FloatResult` | Copy UTF-8 text to bytes, then parse the whole value |
+| `math_parse_bytes(text: bytes) -> FloatResult` | Parse the entire buffer without modifying it; suitable for raw file/stdin bytes |
+| `FloatResult.value: float64` | Parsed finite value on success; positive zero on any failure |
+| `FloatResult.status: int64` | 0 success, -22 syntax, -27 supported input limits, -34 finite range |
+
+Check `status` before using `value`. A zero value alone cannot distinguish
+failure from successful zero/underflow. Results are ordinary structs; keeping
+one remains safe across later parses and collections. Neither parsing function
+changes `parse_error()` or `io_error()`. Those globals still belong to integer
+conversion and I/O, respectively. No parse failure writes stderr or exits.
+
+## Grammar, limits and rounding
+
+Whole-buffer ASCII `[+-]?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?` accepts
+`1`, `+001.25`, `-0`, `1e2` and `1.25E-3`. A decimal point needs digits on both
+sides. Empty input, a lone sign, `.5`, `1.`, whitespace, NUL, non-ASCII digits,
+hex prefixes, underscores, NaN/infinity and trailing bytes are syntax errors.
+Applications may deliberately trim or skip lines before parsing; the library
+does neither implicitly.
+
+At most 768 mantissa digits (including leading zeros) and a written exponent
+from -400 through 400 are supported, matching the source-literal caps. The
+exponent magnitude counts its numerical value, not its digit count: leading
+exponent zeros are allowed up to the existing 1 MiB value limit. A fractional
+digit count adjusts the exponent only after checking the written cap.
+
+Status precedence is syntax (-22), then limits (-27), then finite range (-34).
+The whole syntax is validated even after a limit is exceeded. Thus `1e401` is
+-27, `1e309` is -34, and either value with trailing `x` is -22. `0e401` still
+exceeds the written exponent cap. Failure returns positive zero.
+
+Exact integer-rational conversion rounds once to nearest binary64, breaking
+halfway ties toward an even significand. The library uses bounded base-65536
+work arrays, then scales the rounded integer significand by exact powers of
+two using existing native float operations. There is no approximate repeated
+decimal multiplication or raw bit-cast API. Signed zero, gradual subnormal
+underflow and finite overflow follow [the float contracts](21-math.md): `-1e-400`
+succeeds as negative zero, `5e-324` succeeds as the smallest positive subnormal,
+and unsupported non-finite results return -34 rather than trapping.
+
+Successful conversion allocates bounded temporary managed arrays/records;
+unreachable work is reclaimed normally. Syntax/limit rejection occurs before
+allocating that work. Input scanning is linear in its byte length; conversion
+work is bounded by the digit/exponent caps. Exhausting the live managed heap
+still causes the ordinary allocation trap, rather than a fallible parse status.
+`MathMagnitude` and `math_decimal_*` are implementation helpers; applications
+should use the two parsing functions and the result fields.
+
+Fixed `math_text`/`float_to_text` formatting is unchanged and is not a universal
+lossless round-trip format. Scientific/shortest output and trig/log/power are
+still future work. The existing 0.18 editor grammar covers this release.
+
+## Streamed numerical CLI app
+
+[examples/rstats.ramos](../examples/rstats.ramos) reads one number per line,
+then reports count, minimum, maximum, sum and arithmetic mean. It accepts stdin
+with no argument or a regular file path as its one argument:
+
+```sh
+./ramos run examples/rstats.ramos -- numbers.txt
+```
+
+```powershell
+.\ramos.exe run .\examples\rstats.ramos -- .\numbers.txt
+```
+
+For this input, including LF/CRLF or a final unterminated line:
+
+```text
+1.25
+-2.5
+3e1
+```
+
+Output:
+
+```text
+count=3
+min=-2.500000
+max=30.000000
+sum=28.750000
+mean=9.583333
+```
+
+A file may exceed 1 MiB in total; lines are streamed and retain the existing
+1 MiB line bound. Numeric mantissas still have the smaller 768-digit cap.
+Blank/whitespace-only lines are invalid numbers. Empty input, bad arguments,
+parse failures, I/O errors or output failure return 2. Parse diagnostics include
+the one-based line and status; the summary is produced only after successful
+input and file close. Input files are never modified. Six fixed fractional
+digits are a display choice, not a precision or round-trip guarantee.
+
+Summation is sequential binary64 addition, not compensated summation. Rounding
+and cancellation can affect the mean. A non-finite sum (for example two `1e308`
+lines) triggers the normal float runtime trap/exit 1, with no summary. It is not
+a statistics package or a promise of stable aggregation for arbitrary data.
+
+## Verification
+
+Seven shared tests cover 264 independently normalized binary64 reference values,
+normal/subnormal halfway ties, signs, boundaries, syntax/status precedence,
+whole-buffer validation, unchanged input/status globals and 6,000 repeated parses
+with collection. The app tests Unicode paths, stdin, files, LF/CRLF, final lines,
+a 1,078,272-byte input, invalid/non-ASCII numbers, oversized lines and checked
+summation overflow. The complete Linux/Windows corpora and compiler fixed points
+are recorded in [math-input-verification.json](../evidence/math-input-verification.json),
+[Linux proof](../evidence/bootstrap-proof.json) and [native Windows proof](../evidence/windows-bootstrap-proof.json).
+No new comparative timing or language score is claimed.
 
 
 ---
@@ -1018,19 +1163,19 @@ OS process cleanup. There is no file replacement mode.
 
 ## Measurements and release checks
 
-[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/benchmarks/text-builder/run.py) compares repeated
+[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/benchmarks/text-builder/run.py) compares repeated
 string `+=` with the builder on the same compiler and machine. It appends 64-byte
 pieces, then independently checks all result bytes using `text_repeat`. One
 warmup and five alternating-order measurements include process startup and
 verification. Raw samples, machine and binary/library hashes are recorded in
 [the raw report](../evidence/text-builder.json) and
-[measured table](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
+[measured table](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
 the recorded Linux medians were 287 ms for concatenation and 13.8 ms for the
 builder (about 20.8×). This measures one Linux text
 assembly workload; it is not a C/Rust/Python comparison or an overall language
 score. Historical 0.14 comparative results remain historical.
 
-[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/tests/test_text_builder.py) cover Unicode/NUL/empty values,
+[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/tests/test_text_builder.py) cover Unicode/NUL/empty values,
 shared builder aliases, immutable snapshots, capacity reuse/release, exact-limit
 success and nonmutating rejection, invalid counts, automatic reclamation across
 6000 results, CRLF/empty/final lines, large streamed files and fallible size/I/O
@@ -1071,7 +1216,7 @@ allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
 Metadata and alignment count toward the heap limit. Invalid sizes, indices,
 byte values or allocation failures report a runtime error and exit 1.
 Unreachable allocations can be collected automatically or with `collect()`.
-See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/docs/buffers.md).
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/docs/buffers.md).
 
 ## Bytes versus strings
 
@@ -1202,6 +1347,12 @@ syntax and overflow precedence, independent statuses, live input before pipe
 closure, binary data, CRLF and refill boundaries, exact limits and oversized
 line recovery, 20,000 short lines, OS failures, preserved input-file protection,
 and the interactive example. Both self-hosting proofs run these tests.
+
+## Decimal float input (since 0.18.1)
+
+The Ramos-written [math parser](22-math-input.md) adds signed decimal/scientific
+float input with a typed value/status result. Integer `text_to_int` and its
+`parse_error` global retain the contracts above; float parsing does not change them.
 
 
 ---
@@ -1342,7 +1493,7 @@ reuses it. All functions are checked by the ordinary compiler.
 
 | File | Helpers |
 | --- | --- |
-| `math.ramos` (0.18) | `math_abs`, `math_min`, `math_max`, `math_clamp`, `math_sqrt`, `math_text`; see [float contracts](21-math.md) |
+| `math.ramos` (0.18) | `math_abs`, `math_min`, `math_max`, `math_clamp`, `math_sqrt`, `math_text`, `FloatResult`, `math_parse`, `math_parse_bytes`; see [float contracts](21-math.md) and [decimal input](22-math-input.md) |
 | `numbers.ramos` | `num_min`, `num_max`, `num_abs`, `num_clamp`, `num_text`, `num_parse` |
 | `text.ramos` | `text_starts`, `text_ends`, `text_find`, `text_contains`, `text_join`, `text_repeat` |
 | `bytes.ramos` | `bytes_copy`, `bytes_equal`, `bytes_slice`, `bytes_put` |
@@ -1633,7 +1784,7 @@ and emits ELF/PE directly.
 
 ## Run the tools
 
-Extract the complete `ramos-0.18.0-math.zip` archive; keep `stdlib/` beside
+Extract the complete `ramos-0.18.1-math-input.zip` archive; keep `stdlib/` beside
 `examples/`. On Linux:
 
 ```sh
@@ -2020,7 +2171,7 @@ There is no interpreter, Python dependency or C runtime in generated programs.
 
 ## Use Ramos on Windows
 
-Download [ramos.exe from the 0.18 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.18.0/ramos.exe)
+Download [ramos.exe from the 0.18.1 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.18.1/ramos.exe)
 and open PowerShell in its directory. CI artifacts are also available from the
 [Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
 
@@ -2144,12 +2295,15 @@ argument quoting, status handling, resource ownership and current limits.
 Version 0.18 adds native float64 arithmetic, conversions, square root and fixed
 decimal formatting on the same Windows runtime. See [math.md](21-math.md).
 
+Version 0.18.1 adds a Ramos-written decimal parser and streamed numerical
+statistics on stdin/files. See [math-input.md](22-math-input.md).
+
 
 ---
 
 # Runnable projects
 
-These are complete programs from Ramos 0.18, not pseudocode. The repository
+These are complete programs from Ramos 0.18.1, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -2302,12 +2456,27 @@ size/error behavior and immutable snapshots.
 pixels; an image viewer opens the result. Existing output is preserved. Read
 [math and renderer contracts](21-math.md) for argument and size limits.
 
+## Summarize decimal numbers
+
+```sh
+./ramos-linux-x86_64 run examples/rstats.ramos -- numbers.txt
+```
+
+```powershell
+.\ramos.exe run .\examples\rstats.ramos -- .\numbers.txt
+```
+
+[Source](../examples/rstats.ramos). Read one decimal number per line and report
+count/min/max/sum/mean. Omit the argument to read stdin. Input files are preserved.
+[Decimal input contracts](22-math-input.md) explain status precedence, strict
+syntax, fixed output and checked summation.
+
 
 ---
 
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -2372,7 +2541,7 @@ seed it. User programs can use the new structs and typed arrays; no preprocessin
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -2381,7 +2550,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -2393,7 +2562,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.18 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.18.1 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.
@@ -2427,6 +2596,12 @@ The compiler source itself stays within the seed grammar; the seed skips the
 The independent Python references exist only in the test harness, never in the
 compiler pipeline. See [math contracts and verification](21-math.md).
 
+Version 0.18.1 adds ordinary Ramos-written decimal parsing and the rstats CLI
+example. The seven math-input tests run on native self-hosted stages and
+Windows; the retained seed skips the unsupported application grammar.
+The compiler change is only its version string; native float runtime bytes
+and code generation are unchanged. See [math-input.md](22-math-input.md).
+
 
 ---
 
@@ -2440,7 +2615,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -2465,10 +2640,10 @@ or active-call limits.
 ## Standard library signatures
 
 These are the complete function signatures defined in the thirteen bundled
-libraries. Follow the chapter APIs for supported application-facing helpers;
-some prefixed functions are implementation helpers. Read source for structs and
-exact status/lifetime contracts. [Math](21-math.md), [text builders](20-text-builder.md)
-and [OS APIs](18-system.md) document their respective application contracts.
+libraries. Follow chapter APIs for supported application-facing helpers; some
+prefixed functions are implementation helpers. Read source for structs and
+exact status/lifetime contracts. [Math](21-math.md), [decimal input](22-math-input.md),
+[text builders](20-text-builder.md) and [OS APIs](18-system.md) document application contracts.
 
 ### bytes.ramos
 
@@ -2569,6 +2744,19 @@ fn math_max(a: float64, b: float64) -> float64
 fn math_clamp(value: float64, low: float64, high: float64) -> float64
 fn math_sqrt(value: float64) -> float64
 fn math_text(value: float64, places: int64) -> string
+fn math_decimal_new(value: int64) -> MathMagnitude
+fn math_decimal_copy(value: MathMagnitude) -> MathMagnitude
+fn math_decimal_trim(value: MathMagnitude)
+fn math_decimal_mul(value: MathMagnitude, factor: int64, add: int64)
+fn math_decimal_shift(value: MathMagnitude, count: int64)
+fn math_decimal_half(value: MathMagnitude)
+fn math_decimal_compare(a: MathMagnitude, b: MathMagnitude) -> int64
+fn math_decimal_sub(a: MathMagnitude, b: MathMagnitude)
+fn math_decimal_bits(value: MathMagnitude) -> int64
+fn math_decimal_digit(value: int64) -> bool
+fn math_decimal_scale(value: int64, exponent: int64) -> float64
+fn math_parse_bytes(text: bytes) -> FloatResult
+fn math_parse(text: string) -> FloatResult
 ```
 
 ### numbers.ramos
@@ -2667,9 +2855,9 @@ fn tui_key(timeout_ms: int64) -> int64
 
 # Performance and evidence
 
-This 0.18 edition retains measured **0.14** cross-language results below.
+This 0.18.1 edition retains measured **0.14** cross-language results below.
 They are historical; no C/Rust/Python comparison or overall language score
-for 0.18 is claimed. Historical focused 0.17 text-assembly measurements follow.
+for 0.18.1 is claimed. Historical focused 0.17 text-assembly measurements follow.
 0.18 numerical tests prove results, not a comparative speed measurement.
 
 These are recorded **Ramos 0.14.0** measurements, including exact outputs,
@@ -2762,7 +2950,7 @@ Median of three builds per task, including compiler startup and linking/publicat
 ## Next work for Ramos
 
 1. Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (6.1× C time), Runtime-seeded recursive tree (5.1× C time), Scan 16 KiB ASCII text (3.9× C time). Version 0.7.1 already reduces buffer-call and stack traffic and specializes constant arithmetic. Further changes need their own measurements.
-2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/benchmarks/optimization.md).
+2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/benchmarks/optimization.md).
 3. Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.
 
 ![Overall index and task ratios](../assets/performance-0.14.0.png)
@@ -2786,9 +2974,9 @@ make
 python3 benchmarks/run_suite.py --work-counts benchmarks/baseline-0.13.0/results.json --output-dir work/reproduced-0.14.0
 ```
 
-Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
+Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
 
-Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/benchmarks/results-0.2.json); they are not directly comparable to this suite.
 
 ## 0.17 focused text assembly
 
@@ -2811,7 +2999,7 @@ applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.
 
-This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math are now
+This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -2852,6 +3040,7 @@ timings are historical; they are not a performance result for 0.13.
 | 0.16: easier development (implemented; see [contracts](19-devtools.md)) | Source-line/caret errors, a formatter and a compile-and-run command | A new user can run a file, correct a reported error and format it using the documented commands |
 | 0.17: reusable text (implemented; see [contracts](20-text-builder.md)) | UTF-8 builder, immutable snapshots, capacity reuse/release | Streamed UTF-8 line numbering with a reusable builder; exact-size/rejection and long-running memory checks |
 | 0.18: native math (implemented; see [contracts](21-math.md)) | Finite `float64`, explicit conversions, square root, exact fixed formatting and Ramos math helpers | Native Mandelbrot image renderer, independently checked numerical results on both OSes |
+| 0.18.1: numerical input (implemented; see [contracts](22-math-input.md)) | Fallible decimal parsing with exact rounding in the Ramos math library | Streamed file/stdin statistics, independent references and long-running memory checks |
 | Follow-up: collections and limits | Profile collection growth and review memory/recursion limits before changing contracts | Bounded collection workloads and long-running live-memory checks |
 | 0.19: portable GUI | Linux backend, layout/DPI handling, file dialogs and basic drawing behind the GUI library | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
@@ -2903,7 +3092,8 @@ contract and should not become a second code-generation backend.
 0.18 now specifies and implements finite binary64 literals, comparisons, conversions,
 division, square root and fixed printing. Integer overflow checks stay intact.
 Numerical results are verified against independent references on both targets.
-See [the exact contracts](21-math.md); trig/log functions and text-to-float parsing remain future work.
+See [the exact contracts](21-math.md); [0.18.1 decimal input](22-math-input.md) now fills the text-to-float gap;
+trig/log functions and broader numeric output remain future work.
 
 0.17 delivered a string builder; next review amortized collection growth with clear aliasing and
 lifetime rules. Keep immutable string values and low-level bytes available.
@@ -2971,7 +3161,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.18.0** unless the task explicitly provides a newer compiler
+programs. Target **0.18.1** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -3043,7 +3233,11 @@ For numerical code, read [float64 and math](21-math.md). Use explicit
 Float overflow/non-finite results, division by zero, invalid conversion and
 negative nonzero square root trap; gradual underflow is allowed. Printing uses
 six fractional digits; `float_to_text`/`math_text` allow 0..18 fixed digits,
-not lossless round trips. Do not invent NaN/infinity or text-to-float input APIs.
+not lossless round trips. Do not invent NaN/infinity. For numeric input use
+`math_parse(string)` or `math_parse_bytes(bytes)` from the [math-input library](22-math-input.md).
+Check the returned FloatResult.status (0, -22, -27 or -34) before using value.
+It does not change integer parse_error or io_error. Do not invent a native
+text_to_float intrinsic or silently trim input; parsing consumes the whole buffer.
 
 ## Build and verify
 

@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.18.0** unless the task explicitly provides a newer compiler
+programs. Target **0.18.1** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -73,7 +73,11 @@ For numerical code, read [float64 and math](21-math.md). Use explicit
 Float overflow/non-finite results, division by zero, invalid conversion and
 negative nonzero square root trap; gradual underflow is allowed. Printing uses
 six fractional digits; `float_to_text`/`math_text` allow 0..18 fixed digits,
-not lossless round trips. Do not invent NaN/infinity or text-to-float input APIs.
+not lossless round trips. Do not invent NaN/infinity. For numeric input use
+`math_parse(string)` or `math_parse_bytes(bytes)` from the [math-input library](22-math-input.md).
+Check the returned FloatResult.status (0, -22, -27 or -34) before using value.
+It does not change integer parse_error or io_error. Do not invent a native
+text_to_float intrinsic or silently trim input; parsing consumes the whole buffer.
 
 ## Build and verify
 

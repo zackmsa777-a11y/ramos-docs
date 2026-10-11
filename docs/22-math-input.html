@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.18.1, with Markdown for agents and HTML for people.">
+<title>Decimal input and streamed numerical tools · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.18.1</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html" aria-current="page"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>15</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>16</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>17</span>Runnable projects</a><a href="12-self-hosting.html"><span>18</span>How the compiler builds itself</a><a href="13-reference.html"><span>19</span>Limits and standard library reference</a><a href="14-performance.html"><span>20</span>Performance and evidence</a><a href="15-roadmap.html"><span>21</span>What comes next</a><a href="16-agent-guide.html"><span>22</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="decimal-input-and-streamed-numerical-tools">Decimal input and streamed numerical tools</h1>
+<p>Weave <code>stdlib/math.ramos</code> to parse numbers from arguments, stdin or files. The
+parser is ordinary Ramos code and uses the existing native float64 operations.
+This release adds no syntax, native intrinsic, delegated backend or dependency.
+The compiler, runtime and thirteen-library structure retain their 0.18 contracts.</p>
+<h2 id="a-complete-input-program">A complete input program</h2>
+<pre><code class="language-ramos">weave &quot;stdlib/math.ramos&quot;
+fn main() {
+    let line = read_line()
+    if io_error() != 0 { stderr(&quot;input failed\n&quot;)
+        exit(2) }
+    let parsed = math_parse_bytes(line)
+    if parsed.status != 0 { stderr(&quot;expected a decimal number\n&quot;)
+        exit(2) }
+    print(math_text(parsed.value * 2.0, 3))
+}
+</code></pre>
+<p>Keep <code>stdlib/</code> beside this source, build with <code>ramos build double.ramos -o double</code>
+and enter <code>1.25</code> followed by Enter. Output is <code>2.500</code>. On Windows use
+<code>ramos.exe</code> and <code>-o double.exe</code>. As with every float operation, doubling a very
+large finite value may trigger the checked non-finite-result trap.</p>
+<h2 id="typed-results">Typed results</h2>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>math_parse(text: string) -&gt; FloatResult</code></td>
+<td>Copy UTF-8 text to bytes, then parse the whole value</td>
+</tr>
+<tr>
+<td><code>math_parse_bytes(text: bytes) -&gt; FloatResult</code></td>
+<td>Parse the entire buffer without modifying it; suitable for raw file/stdin bytes</td>
+</tr>
+<tr>
+<td><code>FloatResult.value: float64</code></td>
+<td>Parsed finite value on success; positive zero on any failure</td>
+</tr>
+<tr>
+<td><code>FloatResult.status: int64</code></td>
+<td>0 success, -22 syntax, -27 supported input limits, -34 finite range</td>
+</tr>
+</tbody>
+</table>
+<p>Check <code>status</code> before using <code>value</code>. A zero value alone cannot distinguish
+failure from successful zero/underflow. Results are ordinary structs; keeping
+one remains safe across later parses and collections. Neither parsing function
+changes <code>parse_error()</code> or <code>io_error()</code>. Those globals still belong to integer
+conversion and I/O, respectively. No parse failure writes stderr or exits.</p>
+<h2 id="grammar-limits-and-rounding">Grammar, limits and rounding</h2>
+<p>Whole-buffer ASCII <code>[+-]?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?</code> accepts
+<code>1</code>, <code>+001.25</code>, <code>-0</code>, <code>1e2</code> and <code>1.25E-3</code>. A decimal point needs digits on both
+sides. Empty input, a lone sign, <code>.5</code>, <code>1.</code>, whitespace, NUL, non-ASCII digits,
+hex prefixes, underscores, NaN/infinity and trailing bytes are syntax errors.
+Applications may deliberately trim or skip lines before parsing; the library
+does neither implicitly.</p>
+<p>At most 768 mantissa digits (including leading zeros) and a written exponent
+from -400 through 400 are supported, matching the source-literal caps. The
+exponent magnitude counts its numerical value, not its digit count: leading
+exponent zeros are allowed up to the existing 1 MiB value limit. A fractional
+digit count adjusts the exponent only after checking the written cap.</p>
+<p>Status precedence is syntax (-22), then limits (-27), then finite range (-34).
+The whole syntax is validated even after a limit is exceeded. Thus <code>1e401</code> is
+-27, <code>1e309</code> is -34, and either value with trailing <code>x</code> is -22. <code>0e401</code> still
+exceeds the written exponent cap. Failure returns positive zero.</p>
+<p>Exact integer-rational conversion rounds once to nearest binary64, breaking
+halfway ties toward an even significand. The library uses bounded base-65536
+work arrays, then scales the rounded integer significand by exact powers of
+two using existing native float operations. There is no approximate repeated
+decimal multiplication or raw bit-cast API. Signed zero, gradual subnormal
+underflow and finite overflow follow <a href="21-math.html">the float contracts</a>: <code>-1e-400</code>
+succeeds as negative zero, <code>5e-324</code> succeeds as the smallest positive subnormal,
+and unsupported non-finite results return -34 rather than trapping.</p>
+<p>Successful conversion allocates bounded temporary managed arrays/records;
+unreachable work is reclaimed normally. Syntax/limit rejection occurs before
+allocating that work. Input scanning is linear in its byte length; conversion
+work is bounded by the digit/exponent caps. Exhausting the live managed heap
+still causes the ordinary allocation trap, rather than a fallible parse status.
+<code>MathMagnitude</code> and <code>math_decimal_*</code> are implementation helpers; applications
+should use the two parsing functions and the result fields.</p>
+<p>Fixed <code>math_text</code>/<code>float_to_text</code> formatting is unchanged and is not a universal
+lossless round-trip format. Scientific/shortest output and trig/log/power are
+still future work. The existing 0.18 editor grammar covers this release.</p>
+<h2 id="streamed-numerical-cli-app">Streamed numerical CLI app</h2>
+<p><a href="examples/rstats.ramos">examples/rstats.ramos</a> reads one number per line,
+then reports count, minimum, maximum, sum and arithmetic mean. It accepts stdin
+with no argument or a regular file path as its one argument:</p>
+<pre><code class="language-sh">./ramos run examples/rstats.ramos -- numbers.txt
+</code></pre>
+<pre><code class="language-powershell">.\ramos.exe run .\examples\rstats.ramos -- .\numbers.txt
+</code></pre>
+<p>For this input, including LF/CRLF or a final unterminated line:</p>
+<pre><code class="language-text">1.25
+-2.5
+3e1
+</code></pre>
+<p>Output:</p>
+<pre><code class="language-text">count=3
+min=-2.500000
+max=30.000000
+sum=28.750000
+mean=9.583333
+</code></pre>
+<p>A file may exceed 1 MiB in total; lines are streamed and retain the existing
+1 MiB line bound. Numeric mantissas still have the smaller 768-digit cap.
+Blank/whitespace-only lines are invalid numbers. Empty input, bad arguments,
+parse failures, I/O errors or output failure return 2. Parse diagnostics include
+the one-based line and status; the summary is produced only after successful
+input and file close. Input files are never modified. Six fixed fractional
+digits are a display choice, not a precision or round-trip guarantee.</p>
+<p>Summation is sequential binary64 addition, not compensated summation. Rounding
+and cancellation can affect the mean. A non-finite sum (for example two <code>1e308</code>
+lines) triggers the normal float runtime trap/exit 1, with no summary. It is not
+a statistics package or a promise of stable aggregation for arbitrary data.</p>
+<h2 id="verification">Verification</h2>
+<p>Seven shared tests cover 264 independently normalized binary64 reference values,
+normal/subnormal halfway ties, signs, boundaries, syntax/status precedence,
+whole-buffer validation, unchanged input/status globals and 6,000 repeated parses
+with collection. The app tests Unicode paths, stdin, files, LF/CRLF, final lines,
+a 1,078,272-byte input, invalid/non-ASCII numbers, oversized lines and checked
+summation overflow. The complete Linux/Windows corpora and compiler fixed points
+are recorded in <a href="evidence/math-input-verification.json">math-input-verification.json</a>,
+<a href="evidence/bootstrap-proof.json">Linux proof</a> and <a href="evidence/windows-bootstrap-proof.json">native Windows proof</a>.
+No new comparative timing or language score is claimed.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="21-math.html">← Native float64 and essential math</a><a href="03-values.html">Strings, structs, arrays and memory →</a></nav><footer>Ramos 0.18.1 · <a href="book/22-math-input.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

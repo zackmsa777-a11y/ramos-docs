@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.18.0**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.18.1**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -21,26 +21,27 @@ This edition describes released features; proposed upgrades are clearly marked.
 4. The language
 5. Easier syntax: branches, ranges and assignment
 6. Native float64 and essential math
-7. Strings, structs, arrays and memory
-8. Reusable text builders and streamed text tools
-9. Working with bytes
-10. Stdin and number conversion
-11. Arguments and file I/O
-12. Libraries with weave
-13. Paths, directories, environment and child processes
-14. CLI tools and terminal interfaces
-15. Desktop GUI on Windows
-16. Windows and cross-compilation
-17. Runnable projects
-18. How the compiler builds itself
-19. Limits and standard library reference
-20. Performance and evidence
-21. What comes next
-22. Guide for AI coding agents
+7. Decimal input and streamed numerical tools
+8. Strings, structs, arrays and memory
+9. Reusable text builders and streamed text tools
+10. Working with bytes
+11. Stdin and number conversion
+12. Arguments and file I/O
+13. Libraries with weave
+14. Paths, directories, environment and child processes
+15. CLI tools and terminal interfaces
+16. Desktop GUI on Windows
+17. Windows and cross-compilation
+18. Runnable projects
+19. How the compiler builds itself
+20. Limits and standard library reference
+21. Performance and evidence
+22. What comes next
+23. Guide for AI coding agents
 
 The `examples/` and `stdlib/` folders contain matching source from the compiler
 repository. Download a native compiler from the
-[0.18.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.18.0)
+[0.18.1 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.18.1)
 and place it at this repository's root to compile those examples. See the
 [quick start](book/01-getting-started.md). This repository does not include or
 implement a second compiler.

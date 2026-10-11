@@ -92,7 +92,8 @@ Wrap with `string(...)` for UTF-8 string operations, or use `math_text`.
 
 Fixed printing is not a shortest-decimal, scientific or lossless round-trip
 format. Tiny values may print as zero at the chosen precision. Text-to-float
-parsing, trig/log/power functions and arbitrary precision are not provided yet.
+parsing is added by the [0.18.1 math library](22-math-input.md); trig/log/power
+functions and arbitrary precision remain future work.
 
 ## Ramos math library
 
@@ -133,7 +134,7 @@ both targets. It is an acceptance example, not a comparative speed benchmark.
 The twelve shared float tests cover independent binary literal encodings (95
 cases), exact fixed formatting (256 cases), arithmetic (200 cases), recursion,
 arrays/fields/GC, invalid operations, type/literal limits, formatting and the
-renderer. Release evidence is in [math-verification.json](../evidence/math-verification.json),
+renderer. The 0.18 milestone evidence is in [math-verification.json](../evidence/math-verification.json),
 with [Linux](../evidence/bootstrap-proof.json) and [native Windows](../evidence/windows-bootstrap-proof.json)
 compiler fixed points. Existing memory, collection growth, call-depth and source
 limits remain enforced; this release does not raise them. Networking APIs,

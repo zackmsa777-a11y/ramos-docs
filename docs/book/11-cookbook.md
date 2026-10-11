@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.18, not pseudocode. The repository
+These are complete programs from Ramos 0.18.1, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -152,3 +152,18 @@ size/error behavior and immutable snapshots.
 [Source](../examples/mandelbrot.ramos). Native float64 computes P5 grayscale
 pixels; an image viewer opens the result. Existing output is preserved. Read
 [math and renderer contracts](21-math.md) for argument and size limits.
+
+## Summarize decimal numbers
+
+```sh
+./ramos-linux-x86_64 run examples/rstats.ramos -- numbers.txt
+```
+
+```powershell
+.\ramos.exe run .\examples\rstats.ramos -- .\numbers.txt
+```
+
+[Source](../examples/rstats.ramos). Read one decimal number per line and report
+count/min/max/sum/mean. Omit the argument to read stdin. Input files are preserved.
+[Decimal input contracts](22-math-input.md) explain status precedence, strict
+syntax, fixed output and checked summation.

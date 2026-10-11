@@ -8,7 +8,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -33,10 +33,10 @@ or active-call limits.
 ## Standard library signatures
 
 These are the complete function signatures defined in the thirteen bundled
-libraries. Follow the chapter APIs for supported application-facing helpers;
-some prefixed functions are implementation helpers. Read source for structs and
-exact status/lifetime contracts. [Math](21-math.md), [text builders](20-text-builder.md)
-and [OS APIs](18-system.md) document their respective application contracts.
+libraries. Follow chapter APIs for supported application-facing helpers; some
+prefixed functions are implementation helpers. Read source for structs and
+exact status/lifetime contracts. [Math](21-math.md), [decimal input](22-math-input.md),
+[text builders](20-text-builder.md) and [OS APIs](18-system.md) document application contracts.
 
 ### bytes.ramos
 
@@ -137,6 +137,19 @@ fn math_max(a: float64, b: float64) -> float64
 fn math_clamp(value: float64, low: float64, high: float64) -> float64
 fn math_sqrt(value: float64) -> float64
 fn math_text(value: float64, places: int64) -> string
+fn math_decimal_new(value: int64) -> MathMagnitude
+fn math_decimal_copy(value: MathMagnitude) -> MathMagnitude
+fn math_decimal_trim(value: MathMagnitude)
+fn math_decimal_mul(value: MathMagnitude, factor: int64, add: int64)
+fn math_decimal_shift(value: MathMagnitude, count: int64)
+fn math_decimal_half(value: MathMagnitude)
+fn math_decimal_compare(a: MathMagnitude, b: MathMagnitude) -> int64
+fn math_decimal_sub(a: MathMagnitude, b: MathMagnitude)
+fn math_decimal_bits(value: MathMagnitude) -> int64
+fn math_decimal_digit(value: int64) -> bool
+fn math_decimal_scale(value: int64, exponent: int64) -> float64
+fn math_parse_bytes(text: bytes) -> FloatResult
+fn math_parse(text: string) -> FloatResult
 ```
 
 ### numbers.ramos

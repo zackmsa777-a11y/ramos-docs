@@ -7,7 +7,7 @@ and emits ELF/PE directly.
 
 ## Run the tools
 
-Extract the complete `ramos-0.18.0-math.zip` archive; keep `stdlib/` beside
+Extract the complete `ramos-0.18.1-math-input.zip` archive; keep `stdlib/` beside
 `examples/`. On Linux:
 
 ```sh

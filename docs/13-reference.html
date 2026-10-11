@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.18.0, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.18.1, with Markdown for agents and HTML for people.">
 <title>Limits and standard library reference · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.18.0</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.18.1</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="03-values.html"><span>06</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>07</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>08</span>Working with bytes</a><a href="05-input.html"><span>09</span>Stdin and number conversion</a><a href="06-files.html"><span>10</span>Arguments and file I/O</a><a href="07-libraries.html"><span>11</span>Libraries with weave</a><a href="18-system.html"><span>12</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>13</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>14</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>15</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>16</span>Runnable projects</a><a href="12-self-hosting.html"><span>17</span>How the compiler builds itself</a><a href="13-reference.html" aria-current="page"><span>18</span>Limits and standard library reference</a><a href="14-performance.html"><span>19</span>Performance and evidence</a><a href="15-roadmap.html"><span>20</span>What comes next</a><a href="16-agent-guide.html"><span>21</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>15</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>16</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>17</span>Runnable projects</a><a href="12-self-hosting.html"><span>18</span>How the compiler builds itself</a><a href="13-reference.html" aria-current="page"><span>19</span>Limits and standard library reference</a><a href="14-performance.html"><span>20</span>Performance and evidence</a><a href="15-roadmap.html"><span>21</span>What comes next</a><a href="16-agent-guide.html"><span>22</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
 <main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="limits-and-standard-library-reference">Limits and standard library reference</h1>
 <p>The self-hosted compiler accepts up to 64 regular source files totaling 1 MiB
 (with boundary separators), at most 50,000
@@ -20,7 +20,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See <a href="https://github.com/zackmsa777-a11y/ramos/blob/61cb3a92affa20afe018594bc00740b75dec200d/compiler/README.md">compiler representation limits</a>.</p>
+the older 4 MiB output and IR limits. See <a href="https://github.com/zackmsa777-a11y/ramos/blob/1561b5a8d12080e16fb5e43b5aaae15b4f6d0c1a/compiler/README.md">compiler representation limits</a>.</p>
 <p>The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
@@ -38,10 +38,10 @@ precision 0..18. These extend numeric types without raising collection, memory
 or active-call limits.</p>
 <h2 id="standard-library-signatures">Standard library signatures</h2>
 <p>These are the complete function signatures defined in the thirteen bundled
-libraries. Follow the chapter APIs for supported application-facing helpers;
-some prefixed functions are implementation helpers. Read source for structs and
-exact status/lifetime contracts. <a href="21-math.html">Math</a>, <a href="20-text-builder.html">text builders</a>
-and <a href="18-system.html">OS APIs</a> document their respective application contracts.</p>
+libraries. Follow chapter APIs for supported application-facing helpers; some
+prefixed functions are implementation helpers. Read source for structs and
+exact status/lifetime contracts. <a href="21-math.html">Math</a>, <a href="22-math-input.html">decimal input</a>,
+<a href="20-text-builder.html">text builders</a> and <a href="18-system.html">OS APIs</a> document application contracts.</p>
 <h3 id="bytesramos">bytes.ramos</h3>
 <p><a href="stdlib/bytes.ramos">Read the source</a>.</p>
 <pre><code class="language-ramos">fn bytes_copy(source: bytes) -&gt; bytes
@@ -114,6 +114,19 @@ fn math_max(a: float64, b: float64) -&gt; float64
 fn math_clamp(value: float64, low: float64, high: float64) -&gt; float64
 fn math_sqrt(value: float64) -&gt; float64
 fn math_text(value: float64, places: int64) -&gt; string
+fn math_decimal_new(value: int64) -&gt; MathMagnitude
+fn math_decimal_copy(value: MathMagnitude) -&gt; MathMagnitude
+fn math_decimal_trim(value: MathMagnitude)
+fn math_decimal_mul(value: MathMagnitude, factor: int64, add: int64)
+fn math_decimal_shift(value: MathMagnitude, count: int64)
+fn math_decimal_half(value: MathMagnitude)
+fn math_decimal_compare(a: MathMagnitude, b: MathMagnitude) -&gt; int64
+fn math_decimal_sub(a: MathMagnitude, b: MathMagnitude)
+fn math_decimal_bits(value: MathMagnitude) -&gt; int64
+fn math_decimal_digit(value: int64) -&gt; bool
+fn math_decimal_scale(value: int64, exponent: int64) -&gt; float64
+fn math_parse_bytes(text: bytes) -&gt; FloatResult
+fn math_parse(text: string) -&gt; FloatResult
 </code></pre>
 <h3 id="numbersramos">numbers.ramos</h3>
 <p><a href="stdlib/numbers.ramos">Read the source</a>.</p>
@@ -181,5 +194,5 @@ fn tui_at(row: int64, column: int64, value: string)
 fn tui_box(row: int64, column: int64, width: int64, height: int64)
 fn tui_safe(value: bytes, width: int64) -&gt; string
 fn tui_key(timeout_ms: int64) -&gt; int64
-</code></pre></article><nav class="pager" aria-label="Chapter navigation"><a href="12-self-hosting.html">← How the compiler builds itself</a><a href="14-performance.html">Performance and evidence →</a></nav><footer>Ramos 0.18.0 · <a href="book/13-reference.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</code></pre></article><nav class="pager" aria-label="Chapter navigation"><a href="12-self-hosting.html">← How the compiler builds itself</a><a href="14-performance.html">Performance and evidence →</a></nav><footer>Ramos 0.18.1 · <a href="book/13-reference.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>
