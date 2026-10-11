@@ -142,7 +142,7 @@ language speed claim.
 A fresh eight-task C/Rust/Python baseline was recorded before changing 0.13.
 Existing workload binaries remain byte-identical for Linux and Windows; see
 [the continuity report](../evidence/syntax-codegen-continuity.json). The
-[current measurements](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/benchmarks/0.14.0/report.md) use the baseline's work
+[current measurements](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/benchmarks/0.14.0/report.md) use the baseline's work
 counts and verify every timed output. This syntax milestone makes no speedup
 claim. Compiler rebuild and app-build timings are recorded separately in
 [the acceptance evidence](../evidence/syntax-verification.json).

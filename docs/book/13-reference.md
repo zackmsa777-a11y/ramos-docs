@@ -8,13 +8,20 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/7cb4a012370b9824f256397a5b63fb44129c6793/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, floats, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
 permissions. General canvas graphics, games, a Linux GUI backend and browser support need further platform work.
+
+## Compiler commands
+
+`build SOURCE -o PROGRAM [--force] [--target linux|windows] [--gui]` writes an
+executable. `run SOURCE [-- ARG...]` compiles and runs for the native OS.
+`fmt SOURCE [--check | -o FILE [--force]]` formats one file. See
+[complete authoring contracts](19-devtools.md).
 
 ## Standard library signatures
 

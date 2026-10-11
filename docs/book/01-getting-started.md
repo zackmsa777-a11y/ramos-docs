@@ -1,7 +1,7 @@
 # Install, build and run
 
 Use the complete
-[0.15.0 system bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.15.0/ramos-0.15.0-system.zip),
+[0.16.0 authoring-tools bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.16.0/ramos-0.16.0-devtools.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all twelve
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.
@@ -20,6 +20,7 @@ fn main() {
 
 ```powershell
 .\ramos.exe --version
+.\ramos.exe run .\hello.ramos
 .\ramos.exe build .\hello.ramos -o .\hello.exe
 .\hello.exe
 ```
@@ -32,9 +33,21 @@ are not required to compile or run programs with the downloaded compiler.
 ```sh
 chmod +x ramos-linux-x86_64
 ./ramos-linux-x86_64 --version
+./ramos-linux-x86_64 run hello.ramos
 ./ramos-linux-x86_64 build hello.ramos -o hello
 ./hello
 ```
+
+## Formatting and readable errors
+
+```sh
+./ramos-linux-x86_64 fmt hello.ramos --check
+./ramos-linux-x86_64 fmt hello.ramos -o formatted-hello.ramos
+```
+
+Use `.\ramos.exe` for these commands in PowerShell. Source-line/caret errors
+help locate mistakes; [authoring tools](19-devtools.md) describe formatting,
+argument forwarding and temporary executable cleanup.
 
 ## Rebuilding an existing output
 

@@ -1,7 +1,7 @@
 {
-  "version": "0.15.0",
+  "version": "0.16.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "7cb4a012370b9824f256397a5b63fb44129c6793",
+  "source_commit": "41f819c1cfec06606c0a6c9e59937fb7769773cf",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -12,6 +12,11 @@
       "slug": "01-getting-started",
       "title": "Install, build and run",
       "source": null
+    },
+    {
+      "slug": "19-devtools",
+      "title": "Diagnostics, formatting and running source files",
+      "source": "docs/devtools.md"
     },
     {
       "slug": "02-language",

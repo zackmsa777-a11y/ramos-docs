@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.15.0** unless the task explicitly provides a newer compiler
+programs. Target **0.16.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -64,6 +64,15 @@ when idle and close the window. Do not promise dialogs, canvas APIs or a Linux
 backend. For TUI, require an interactive terminal and restore it before exit.
 
 ## Build and verify
+
+Use `ramos run app.ramos -- ARG...` for local native execution; stdin, stdout
+and stderr are inherited and child exit codes are forwarded. Use `build` for
+saved or cross-target executables and `--gui`. `ramos fmt app.ramos --check`
+checks formatting; `fmt app.ramos -o copy.ramos` writes an atomic copy and
+protects source aliases. It validates lexical syntax only, not full types.
+Errors show an escaped source line and caret with byte-column locations. Read
+[authoring contracts](19-devtools.md) before relying on temp-file lifetime.
+
 
 For a native downloaded compiler on Linux:
 

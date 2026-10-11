@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.15.0**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.16.0**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -17,27 +17,28 @@ This edition describes released features; proposed upgrades are clearly marked.
 
 1. Welcome and capability overview
 2. Install, build and run on Linux and Windows
-3. Syntax, control flow, functions and checked arithmetic
-4. Easier syntax: else-if, ranges and compound assignment
-5. Strings, structs, arrays and reclaiming memory
-6. Byte buffers and binary data
-7. Stdin and number conversion
-8. Arguments and file I/O
-9. `weave` and the standard library
-10. Paths, directories, environment and child processes
-11. CLI tools and terminal interfaces
-12. Native Windows desktop GUI
-13. Windows and cross-compilation
-14. Runnable projects
-15. Compiler self-hosting
-16. Limits and standard library signatures
-17. Performance evidence
-18. Proposed application-language roadmap
-19. AI coding agent guide
+3. Diagnostics, formatting and running source files
+4. Syntax, control flow, functions and checked arithmetic
+5. Easier syntax: else-if, ranges and compound assignment
+6. Strings, structs, arrays and reclaiming memory
+7. Byte buffers and binary data
+8. Stdin and number conversion
+9. Arguments and file I/O
+10. `weave` and the standard library
+11. Paths, directories, environment and child processes
+12. CLI tools and terminal interfaces
+13. Native Windows desktop GUI
+14. Windows and cross-compilation
+15. Runnable projects
+16. Compiler self-hosting
+17. Limits and standard library signatures
+18. Performance evidence
+19. Proposed application-language roadmap
+20. AI coding agent guide
 
 The `examples/` and `stdlib/` folders contain matching source from the compiler
 repository. Download a native compiler from the
-[0.15.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.15.0)
+[0.16.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.16.0)
 and place it at this repository's root to compile those examples. See the
 [quick start](book/01-getting-started.md). This repository does not include or
 implement a second compiler.

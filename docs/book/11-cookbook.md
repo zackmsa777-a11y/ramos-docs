@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.15, not pseudocode. The repository
+These are complete programs from Ramos 0.16, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -116,3 +116,15 @@ See [limits and traversal policy](18-system.md).
 [Source: rrun.ramos](../examples/rrun.ramos). No shell or PATH lookup. Argument
 values and inherited standard streams are preserved; OS failures are separate
 from child exit codes. Exit codes above 255 map to 1 in this small CLI wrapper.
+
+## Run and format while developing
+
+```sh
+./ramos-linux-x86_64 run examples/hello.ramos
+./ramos-linux-x86_64 run examples/rgrep.ramos -- needle README.md
+./ramos-linux-x86_64 fmt examples/hello.ramos -o hello-formatted.ramos
+./ramos-linux-x86_64 fmt hello-formatted.ramos --check
+```
+
+The same commands work with `.\ramos.exe` in PowerShell. [Authoring tools](19-devtools.md)
+cover preserved comments/newlines, error previews and cleanup.
