@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.17.0, with Markdown for agents and HTML for people.">
+<title>Reusable text builders and streamed text tools · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.17.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="03-values.html"><span>05</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html" aria-current="page"><span>06</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>07</span>Working with bytes</a><a href="05-input.html"><span>08</span>Stdin and number conversion</a><a href="06-files.html"><span>09</span>Arguments and file I/O</a><a href="07-libraries.html"><span>10</span>Libraries with weave</a><a href="18-system.html"><span>11</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>12</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>13</span>Desktop GUI on Windows</a><a href="10-windows.html"><span>14</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>15</span>Runnable projects</a><a href="12-self-hosting.html"><span>16</span>How the compiler builds itself</a><a href="13-reference.html"><span>17</span>Limits and standard library reference</a><a href="14-performance.html"><span>18</span>Performance and evidence</a><a href="15-roadmap.html"><span>19</span>What comes next</a><a href="16-agent-guide.html"><span>20</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="reusable-text-builders-and-streamed-text-tools">Reusable text builders and streamed text tools</h1>
+<p><code>weave "stdlib/text.ramos"</code> now provides a reusable UTF-8 text builder. Append
+new pieces without repeatedly concatenating the entire existing prefix. The
+builder, growth and copy logic are ordinary Ramos; no new syntax, intrinsic or
+native runtime dependency is added.</p>
+<pre><code class="language-ramos">weave &quot;stdlib/text.ramos&quot;
+
+fn main() {
+    let out = text_builder()
+    text_builder_append(out, s&quot;Hello, &quot;)
+    text_builder_append(out, s&quot;Ramos! 🚀&quot;)
+    let message = text_builder_finish(out)
+    text_builder_clear(out)
+    print(message)
+}
+</code></pre>
+<p>These fixed small appends fit within the bound. For variable-sized user input,
+check the return status of each append before using a result.</p>
+<h2 id="api-and-ownership">API and ownership</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text_builder() -&gt; TextBuilder</code></td>
+<td>Empty builder with 64-byte initial capacity</td>
+</tr>
+<tr>
+<td><code>text_builder_append(builder, text: string) -&gt; int64</code></td>
+<td>Append UTF-8 bytes; return 0, or -27 if total would exceed 1 MiB</td>
+</tr>
+<tr>
+<td><code>text_builder_bytes(builder) -&gt; int64</code></td>
+<td>Current byte count, not Unicode scalar count</td>
+</tr>
+<tr>
+<td><code>text_builder_finish(builder) -&gt; string</code></td>
+<td>Independent immutable snapshot; keeps builder content</td>
+</tr>
+<tr>
+<td><code>text_builder_clear(builder)</code></td>
+<td>Empty content and keep capacity for reuse</td>
+</tr>
+<tr>
+<td><code>text_builder_release(builder)</code></td>
+<td>Empty content and drop owned backing storage; future appends still work</td>
+</tr>
+</tbody>
+</table>
+<p><code>TextBuilder</code> is a mutable struct with <code>data: bytes</code> and <code>count: int64</code>. Aliases
+of the builder share its state. Treat those fields as implementation storage;
+use the functions for mutation. Counts outside 0..capacity produce a library
+error and exit 1 before access. <code>finish</code> validates UTF-8 through the existing
+<code>string</code> conversion, including when application code directly corrupts storage.</p>
+<p>Snapshots do not share mutable storage with the builder. Clearing, appending or
+releasing it cannot change an earlier result. Empty text, embedded NUL and valid
+Unicode are supported. No partial UTF-8 append is exposed because the input is a
+checked string. A size rejection leaves content and capacity unchanged; it is
+not a sticky error, so later smaller appends can succeed. The result limit includes
+all UTF-8 bytes, not scalar count. Allocation exhaustion retains the native
+checked runtime error; -27 does not mean allocation failures are recoverable.</p>
+<p>Capacity doubles until sufficient, capped at 1 MiB. Appending copies the new
+piece; only growth copies the old storage. <code>to_bytes</code> still copies each input
+string, and <code>finish</code> copies/validates the result. This is an amortized linear
+assembly API, not zero-copy text. Taking a snapshot after every append still
+copies every prefix. Reuse <code>clear</code> for records of similar size; use <code>release</code>
+after a large record when retaining its capacity is unnecessary.</p>
+<p>Release drops the builder's reference; collection reclaims unreachable managed
+storage normally. Any separate alias of its raw <code>data</code> keeps that buffer alive.
+This is not manual pointer freeing. <code>collect()</code> can request collection, and
+existing 16 MiB managed arena / 1 MiB individual-value limits remain enforced.</p>
+<h2 id="a-real-streamed-file-tool">A real streamed file tool</h2>
+<p><a href="examples/rnumber.ramos">examples/rnumber.ramos</a> numbers UTF-8 lines while
+reusing one builder. It processes files larger than the heap in bounded chunks.</p>
+<pre><code class="language-sh">./ramos run examples/rnumber.ramos -- input.txt
+./ramos build examples/rnumber.ramos -o rnumber
+./rnumber input.txt
+</code></pre>
+<p>Windows PowerShell:</p>
+<pre><code class="language-powershell">.\ramos.exe run .\examples\rnumber.ramos -- .\input.txt
+</code></pre>
+<p>Input <code>é🚀</code>, an empty line and a final unterminated <code>last</code> produce these output lines (shown quoted to make the empty payload visible):</p>
+<pre><code class="language-text">&quot;1: é🚀&quot;
+&quot;2: &quot;
+&quot;3: last&quot;
+</code></pre>
+<p>LF/CRLF terminators normalize to LF output. Empty files produce no lines. An
+input line or numbered output line exceeding 1 MiB returns 2 before emitting that
+line. Missing files, read/close failures and fallible stdout failures also return
+2. Previously emitted lines remain emitted. Malformed input UTF-8 invokes the
+existing conversion trap (exit 1), so this is a text tool rather than a binary
+copy API. Files close on ordinary error/exit paths; forced termination follows
+OS process cleanup. There is no file replacement mode.</p>
+<h2 id="measurements-and-release-checks">Measurements and release checks</h2>
+<p><a href="https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/text-builder/run.py">The focused benchmark</a> compares repeated
+string <code>+=</code> with the builder on the same compiler and machine. It appends 64-byte
+pieces, then independently checks all result bytes using <code>text_repeat</code>. One
+warmup and five alternating-order measurements include process startup and
+verification. Raw samples, machine and binary/library hashes are recorded in
+<a href="evidence/text-builder.json">the raw report</a> and
+<a href="https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/0.17.0/text-builder.md">measured table</a>. At 8192 appends / 512 KiB,
+the recorded Linux medians were 287 ms for concatenation and 13.8 ms for the
+builder (about 20.8×). This measures one Linux text
+assembly workload; it is not a C/Rust/Python comparison or an overall language
+score. Historical 0.14 comparative results remain historical.</p>
+<p><a href="https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/tests/test_text_builder.py">Shared tests</a> cover Unicode/NUL/empty values,
+shared builder aliases, immutable snapshots, capacity reuse/release, exact-limit
+success and nonmutating rejection, invalid counts, automatic reclamation across
+6000 results, CRLF/empty/final lines, large streamed files and fallible size/I/O
+errors. Native Linux and Windows compiler fixed-point proofs remain required.</p>
+<p>Release validation passes <strong>246 Linux tests</strong> (251 discovered, five platform
+skips) and <strong>192 native Windows tests</strong> (193 discovered, one Linux fixture skip),
+with byte-identical compiler fixed points on both targets. See
+<a href="evidence/text-builder-verification.json">release evidence</a>.</p>
+<p>The broader data/math milestone was split to keep releases reviewable: this
+release ships builders only. Float64 and essential math, reviewed collection and
+recursion limits, and Linux GUI remain future work. See <a href="15-roadmap.html">roadmap</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="03-values.html">← Strings, structs, arrays and memory</a><a href="04-bytes.html">Working with bytes →</a></nav><footer>Ramos 0.17.0 · <a href="book/20-text-builder.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

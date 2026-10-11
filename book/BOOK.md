@@ -1,4 +1,4 @@
-# The Ramos Book — 0.16.0
+# The Ramos Book — 0.17.0
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.16.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.17.0**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -18,7 +18,7 @@ identify when a feature arrived; they do not change this book's baseline.
 - Building a tool? Read [files](06-files.md), [libraries](07-libraries.md) and
   [OS libraries](18-system.md) and [CLI/TUI](08-cli-tui.md), then try the [projects](11-cookbook.md).
 - Building a desktop window? Read [Windows GUI](09-gui.md). The Linux GUI backend
-  is not available in 0.16.
+  is not available in 0.17.
 - Writing Ramos with an AI agent? Start with the [agent guide](16-agent-guide.md)
   and [API reference](13-reference.md).
 - Working on the compiler? Read [self-hosting](12-self-hosting.md).
@@ -29,9 +29,11 @@ Checked int64 arithmetic, booleans, functions, comments, while/range loops, else
 UTF-8 strings, mutable bytes, structs, typed arrays, reclaiming managed memory,
 compile-time `weave`, stdin, streamed files, terminal interfaces and Windows
 native GUI controls, directory iteration/creation, lexical path helpers,
-environment lookup and direct child execution.
+environment lookup, direct child execution and reusable UTF-8 text builders.
+[Text builders](20-text-builder.md) provide immutable snapshots and capacity
+reuse/release for streamed tools.
 
-There are no floats, namespaces or package registry in 0.16. Read
+There are no floats, namespaces or package registry in 0.17. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -44,7 +46,7 @@ Use `ramos run app.ramos` to compile and execute a source file directly, or
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.16.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.16.0)
+- [Ramos 0.17.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.17.0)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 
 The limits and negative results matter as much as working features. Native
@@ -57,7 +59,7 @@ interactive applications have been tested there.
 # Install, build and run
 
 Use the complete
-[0.16.0 authoring-tools bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.16.0/ramos-0.16.0-devtools.zip),
+[0.17.0 text-builders bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.17.0/ramos-0.17.0-text-builders.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all twelve
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.
@@ -270,7 +272,7 @@ remain byte-based rather than terminal display-cell positions.
 
 ## Verification and limits
 
-The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/tests/test_devtools.py) check caret/type
+The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/tests/test_devtools.py) check caret/type
 messages, original library locations, EOF/control escaping, formatter idempotence,
 comments/literals/CRLF, byte-identical compiled output before/after formatting,
 atomic publication and source protection, argument quoting, inherited I/O,
@@ -278,7 +280,7 @@ exit codes, temporary cleanup, error paths, repeated runs and an empty tool PATH
 The native Linux and Windows [self-hosting workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml)
 runs the shared corpus and verifies byte-identical compiler fixed points.
 
-Release validation passes **240 Linux tests** (245 discovered, five platform
+The 0.16 milestone validation passed **240 Linux tests** (245 discovered, five platform
 skips) and **186 native Windows tests** (187 discovered, one Linux fixture
 skip), with both byte-identical compiler fixed points and an empty-PATH Linux
 rebuild. See [release evidence](../evidence/devtools-verification.json).
@@ -424,7 +426,7 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 
@@ -585,7 +587,7 @@ language speed claim.
 A fresh eight-task C/Rust/Python baseline was recorded before changing 0.13.
 Existing workload binaries remain byte-identical for Linux and Windows; see
 [the continuity report](../evidence/syntax-codegen-continuity.json). The
-[current measurements](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/benchmarks/0.14.0/report.md) use the baseline's work
+[current measurements](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/0.14.0/report.md) use the baseline's work
 counts and verify every timed output. This syntax milestone makes no speedup
 claim. Compiler rebuild and app-build timings are recorded separately in
 [the acceptance evidence](../evidence/syntax-verification.json).
@@ -768,6 +770,131 @@ rebuilds on both targets. See [recorded validation](../evidence/values-verificat
 
 ---
 
+# Reusable text builders and streamed text tools
+
+`weave "stdlib/text.ramos"` now provides a reusable UTF-8 text builder. Append
+new pieces without repeatedly concatenating the entire existing prefix. The
+builder, growth and copy logic are ordinary Ramos; no new syntax, intrinsic or
+native runtime dependency is added.
+
+```ramos
+weave "stdlib/text.ramos"
+
+fn main() {
+    let out = text_builder()
+    text_builder_append(out, s"Hello, ")
+    text_builder_append(out, s"Ramos! 🚀")
+    let message = text_builder_finish(out)
+    text_builder_clear(out)
+    print(message)
+}
+```
+
+These fixed small appends fit within the bound. For variable-sized user input,
+check the return status of each append before using a result.
+
+## API and ownership
+
+| Function | Contract |
+| --- | --- |
+| `text_builder() -> TextBuilder` | Empty builder with 64-byte initial capacity |
+| `text_builder_append(builder, text: string) -> int64` | Append UTF-8 bytes; return 0, or -27 if total would exceed 1 MiB |
+| `text_builder_bytes(builder) -> int64` | Current byte count, not Unicode scalar count |
+| `text_builder_finish(builder) -> string` | Independent immutable snapshot; keeps builder content |
+| `text_builder_clear(builder)` | Empty content and keep capacity for reuse |
+| `text_builder_release(builder)` | Empty content and drop owned backing storage; future appends still work |
+
+`TextBuilder` is a mutable struct with `data: bytes` and `count: int64`. Aliases
+of the builder share its state. Treat those fields as implementation storage;
+use the functions for mutation. Counts outside 0..capacity produce a library
+error and exit 1 before access. `finish` validates UTF-8 through the existing
+`string` conversion, including when application code directly corrupts storage.
+
+Snapshots do not share mutable storage with the builder. Clearing, appending or
+releasing it cannot change an earlier result. Empty text, embedded NUL and valid
+Unicode are supported. No partial UTF-8 append is exposed because the input is a
+checked string. A size rejection leaves content and capacity unchanged; it is
+not a sticky error, so later smaller appends can succeed. The result limit includes
+all UTF-8 bytes, not scalar count. Allocation exhaustion retains the native
+checked runtime error; -27 does not mean allocation failures are recoverable.
+
+Capacity doubles until sufficient, capped at 1 MiB. Appending copies the new
+piece; only growth copies the old storage. `to_bytes` still copies each input
+string, and `finish` copies/validates the result. This is an amortized linear
+assembly API, not zero-copy text. Taking a snapshot after every append still
+copies every prefix. Reuse `clear` for records of similar size; use `release`
+after a large record when retaining its capacity is unnecessary.
+
+Release drops the builder's reference; collection reclaims unreachable managed
+storage normally. Any separate alias of its raw `data` keeps that buffer alive.
+This is not manual pointer freeing. `collect()` can request collection, and
+existing 16 MiB managed arena / 1 MiB individual-value limits remain enforced.
+
+## A real streamed file tool
+
+[examples/rnumber.ramos](../examples/rnumber.ramos) numbers UTF-8 lines while
+reusing one builder. It processes files larger than the heap in bounded chunks.
+
+```sh
+./ramos run examples/rnumber.ramos -- input.txt
+./ramos build examples/rnumber.ramos -o rnumber
+./rnumber input.txt
+```
+
+Windows PowerShell:
+
+```powershell
+.\ramos.exe run .\examples\rnumber.ramos -- .\input.txt
+```
+
+Input `é🚀`, an empty line and a final unterminated `last` produce these output lines (shown quoted to make the empty payload visible):
+
+```text
+"1: é🚀"
+"2: "
+"3: last"
+```
+
+LF/CRLF terminators normalize to LF output. Empty files produce no lines. An
+input line or numbered output line exceeding 1 MiB returns 2 before emitting that
+line. Missing files, read/close failures and fallible stdout failures also return
+2. Previously emitted lines remain emitted. Malformed input UTF-8 invokes the
+existing conversion trap (exit 1), so this is a text tool rather than a binary
+copy API. Files close on ordinary error/exit paths; forced termination follows
+OS process cleanup. There is no file replacement mode.
+
+## Measurements and release checks
+
+[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/text-builder/run.py) compares repeated
+string `+=` with the builder on the same compiler and machine. It appends 64-byte
+pieces, then independently checks all result bytes using `text_repeat`. One
+warmup and five alternating-order measurements include process startup and
+verification. Raw samples, machine and binary/library hashes are recorded in
+[the raw report](../evidence/text-builder.json) and
+[measured table](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
+the recorded Linux medians were 287 ms for concatenation and 13.8 ms for the
+builder (about 20.8×). This measures one Linux text
+assembly workload; it is not a C/Rust/Python comparison or an overall language
+score. Historical 0.14 comparative results remain historical.
+
+[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/tests/test_text_builder.py) cover Unicode/NUL/empty values,
+shared builder aliases, immutable snapshots, capacity reuse/release, exact-limit
+success and nonmutating rejection, invalid counts, automatic reclamation across
+6000 results, CRLF/empty/final lines, large streamed files and fallible size/I/O
+errors. Native Linux and Windows compiler fixed-point proofs remain required.
+
+Release validation passes **246 Linux tests** (251 discovered, five platform
+skips) and **192 native Windows tests** (193 discovered, one Linux fixture skip),
+with byte-identical compiler fixed points on both targets. See
+[release evidence](../evidence/text-builder-verification.json).
+
+The broader data/math milestone was split to keep releases reviewable: this
+release ships builders only. Float64 and essential math, reviewed collection and
+recursion limits, and Linux GUI remain future work. See [roadmap](15-roadmap.md).
+
+
+---
+
 # Working with bytes
 
 ```text
@@ -791,7 +918,7 @@ allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
 Metadata and alignment count toward the heap limit. Invalid sizes, indices,
 byte values or allocation failures report a runtime error and exit 1.
 Unreachable allocations can be collected automatically or with `collect()`.
-See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/docs/buffers.md).
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/docs/buffers.md).
 
 ## Bytes versus strings
 
@@ -1160,6 +1287,12 @@ Version 0.12 expands the bundle with [CLI and TUI libraries](08-cli-tui.md).
 
 See [0.15 OS contracts](18-system.md) for the new system, path and process helpers.
 
+## Reusable text assembly (0.17)
+
+The existing `text.ramos` library now provides `TextBuilder` for appending checked
+UTF-8 pieces, immutable snapshots, capacity reuse and dropping backing storage.
+See [complete ownership/limit contracts and a streamed file tool](20-text-builder.md).
+
 
 ---
 
@@ -1346,7 +1479,7 @@ and emits ELF/PE directly.
 
 ## Run the tools
 
-Extract the complete `ramos-0.16.0-devtools.zip` archive; keep `stdlib/` beside
+Extract the complete `ramos-0.17.0-text-builders.zip` archive; keep `stdlib/` beside
 `examples/`. On Linux:
 
 ```sh
@@ -1733,7 +1866,7 @@ There is no interpreter, Python dependency or C runtime in generated programs.
 
 ## Use Ramos on Windows
 
-Download [ramos.exe from the 0.16 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.16.0/ramos.exe)
+Download [ramos.exe from the 0.17 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.17.0/ramos.exe)
 and open PowerShell in its directory. CI artifacts are also available from the
 [Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
 
@@ -1859,7 +1992,7 @@ argument quoting, status handling, resource ownership and current limits.
 
 # Runnable projects
 
-These are complete programs from Ramos 0.16, not pseudocode. The repository
+These are complete programs from Ramos 0.17, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -1988,12 +2121,22 @@ from child exit codes. Exit codes above 255 map to 1 in this small CLI wrapper.
 The same commands work with `.\ramos.exe` in PowerShell. [Authoring tools](19-devtools.md)
 cover preserved comments/newlines, error previews and cleanup.
 
+## Number UTF-8 lines
+
+```sh
+./ramos-linux-x86_64 run examples/rnumber.ramos -- input.txt
+```
+
+[Source](../examples/rnumber.ramos). Streams input, reuses one text builder and
+normalizes LF/CRLF output. [Text builder contracts](20-text-builder.md) cover
+size/error behavior and immutable snapshots.
+
 
 ---
 
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -2058,7 +2201,7 @@ seed it. User programs can use the new structs and typed arrays; no preprocessin
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -2067,7 +2210,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -2079,7 +2222,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.16 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.17 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.
@@ -2102,6 +2245,10 @@ Ramos. The retained seed recognizes `stdout` and `_run_file` so it can compile
 this source; its own CLI explicitly skips the 14 development-tool tests. Native
 self-hosted stages and Windows run them. See [devtools.md](19-devtools.md).
 
+Version 0.17 adds only Ramos-written text helpers and the rnumber example.
+Its six shared acceptance tests run on native self-hosted stages and Windows;
+the retained seed skips the unsupported weave/struct grammar.
+
 
 ---
 
@@ -2115,7 +2262,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, floats, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -2135,8 +2282,8 @@ executable. `run SOURCE [-- ARG...]` compiles and runs for the native OS.
 These are the complete function signatures defined in the bundled source.
 Follow the chapter APIs for supported application-facing helpers; some
 prefixed functions are implementation helpers. Read source for structs and
-exact status/lifetime contracts. [OS APIs](18-system.md) document native
-intrinsics and the system/path/process libraries.
+exact status/lifetime contracts. [Text builders](20-text-builder.md) document
+reusable text assembly; [OS APIs](18-system.md) document system/path/process.
 
 ### bytes.ramos
 
@@ -2288,6 +2435,13 @@ fn text_find(text: string, needle: string) -> int64
 fn text_contains(text: string, needle: string) -> bool
 fn text_join(parts: [string], separator: string) -> string
 fn text_repeat(text: string, count: int64) -> string
+fn text_builder() -> TextBuilder
+fn text_builder_valid(builder: TextBuilder)
+fn text_builder_bytes(builder: TextBuilder) -> int64
+fn text_builder_append(builder: TextBuilder, text: string) -> int64
+fn text_builder_finish(builder: TextBuilder) -> string
+fn text_builder_clear(builder: TextBuilder)
+fn text_builder_release(builder: TextBuilder)
 ```
 
 ### tui.ramos
@@ -2315,10 +2469,11 @@ fn tui_key(timeout_ms: int64) -> int64
 
 # Performance and evidence
 
-This 0.16 edition retains measured **0.14** results below. They are historical;
-no comparative performance or speedup measurement for 0.16 is claimed.
+This 0.17 edition retains measured **0.14** cross-language results below.
+They are historical; no C/Rust/Python comparison or overall language score
+for 0.17 is claimed. A separate focused text-assembly workload follows.
 
-These are recorded **Ramos 0.16.0** measurements, including exact outputs,
+These are recorded **Ramos 0.17.0** measurements, including exact outputs,
 source/compiler hashes, flags and raw samples. The shared VM and selected
 workloads limit the conclusions. This is an execution index, not a score for
 language quality or all possible applications.
@@ -2408,7 +2563,7 @@ Median of three builds per task, including compiler startup and linking/publicat
 ## Next work for Ramos
 
 1. Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (6.1× C time), Runtime-seeded recursive tree (5.1× C time), Scan 16 KiB ASCII text (3.9× C time). Version 0.7.1 already reduces buffer-call and stack traffic and specializes constant arithmetic. Further changes need their own measurements.
-2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/benchmarks/optimization.md).
+2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/optimization.md).
 3. Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.
 
 ![Overall index and task ratios](../assets/performance-0.14.0.png)
@@ -2432,9 +2587,20 @@ make
 python3 benchmarks/run_suite.py --work-counts benchmarks/baseline-0.13.0/results.json --output-dir work/reproduced-0.14.0
 ```
 
-Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
+Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
 
-Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+
+## 0.17 focused text assembly
+
+At 8192 appends / 512 KiB, medians on the recorded Linux machine were 287 ms
+for repeated string concatenation versus 13.8 ms for the reusable text builder
+(about 20.8×). One warmup and five alternating-order samples include startup
+and complete content verification. This is a single application workload on
+a shared container, not a general speedup or native Windows timing.
+
+[Raw samples and machine/hash evidence](../evidence/text-builder.json). See
+[text-builder APIs and reproducible measurement](20-text-builder.md).
 
 
 ---
@@ -2446,7 +2612,7 @@ applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.
 
-This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries and 0.16 authoring tools are now
+This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools and 0.17 text builders are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -2485,8 +2651,9 @@ timings are historical; they are not a performance result for 0.13.
 | 0.14: easier code (implemented; see [contracts](17-easier-syntax.md)) | `else if`, exclusive-range `for`, `+=` and `-=`; updated syntax documentation and highlighting | Simplify an existing search/viewer example while preserving its output and behavior on both OSes |
 | 0.15: useful OS libraries (implemented; see [contracts](18-system.md)) | Directory iteration, paths, environment access and direct child-process execution | Recursive name search, streamed exclusive file copy and a direct command runner; recursive backup is not shipped |
 | 0.16: easier development (implemented; see [contracts](19-devtools.md)) | Source-line/caret errors, a formatter and a compile-and-run command | A new user can run a file, correct a reported error and format it using the documented commands |
-| 0.17: data and math | `float64`, conversions and essential math; string builders and better collection growth; reviewed memory/recursion limits | A numerical renderer and a streaming text tool that builds output without repeated whole-string copies |
-| 0.18: portable GUI | Linux backend, layout/DPI handling, file dialogs and basic drawing behind the GUI library | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
+| 0.17: reusable text (implemented; see [contracts](20-text-builder.md)) | UTF-8 builder, immutable snapshots, capacity reuse/release | Streamed UTF-8 line numbering with a reusable builder; exact-size/rejection and long-running memory checks |
+| 0.18: data and math | `float64`, conversions and essential math; better collection growth; reviewed memory/recursion limits | A numerical renderer and bounded collection workloads |
+| 0.19: portable GUI | Linux backend, layout/DPI handling, file dialogs and basic drawing behind the GUI library | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
 
 ### 0.14: specify the small syntax changes first
@@ -2531,14 +2698,14 @@ distributable executables. Update editor support alongside new syntax. Evaluate
 `--emit-asm` after the core authoring work; an inspection feature needs a clear
 contract and should not become a second code-generation backend.
 
-### 0.17: remove the walls using measured application needs
+### 0.18: remove the walls using measured application needs
 
 Specify floating-point literals, IEEE-754 behavior, comparisons, conversions,
 NaN/infinity handling, division and printing before implementation. Keep integer
 overflow checks intact. Verify numerical results against independent references
 on both targets.
 
-Add a string builder and amortized collection growth with clear aliasing and
+0.17 delivered a string builder; next review amortized collection growth with clear aliasing and
 lifetime rules. Keep immutable string values and low-level bytes available.
 Profile collection and heap behavior before redesigning the allocator or GC.
 Use long-running allocation tests and actual live-data workloads to choose
@@ -2549,7 +2716,7 @@ resources such as files, processes and windows.
 Generics and broader containers come later if concrete apps need them; they
 should not block useful strings, arrays and number handling.
 
-### 0.18: one GUI API with real desktop evidence
+### 0.19: one GUI API with real desktop evidence
 
 Choose and document the initial Linux display backend and its OS dependencies.
 Keep platform details behind `stdlib/gui.ramos`. Add layout, scaling, dialogs
@@ -2604,7 +2771,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.16.0** unless the task explicitly provides a newer compiler
+programs. Target **0.17.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -2665,6 +2832,11 @@ values and 32767 packed UTF-8 bytes. Child input/output is inherited, not captur
 For GUI, support is Windows-only. Pump events regularly, use blocking waits
 when idle and close the window. Do not promise dialogs, canvas APIs or a Linux
 backend. For TUI, require an interactive terminal and restore it before exit.
+
+For incremental text, use the [text builder](20-text-builder.md). Check append
+status (0 or -27); byte count differs from Unicode scalar count. Snapshot
+strings are independent; clear reuses capacity and release drops storage for
+normal collection. Do not access backing fields to bypass UTF-8 checks.
 
 ## Build and verify
 

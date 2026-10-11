@@ -8,7 +8,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, floats, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -28,8 +28,8 @@ executable. `run SOURCE [-- ARG...]` compiles and runs for the native OS.
 These are the complete function signatures defined in the bundled source.
 Follow the chapter APIs for supported application-facing helpers; some
 prefixed functions are implementation helpers. Read source for structs and
-exact status/lifetime contracts. [OS APIs](18-system.md) document native
-intrinsics and the system/path/process libraries.
+exact status/lifetime contracts. [Text builders](20-text-builder.md) document
+reusable text assembly; [OS APIs](18-system.md) document system/path/process.
 
 ### bytes.ramos
 
@@ -181,6 +181,13 @@ fn text_find(text: string, needle: string) -> int64
 fn text_contains(text: string, needle: string) -> bool
 fn text_join(parts: [string], separator: string) -> string
 fn text_repeat(text: string, count: int64) -> string
+fn text_builder() -> TextBuilder
+fn text_builder_valid(builder: TextBuilder)
+fn text_builder_bytes(builder: TextBuilder) -> int64
+fn text_builder_append(builder: TextBuilder, text: string) -> int64
+fn text_builder_finish(builder: TextBuilder) -> string
+fn text_builder_clear(builder: TextBuilder)
+fn text_builder_release(builder: TextBuilder)
 ```
 
 ### tui.ramos

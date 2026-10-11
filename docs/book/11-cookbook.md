@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.16, not pseudocode. The repository
+These are complete programs from Ramos 0.17, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -128,3 +128,13 @@ from child exit codes. Exit codes above 255 map to 1 in this small CLI wrapper.
 
 The same commands work with `.\ramos.exe` in PowerShell. [Authoring tools](19-devtools.md)
 cover preserved comments/newlines, error previews and cleanup.
+
+## Number UTF-8 lines
+
+```sh
+./ramos-linux-x86_64 run examples/rnumber.ramos -- input.txt
+```
+
+[Source](../examples/rnumber.ramos). Streams input, reuses one text builder and
+normalizes LF/CRLF output. [Text builder contracts](20-text-builder.md) cover
+size/error behavior and immutable snapshots.

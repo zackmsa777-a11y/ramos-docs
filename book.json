@@ -1,7 +1,7 @@
 {
-  "version": "0.16.0",
+  "version": "0.17.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "41f819c1cfec06606c0a6c9e59937fb7769773cf",
+  "source_commit": "8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -32,6 +32,11 @@
       "slug": "03-values",
       "title": "Strings, structs, arrays and memory",
       "source": "docs/values.md"
+    },
+    {
+      "slug": "20-text-builder",
+      "title": "Reusable text builders and streamed text tools",
+      "source": "docs/text-builder.md"
     },
     {
       "slug": "04-bytes",

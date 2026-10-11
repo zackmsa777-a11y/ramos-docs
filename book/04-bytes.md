@@ -21,7 +21,7 @@ allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
 Metadata and alignment count toward the heap limit. Invalid sizes, indices,
 byte values or allocation failures report a runtime error and exit 1.
 Unreachable allocations can be collected automatically or with `collect()`.
-See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/docs/buffers.md).
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/docs/buffers.md).
 
 ## Bytes versus strings
 

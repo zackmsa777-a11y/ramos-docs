@@ -113,7 +113,7 @@ remain byte-based rather than terminal display-cell positions.
 
 ## Verification and limits
 
-The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/41f819c1cfec06606c0a6c9e59937fb7769773cf/tests/test_devtools.py) check caret/type
+The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/8acee66ff47b79ae1ec3de8ebb9d8de6f69b50d7/tests/test_devtools.py) check caret/type
 messages, original library locations, EOF/control escaping, formatter idempotence,
 comments/literals/CRLF, byte-identical compiled output before/after formatting,
 atomic publication and source protection, argument quoting, inherited I/O,
@@ -121,7 +121,7 @@ exit codes, temporary cleanup, error paths, repeated runs and an empty tool PATH
 The native Linux and Windows [self-hosting workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml)
 runs the shared corpus and verifies byte-identical compiler fixed points.
 
-Release validation passes **240 Linux tests** (245 discovered, five platform
+The 0.16 milestone validation passed **240 Linux tests** (245 discovered, five platform
 skips) and **186 native Windows tests** (187 discovered, one Linux fixture
 skip), with both byte-identical compiler fixed points and an empty-PATH Linux
 rebuild. See [release evidence](../evidence/devtools-verification.json).

@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.16.0**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.17.0**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -38,7 +38,7 @@ This edition describes released features; proposed upgrades are clearly marked.
 
 The `examples/` and `stdlib/` folders contain matching source from the compiler
 repository. Download a native compiler from the
-[0.16.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.16.0)
+[0.17.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.17.0)
 and place it at this repository's root to compile those examples. See the
 [quick start](book/01-getting-started.md). This repository does not include or
 implement a second compiler.

@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.16.0** unless the task explicitly provides a newer compiler
+programs. Target **0.17.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -62,6 +62,11 @@ values and 32767 packed UTF-8 bytes. Child input/output is inherited, not captur
 For GUI, support is Windows-only. Pump events regularly, use blocking waits
 when idle and close the window. Do not promise dialogs, canvas APIs or a Linux
 backend. For TUI, require an interactive terminal and restore it before exit.
+
+For incremental text, use the [text builder](20-text-builder.md). Check append
+status (0 or -27); byte count differs from Unicode scalar count. Snapshot
+strings are independent; clear reuses capacity and release drops storage for
+normal collection. Do not access backing fields to bypass UTF-8 checks.
 
 ## Build and verify
 
