@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.20.0, not pseudocode. The repository
+These are complete programs from Ramos 0.21.0, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -197,3 +197,16 @@ is a Ramos port of Rust nmatrix with twelve terminal scenes. It requires 0.20.0
 for monotonic timing and demonstrates cached changed-cell drawing, frame
 deadlines, help/picker overlays and idle pauses. See its build commands, checked
 platform limits and [timing chapter](23-timing.md).
+
+## Integer file/stdin sorting
+
+```sh
+./ramos-linux-x86_64 build examples/rsort.ramos -o rsort
+printf '3\n-4\n3\n0\n' | ./rsort
+./rsort numbers.txt
+```
+
+`rsort` is a complete native collection example. It sorts signed int64 values
+with duplicates, handles LF/CRLF and Unicode file paths, and reports malformed
+input or more than 131072 numbers with a line number and exit 2. See
+[collection status and ownership](24-collections.md).

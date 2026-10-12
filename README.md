@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.20.0**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.21.0**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -34,25 +34,26 @@ The existing compiler release and book URLs remain stable.
 7. Decimal input and streamed numerical tools
 8. Strings, structs, arrays and memory
 9. Reusable text builders and streamed text tools
-10. Working with bytes
-11. Stdin and number conversion
-12. Arguments and file I/O
-13. Libraries with weave
-14. Paths, directories, environment and child processes
-15. CLI tools and terminal interfaces
-16. Monotonic timing and terminal animation
-17. Desktop GUI on Windows and Linux
-18. Windows and cross-compilation
-19. Runnable projects
-20. How the compiler builds itself
-21. Limits and standard library reference
-22. Performance and evidence
-23. What comes next
-24. Guide for AI coding agents
+10. Collection capacity, release and integer sorting
+11. Working with bytes
+12. Stdin and number conversion
+13. Arguments and file I/O
+14. Libraries with weave
+15. Paths, directories, environment and child processes
+16. CLI tools and terminal interfaces
+17. Monotonic timing and terminal animation
+18. Desktop GUI on Windows and Linux
+19. Windows and cross-compilation
+20. Runnable projects
+21. How the compiler builds itself
+22. Limits and standard library reference
+23. Performance and evidence
+24. What comes next
+25. Guide for AI coding agents
 
 The `examples/` and `stdlib/` folders contain matching source from the compiler
 repository. Download a native compiler from the
-[0.20.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.20.0)
+[0.21.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.21.0)
 and place it at this repository's root to compile those examples. See the
 [quick start](book/01-getting-started.md). This repository does not include or
 implement a second compiler.

@@ -1,4 +1,4 @@
-# The Ramos Book — 0.20.0
+# The Ramos Book — 0.21.0
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.20.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.21.0**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -36,7 +36,7 @@ reuse/release for streamed tools.
 [Native math](21-math.md) adds explicit conversions, square root and fixed
 decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.20.0. Read
+in 0.21.0. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -51,10 +51,13 @@ remains static. [Authoring tools](19-devtools.md) explain arguments, errors and 
 deadlines. The [rmatrix project](https://github.com/zackmsa777-a11y/ramos-examples/tree/main/projects/rmatrix)
 shows changed-cell terminal rendering.
 
+[Collection controls](24-collections.md) add explicit reserve/release, full-capacity
+status handling and signed integer sorting. `rsort` sorts stdin or a streamed file.
+
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.20.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.20.0)
+- [Ramos 0.21.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.21.0)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 - [Small runnable examples](https://github.com/zackmsa777-a11y/ramos-examples)
 - [Scientific calculator: CLI, REPL and GUI](https://github.com/zackmsa777-a11y/ramos-calculator)
@@ -78,7 +81,7 @@ interactive applications have been tested there.
 # Install, build and run
 
 Use the complete
-[0.20.0 timing bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.20.0/ramos-0.20.0-timing.zip),
+[0.21.0 collections bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.21.0/ramos-0.21.0-collections.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS` file lists asset hashes for integrity checking.
@@ -296,7 +299,7 @@ remain byte-based rather than terminal display-cell positions.
 
 ## Verification and limits
 
-The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/tests/test_devtools.py) check caret/type
+The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/tests/test_devtools.py) check caret/type
 messages, original library locations, EOF/control escaping, formatter idempotence,
 comments/literals/CRLF, byte-identical compiled output before/after formatting,
 atomic publication and source protection, argument quoting, inherited I/O,
@@ -450,7 +453,7 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 
@@ -1184,19 +1187,19 @@ OS process cleanup. There is no file replacement mode.
 
 ## Measurements and release checks
 
-[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/benchmarks/text-builder/run.py) compares repeated
+[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/text-builder/run.py) compares repeated
 string `+=` with the builder on the same compiler and machine. It appends 64-byte
 pieces, then independently checks all result bytes using `text_repeat`. One
 warmup and five alternating-order measurements include process startup and
 verification. Raw samples, machine and binary/library hashes are recorded in
 [the raw report](../evidence/text-builder.json) and
-[measured table](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
+[measured table](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
 the recorded Linux medians were 287 ms for concatenation and 13.8 ms for the
 builder (about 20.8×). This measures one Linux text
 assembly workload; it is not a C/Rust/Python comparison or an overall language
 score. Historical 0.14 comparative results remain historical.
 
-[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/tests/test_text_builder.py) cover Unicode/NUL/empty values,
+[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/tests/test_text_builder.py) cover Unicode/NUL/empty values,
 shared builder aliases, immutable snapshots, capacity reuse/release, exact-limit
 success and nonmutating rejection, invalid counts, automatic reclamation across
 6000 results, CRLF/empty/final lines, large streamed files and fallible size/I/O
@@ -1210,6 +1213,147 @@ with byte-identical compiler fixed points on both targets. See
 The broader data/math milestone was split to keep releases reviewable: this
 release ships builders only. Float64 and essential math, reviewed collection and
 recursion limits remain future work. Linux GUI arrives in 0.19 through GTK3. See [roadmap](15-roadmap.md).
+
+
+---
+
+# Collection capacity, release and integer sorting
+
+The existing `IntList` and `StringMap` already grow by doubling. Version 0.21
+adds explicit reservation, recoverable capacity rejection and storage release.
+These helpers are written in Ramos; no syntax, allocator, heap limit or native
+backend changes are required.
+
+```ramos
+weave "stdlib/lists.ramos"
+fn main() {
+    let values = list_new()
+    if list_reserve(values, 1000) != 0 { exit(2) }
+    list_push(values, 42)
+    list_push(values, -7)
+    list_sort(values)
+    print(list_get(values, 0))
+    list_release(values)
+}
+```
+
+## List helpers
+
+| Helper | Contract |
+| --- | --- |
+| `list_capacity(list) -> int64` | Allocated element capacity, separate from logical length |
+| `list_reserve(list, minimum) -> int64` | Grow to at least this capacity; never shrink or change logical length |
+| `list_try_push(list, value) -> int64` | Append, or return -27 without changing the list if it already has 131072 elements |
+| `list_release(list)` | Empty the list and detach its backing array; future pushes work normally |
+| `list_sort(list)` | Sort the active prefix in ascending signed-int64 order, keeping duplicates and capacity |
+
+Reserve returns 0 on success, -22 for a negative minimum and -27 above 131072.
+Rejected requests leave length, capacity and elements unchanged. A request
+smaller than existing capacity is a successful no-op. An explicit reservation
+may be any valid count; subsequent growth doubles capacity, capped at 131072.
+This handles non-power-of-two reservations without exceeding the array bound.
+
+The existing `list_push` remains the convenient append operation. A full list
+produces a library diagnostic and exit 1. Use `list_try_push` when exceeding the
+bound is an expected input condition. Allocation failure still produces the
+checked native runtime error; a successful capacity check does not guarantee
+space in the live heap. Status results are direct return values and do not set
+`io_error()` or `parse_error()`.
+
+Sorting uses an iterative heapsort: O(n log n) comparisons, constant auxiliary
+storage, no recursion or array allocation. Empty and singleton lists work.
+Comparisons use signed ordering rather than subtraction, so INT64_MIN and
+INT64_MAX sort correctly without an arithmetic-overflow exception. It sorts
+only `[0, list_len(list))`; unused capacity remains untouched. It is not stable,
+which makes no observable difference for a list of integers.
+
+## Map helpers
+
+| Helper | Contract |
+| --- | --- |
+| `map_capacity(map) -> int64` | Shared capacity of the key/value arrays |
+| `map_reserve(map, minimum) -> int64` | Same minimum/status rules as list reservation; preserve all entries |
+| `map_try_set(map, key, value) -> int64` | Insert/update; -27 rejects a new key at 131072 entries without mutation |
+| `map_clear(map)` | Remove all entries and active string references; retain capacity |
+| `map_release(map)` | Empty the map and detach both backing arrays |
+
+`map_set` remains the convenient operation, exiting 1 on a full new insertion.
+Replacing an existing key succeeds even at full capacity. Keys/values remain
+immutable strings; matching and lookup are still linear. Reservation avoids
+repeated array growth, not O(n) lookup. This is not a hash-map implementation.
+Both newly resized arrays are prepared before the map fields are replaced.
+Allocation failure retains the terminating native trap.
+
+## Aliases and memory
+
+Collection handles alias their mutable struct state: sorting, clearing,
+reservation and release through one handle are visible through another.
+Fields are implementation metadata; mutate contents through the library API.
+The new capacity/reserve/release/sort operations check structural metadata,
+and map clear also checks it. They do not validate uniqueness of manually
+edited keys. Arbitrarily editing collection fields is not a supported use.
+
+Growth creates new backing arrays and leaves separately retained old array
+aliases unchanged. Release detaches the collection's arrays without
+invalidating aliases that still hold them. Map clear writes empty strings into
+the current arrays, so aliases of those arrays observe the cleared entries.
+Independent immutable string values remain valid.
+
+`list_clear` retains storage for reuse; `map_clear` additionally drops every
+active key/value reference so removed strings can be collected. Release drops
+owned storage. Neither is manual `free`: reclamation occurs normally when no
+remaining reference keeps data alive. `collect()` can request collection;
+`memory_used()` includes headers/padding and uncollected garbage. Conservative
+stack/payload scanning means exact instantaneous reclamation is not promised.
+The 16 MiB live-heap and 131072-element array limits remain unchanged.
+
+## Real CLI example: rsort
+
+```sh
+./ramos build examples/rsort.ramos -o rsort
+printf '3\n-4\n3\n0\n' | ./rsort
+./rsort numbers.txt
+```
+
+Windows PowerShell:
+
+```powershell
+.\ramos.exe build examples/rsort.ramos -o rsort.exe
+'3', '-4', '3', '0' | .\rsort.exe
+.\rsort.exe numbers.txt
+```
+
+Input is one signed decimal int64 per line, using `text_to_int`'s checked parse
+rules. LF/CRLF and a final line without a newline work. Empty input succeeds
+with no output; blank/malformed/out-of-range number lines are errors. At most
+131072 integers are retained. Output is one ascending number per line;
+duplicates stay. Stdin and file input stream while the list retains numbers
+needed for sorting. Unicode file paths work.
+
+Usage, parse, input-limit and I/O failures exit 2. Parse/limit errors include the
+line number. Input validation and sorting finish before output starts, so an
+invalid input emits no sorted result. An output I/O failure can leave a partial
+stream. Files close after normal reads and before reported parsing failures;
+process exit provides OS cleanup for runtime traps. The app does not modify its
+input or create an output file; redirect stdout deliberately if needed.
+
+Tests compare sorting and CLI results with Python's independent integer sort,
+cover exact/excess capacity, alias preservation, malformed metadata, Unicode
+paths, signed extremes and repeated clear/release cycles exceeding cumulative
+heap capacity. Both native targets and compiler fixed points remain release
+checks. Collection-workload measurements are published separately; there is
+no new general language speed score.
+
+## Release evidence
+
+[Native verification](../evidence/collections-verification.json) records 285
+passing Linux tests (6 skipped), 225 passing native Windows tests (1 skipped),
+both compiler fixed points and the empty-PATH Linux rebuild.
+
+[Collection measurements](https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/0.21.0/collections/report.md)
+retain source snapshots, checksums and nine raw samples per variant. Reservation
+reduces observed allocated bytes in that fixture but does not establish a
+runtime speed improvement. No new overall language score is claimed.
 
 
 ---
@@ -1237,7 +1381,7 @@ allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
 Metadata and alignment count toward the heap limit. Invalid sizes, indices,
 byte values or allocation failures report a runtime error and exit 1.
 Unreachable allocations can be collected automatically or with `collect()`.
-See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/docs/buffers.md).
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/docs/buffers.md).
 
 ## Bytes versus strings
 
@@ -2367,7 +2511,7 @@ There is no interpreter, Python dependency or C runtime in generated programs.
 
 ## Use Ramos on Windows
 
-Download [ramos.exe from the 0.20.0 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.20.0/ramos.exe)
+Download [ramos.exe from the 0.21.0 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.21.0/ramos.exe)
 and open PowerShell in its directory. CI artifacts are also available from the
 [Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
 
@@ -2503,7 +2647,7 @@ on native USER32/GDI32. See [portable GUI setup](09-gui.md).
 
 # Runnable projects
 
-These are complete programs from Ramos 0.20.0, not pseudocode. The repository
+These are complete programs from Ramos 0.21.0, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -2701,12 +2845,25 @@ for monotonic timing and demonstrates cached changed-cell drawing, frame
 deadlines, help/picker overlays and idle pauses. See its build commands, checked
 platform limits and [timing chapter](23-timing.md).
 
+## Integer file/stdin sorting
+
+```sh
+./ramos-linux-x86_64 build examples/rsort.ramos -o rsort
+printf '3\n-4\n3\n0\n' | ./rsort
+./rsort numbers.txt
+```
+
+`rsort` is a complete native collection example. It sorts signed int64 values
+with duplicates, handles LF/CRLF and Unicode file paths, and reports malformed
+input or more than 131072 numbers with a line number and exit 2. See
+[collection status and ownership](24-collections.md).
+
 
 ---
 
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -2771,7 +2928,7 @@ seed it. User programs can use the new structs and typed arrays; no preprocessin
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -2780,7 +2937,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -2792,7 +2949,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.20.0 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.21.0 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.
@@ -2862,6 +3019,11 @@ Version 0.20 appends private native slot 69 (compiler intrinsic 325) for
 QueryPerformanceCounter/Frequency. The compiler still rebuilds byte-identically
 on both native targets. See [timing and current counts](23-timing.md).
 
+Version 0.21 adds ordinary Ramos-written collection helpers and the `rsort`
+CLI. The compiler changes only its version label; runtime bytes and code
+generation remain unchanged. Both native targets validate the expanded library
+and application corpus. See [current verification](24-collections.md).
+
 
 ---
 
@@ -2875,7 +3037,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -2898,6 +3060,12 @@ executable. `run SOURCE [--gui] [-- ARG...]` compiles and runs for the native OS
 exponents -400..400, finite values, explicit conversions and fixed formatting
 precision 0..18. These extend numeric types without raising collection, memory
 or active-call limits.
+
+## Collection controls
+
+[Collection contracts](24-collections.md) describe reservation, capacity
+statuses, clear/release ownership, signed integer sorting and the native `rsort`
+CLI. The existing array/live-heap bounds remain checked.
 
 ## Standard library signatures
 
@@ -2984,12 +3152,19 @@ fn io_seek(reader: FileReader, offset: int64) -> int64
 
 ```ramos
 fn list_new() -> IntList
+fn list_valid(list: IntList)
 fn list_len(list: IntList) -> int64
+fn list_capacity(list: IntList) -> int64
+fn list_reserve(list: IntList, capacity: int64) -> int64
 fn list_push(list: IntList, value: int64)
+fn list_try_push(list: IntList, value: int64) -> int64
 fn list_get(list: IntList, index: int64) -> int64
 fn list_set(list: IntList, index: int64, value: int64)
 fn list_pop(list: IntList) -> int64
 fn list_clear(list: IntList)
+fn list_release(list: IntList)
+fn list_sort_down(list: IntList, start: int64, end: int64)
+fn list_sort(list: IntList)
 ```
 
 ### maps.ramos
@@ -2998,12 +3173,18 @@ fn list_clear(list: IntList)
 
 ```ramos
 fn map_new() -> StringMap
+fn map_valid(map: StringMap)
 fn map_len(map: StringMap) -> int64
+fn map_capacity(map: StringMap) -> int64
+fn map_reserve(map: StringMap, capacity: int64) -> int64
 fn map_index(map: StringMap, key: string) -> int64
 fn map_has(map: StringMap, key: string) -> bool
 fn map_get(map: StringMap, key: string, fallback: string) -> string
+fn map_try_set(map: StringMap, key: string, value: string) -> int64
 fn map_set(map: StringMap, key: string, value: string)
 fn map_remove(map: StringMap, key: string) -> bool
+fn map_clear(map: StringMap)
+fn map_release(map: StringMap)
 ```
 
 ### math.ramos
@@ -3223,7 +3404,7 @@ Median of three builds per task, including compiler startup and linking/publicat
 ## Next work for Ramos
 
 1. Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (6.1× C time), Runtime-seeded recursive tree (5.1× C time), Scan 16 KiB ASCII text (3.9× C time). Version 0.7.1 already reduces buffer-call and stack traffic and specializes constant arithmetic. Further changes need their own measurements.
-2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/benchmarks/optimization.md).
+2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/optimization.md).
 3. Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.
 
 ![Overall index and task ratios](../assets/performance-0.14.0.png)
@@ -3247,9 +3428,9 @@ make
 python3 benchmarks/run_suite.py --work-counts benchmarks/baseline-0.13.0/results.json --output-dir work/reproduced-0.14.0
 ```
 
-Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
+Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
 
-Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/results-0.2.json); they are not directly comparable to this suite.
 
 ## 0.17 focused text assembly
 
@@ -3272,7 +3453,7 @@ applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.
 
-This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers are now
+This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -3314,7 +3495,8 @@ timings are historical; they are not a performance result for 0.13.
 | 0.17: reusable text (implemented; see [contracts](20-text-builder.md)) | UTF-8 builder, immutable snapshots, capacity reuse/release | Streamed UTF-8 line numbering with a reusable builder; exact-size/rejection and long-running memory checks |
 | 0.18: native math (implemented; see [contracts](21-math.md)) | Finite `float64`, explicit conversions, square root, exact fixed formatting and Ramos math helpers | Native Mandelbrot image renderer, independently checked numerical results on both OSes |
 | 0.18.1: numerical input (implemented; see [contracts](22-math-input.md)) | Fallible decimal parsing with exact rounding in the Ramos math library | Streamed file/stdin statistics, independent references and long-running memory checks |
-| Follow-up: collections and limits | Profile collection growth and review memory/recursion limits before changing contracts | Bounded collection workloads and long-running live-memory checks |
+| 0.21: collection controls (implemented; see [contracts](24-collections.md)) | Reservation, fallible full-capacity status, storage release, integer sorting; limits remain unchanged | Native `rsort`, alias/boundary and long-running memory checks |
+| Limits follow-up | Review live-memory and recursion budgets before changing contracts | Measured stack/live-data workloads |
 | 0.19: portable GUI (implemented; see [contracts](09-gui.md)) | GTK3 Linux backend, existing native controls/events/panels, `run --gui` | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
 | 0.19.1: GUI helpers (implemented; see [contracts](09-gui.md)) | Checked rectangles, padding, rows/columns and native Open/Save path pickers | Notes opens Unicode files, cancels safely and saves new files on both OSes |
 | GUI follow-up | Explicit DPI policy and general drawing | A drawing app handles desktop scaling on both OSes |
@@ -3436,7 +3618,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.20.0** unless the task explicitly provides a newer compiler
+programs. Target **0.21.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -3560,3 +3742,8 @@ For frame timing, `monotonic_ms()` returns nonnegative milliseconds or -1;
 check `io_error()` immediately. It needs no terminal/GUI setup. Read
 [timing contracts](23-timing.md), use differences and deadlines, and avoid
 repeated rendering while paused. Do not interpret it as a Unix timestamp.
+
+For bounded integer collections, use `list_try_push` for expected full-capacity
+input, `list_reserve` when size is known and `list_sort` for ascending signed
+order. Map lookup stays linear. Clear retains arrays; release detaches owned
+storage while preserving external aliases. Read [collection contracts](24-collections.md).

@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.20.0** unless the task explicitly provides a newer compiler
+programs. Target **0.21.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -125,3 +125,8 @@ For frame timing, `monotonic_ms()` returns nonnegative milliseconds or -1;
 check `io_error()` immediately. It needs no terminal/GUI setup. Read
 [timing contracts](23-timing.md), use differences and deadlines, and avoid
 repeated rendering while paused. Do not interpret it as a Unix timestamp.
+
+For bounded integer collections, use `list_try_push` for expected full-capacity
+input, `list_reserve` when size is known and `list_sort` for ascending signed
+order. Map lookup stays linear. Clear retains arrays; release detaches owned
+storage while preserving external aliases. Read [collection contracts](24-collections.md).

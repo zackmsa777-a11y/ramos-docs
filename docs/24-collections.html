@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.21.0, with Markdown for agents and HTML for people.">
+<title>Collection capacity, release and integer sorting · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.21.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html" aria-current="page"><span>09</span>Collection capacity, release and integer sorting</a><a href="04-bytes.html"><span>10</span>Working with bytes</a><a href="05-input.html"><span>11</span>Stdin and number conversion</a><a href="06-files.html"><span>12</span>Arguments and file I/O</a><a href="07-libraries.html"><span>13</span>Libraries with weave</a><a href="18-system.html"><span>14</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>15</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>16</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>17</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>18</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>19</span>Runnable projects</a><a href="12-self-hosting.html"><span>20</span>How the compiler builds itself</a><a href="13-reference.html"><span>21</span>Limits and standard library reference</a><a href="14-performance.html"><span>22</span>Performance and evidence</a><a href="15-roadmap.html"><span>23</span>What comes next</a><a href="16-agent-guide.html"><span>24</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="collection-capacity-release-and-integer-sorting">Collection capacity, release and integer sorting</h1>
+<p>The existing <code>IntList</code> and <code>StringMap</code> already grow by doubling. Version 0.21
+adds explicit reservation, recoverable capacity rejection and storage release.
+These helpers are written in Ramos; no syntax, allocator, heap limit or native
+backend changes are required.</p>
+<pre><code class="language-ramos">weave &quot;stdlib/lists.ramos&quot;
+fn main() {
+    let values = list_new()
+    if list_reserve(values, 1000) != 0 { exit(2) }
+    list_push(values, 42)
+    list_push(values, -7)
+    list_sort(values)
+    print(list_get(values, 0))
+    list_release(values)
+}
+</code></pre>
+<h2 id="list-helpers">List helpers</h2>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_capacity(list) -&gt; int64</code></td>
+<td>Allocated element capacity, separate from logical length</td>
+</tr>
+<tr>
+<td><code>list_reserve(list, minimum) -&gt; int64</code></td>
+<td>Grow to at least this capacity; never shrink or change logical length</td>
+</tr>
+<tr>
+<td><code>list_try_push(list, value) -&gt; int64</code></td>
+<td>Append, or return -27 without changing the list if it already has 131072 elements</td>
+</tr>
+<tr>
+<td><code>list_release(list)</code></td>
+<td>Empty the list and detach its backing array; future pushes work normally</td>
+</tr>
+<tr>
+<td><code>list_sort(list)</code></td>
+<td>Sort the active prefix in ascending signed-int64 order, keeping duplicates and capacity</td>
+</tr>
+</tbody>
+</table>
+<p>Reserve returns 0 on success, -22 for a negative minimum and -27 above 131072.
+Rejected requests leave length, capacity and elements unchanged. A request
+smaller than existing capacity is a successful no-op. An explicit reservation
+may be any valid count; subsequent growth doubles capacity, capped at 131072.
+This handles non-power-of-two reservations without exceeding the array bound.</p>
+<p>The existing <code>list_push</code> remains the convenient append operation. A full list
+produces a library diagnostic and exit 1. Use <code>list_try_push</code> when exceeding the
+bound is an expected input condition. Allocation failure still produces the
+checked native runtime error; a successful capacity check does not guarantee
+space in the live heap. Status results are direct return values and do not set
+<code>io_error()</code> or <code>parse_error()</code>.</p>
+<p>Sorting uses an iterative heapsort: O(n log n) comparisons, constant auxiliary
+storage, no recursion or array allocation. Empty and singleton lists work.
+Comparisons use signed ordering rather than subtraction, so INT64_MIN and
+INT64_MAX sort correctly without an arithmetic-overflow exception. It sorts
+only <code>[0, list_len(list))</code>; unused capacity remains untouched. It is not stable,
+which makes no observable difference for a list of integers.</p>
+<h2 id="map-helpers">Map helpers</h2>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>map_capacity(map) -&gt; int64</code></td>
+<td>Shared capacity of the key/value arrays</td>
+</tr>
+<tr>
+<td><code>map_reserve(map, minimum) -&gt; int64</code></td>
+<td>Same minimum/status rules as list reservation; preserve all entries</td>
+</tr>
+<tr>
+<td><code>map_try_set(map, key, value) -&gt; int64</code></td>
+<td>Insert/update; -27 rejects a new key at 131072 entries without mutation</td>
+</tr>
+<tr>
+<td><code>map_clear(map)</code></td>
+<td>Remove all entries and active string references; retain capacity</td>
+</tr>
+<tr>
+<td><code>map_release(map)</code></td>
+<td>Empty the map and detach both backing arrays</td>
+</tr>
+</tbody>
+</table>
+<p><code>map_set</code> remains the convenient operation, exiting 1 on a full new insertion.
+Replacing an existing key succeeds even at full capacity. Keys/values remain
+immutable strings; matching and lookup are still linear. Reservation avoids
+repeated array growth, not O(n) lookup. This is not a hash-map implementation.
+Both newly resized arrays are prepared before the map fields are replaced.
+Allocation failure retains the terminating native trap.</p>
+<h2 id="aliases-and-memory">Aliases and memory</h2>
+<p>Collection handles alias their mutable struct state: sorting, clearing,
+reservation and release through one handle are visible through another.
+Fields are implementation metadata; mutate contents through the library API.
+The new capacity/reserve/release/sort operations check structural metadata,
+and map clear also checks it. They do not validate uniqueness of manually
+edited keys. Arbitrarily editing collection fields is not a supported use.</p>
+<p>Growth creates new backing arrays and leaves separately retained old array
+aliases unchanged. Release detaches the collection's arrays without
+invalidating aliases that still hold them. Map clear writes empty strings into
+the current arrays, so aliases of those arrays observe the cleared entries.
+Independent immutable string values remain valid.</p>
+<p><code>list_clear</code> retains storage for reuse; <code>map_clear</code> additionally drops every
+active key/value reference so removed strings can be collected. Release drops
+owned storage. Neither is manual <code>free</code>: reclamation occurs normally when no
+remaining reference keeps data alive. <code>collect()</code> can request collection;
+<code>memory_used()</code> includes headers/padding and uncollected garbage. Conservative
+stack/payload scanning means exact instantaneous reclamation is not promised.
+The 16 MiB live-heap and 131072-element array limits remain unchanged.</p>
+<h2 id="real-cli-example-rsort">Real CLI example: rsort</h2>
+<pre><code class="language-sh">./ramos build examples/rsort.ramos -o rsort
+printf '3\n-4\n3\n0\n' | ./rsort
+./rsort numbers.txt
+</code></pre>
+<p>Windows PowerShell:</p>
+<pre><code class="language-powershell">.\ramos.exe build examples/rsort.ramos -o rsort.exe
+'3', '-4', '3', '0' | .\rsort.exe
+.\rsort.exe numbers.txt
+</code></pre>
+<p>Input is one signed decimal int64 per line, using <code>text_to_int</code>'s checked parse
+rules. LF/CRLF and a final line without a newline work. Empty input succeeds
+with no output; blank/malformed/out-of-range number lines are errors. At most
+131072 integers are retained. Output is one ascending number per line;
+duplicates stay. Stdin and file input stream while the list retains numbers
+needed for sorting. Unicode file paths work.</p>
+<p>Usage, parse, input-limit and I/O failures exit 2. Parse/limit errors include the
+line number. Input validation and sorting finish before output starts, so an
+invalid input emits no sorted result. An output I/O failure can leave a partial
+stream. Files close after normal reads and before reported parsing failures;
+process exit provides OS cleanup for runtime traps. The app does not modify its
+input or create an output file; redirect stdout deliberately if needed.</p>
+<p>Tests compare sorting and CLI results with Python's independent integer sort,
+cover exact/excess capacity, alias preservation, malformed metadata, Unicode
+paths, signed extremes and repeated clear/release cycles exceeding cumulative
+heap capacity. Both native targets and compiler fixed points remain release
+checks. Collection-workload measurements are published separately; there is
+no new general language speed score.</p>
+<h2 id="release-evidence">Release evidence</h2>
+<p><a href="evidence/collections-verification.json">Native verification</a> records 285
+passing Linux tests (6 skipped), 225 passing native Windows tests (1 skipped),
+both compiler fixed points and the empty-PATH Linux rebuild.</p>
+<p><a href="https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/0.21.0/collections/report.md">Collection measurements</a>
+retain source snapshots, checksums and nine raw samples per variant. Reservation
+reduces observed allocated bytes in that fixture but does not establish a
+runtime speed improvement. No new overall language score is claimed.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="20-text-builder.html">← Reusable text builders and streamed text tools</a><a href="04-bytes.html">Working with bytes →</a></nav><footer>Ramos 0.21.0 · <a href="book/24-collections.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

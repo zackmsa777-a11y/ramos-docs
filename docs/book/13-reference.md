@@ -8,7 +8,7 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -31,6 +31,12 @@ executable. `run SOURCE [--gui] [-- ARG...]` compiles and runs for the native OS
 exponents -400..400, finite values, explicit conversions and fixed formatting
 precision 0..18. These extend numeric types without raising collection, memory
 or active-call limits.
+
+## Collection controls
+
+[Collection contracts](24-collections.md) describe reservation, capacity
+statuses, clear/release ownership, signed integer sorting and the native `rsort`
+CLI. The existing array/live-heap bounds remain checked.
 
 ## Standard library signatures
 
@@ -117,12 +123,19 @@ fn io_seek(reader: FileReader, offset: int64) -> int64
 
 ```ramos
 fn list_new() -> IntList
+fn list_valid(list: IntList)
 fn list_len(list: IntList) -> int64
+fn list_capacity(list: IntList) -> int64
+fn list_reserve(list: IntList, capacity: int64) -> int64
 fn list_push(list: IntList, value: int64)
+fn list_try_push(list: IntList, value: int64) -> int64
 fn list_get(list: IntList, index: int64) -> int64
 fn list_set(list: IntList, index: int64, value: int64)
 fn list_pop(list: IntList) -> int64
 fn list_clear(list: IntList)
+fn list_release(list: IntList)
+fn list_sort_down(list: IntList, start: int64, end: int64)
+fn list_sort(list: IntList)
 ```
 
 ### maps.ramos
@@ -131,12 +144,18 @@ fn list_clear(list: IntList)
 
 ```ramos
 fn map_new() -> StringMap
+fn map_valid(map: StringMap)
 fn map_len(map: StringMap) -> int64
+fn map_capacity(map: StringMap) -> int64
+fn map_reserve(map: StringMap, capacity: int64) -> int64
 fn map_index(map: StringMap, key: string) -> int64
 fn map_has(map: StringMap, key: string) -> bool
 fn map_get(map: StringMap, key: string, fallback: string) -> string
+fn map_try_set(map: StringMap, key: string, value: string) -> int64
 fn map_set(map: StringMap, key: string, value: string)
 fn map_remove(map: StringMap, key: string) -> bool
+fn map_clear(map: StringMap)
+fn map_release(map: StringMap)
 ```
 
 ### math.ramos

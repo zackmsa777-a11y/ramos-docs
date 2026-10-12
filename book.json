@@ -1,7 +1,7 @@
 {
-  "version": "0.20.0",
+  "version": "0.21.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "039d8eb944d96419b0e6805ab957f80af0ef0aee",
+  "source_commit": "bdb5d63344d62e5700dc9b5db6264dde0d29ed4d",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -47,6 +47,11 @@
       "slug": "20-text-builder",
       "title": "Reusable text builders and streamed text tools",
       "source": "docs/text-builder.md"
+    },
+    {
+      "slug": "24-collections",
+      "title": "Collection capacity, release and integer sorting",
+      "source": "docs/collections.md"
     },
     {
       "slug": "04-bytes",
