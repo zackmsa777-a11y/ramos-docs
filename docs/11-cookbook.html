@@ -131,5 +131,16 @@ pixels; an image viewer opens the result. Existing output is preserved. Read
 <p><a href="examples/rstats.ramos">Source</a>. Read one decimal number per line and report
 count/min/max/sum/mean. Omit the argument to read stdin. Input files are preserved.
 <a href="22-math-input.html">Decimal input contracts</a> explain status precedence, strict
-syntax, fixed output and checked summation.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="10-windows.html">← Windows and cross-compilation</a><a href="12-self-hosting.html">How the compiler builds itself →</a></nav><footer>Ramos 0.19.1 · <a href="book/11-cookbook.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+syntax, fixed output and checked summation.</p>
+<h2 id="larger-application-scientific-calculator">Larger application: scientific calculator</h2>
+<p>The <a href="https://github.com/zackmsa777-a11y/ramos-calculator">calculator repository</a>
+is a complete application consumer of Ramos 0.19.1: a shared expression engine,
+CLI/REPL and resizable native desktop GUI. It demonstrates <code>weave</code>, strings,
+structs, float64, fallible decimal input, reusable functions and GUI event loops.
+The parser handles precedence, parentheses, integer powers and bounded
+scientific functions implemented in Ramos. Its README documents numerical
+limits and setup; its checks compare independent references and native UI behavior.</p>
+<p>Find smaller programs in <a href="https://github.com/zackmsa777-a11y/ramos-examples">ramos-examples</a>.
+The existing sources bundled with this book remain pinned and runnable. Browse
+all five repositories from the <a href="https://github.com/zackmsa777-a11y/ramos/blob/main/docs/ecosystem.md">Ramos hub</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="10-windows.html">← Windows and cross-compilation</a><a href="12-self-hosting.html">How the compiler builds itself →</a></nav><footer>Ramos 0.19.1 · <a href="book/11-cookbook.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

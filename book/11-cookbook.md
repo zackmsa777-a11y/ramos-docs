@@ -175,3 +175,17 @@ pixels; an image viewer opens the result. Existing output is preserved. Read
 count/min/max/sum/mean. Omit the argument to read stdin. Input files are preserved.
 [Decimal input contracts](22-math-input.md) explain status precedence, strict
 syntax, fixed output and checked summation.
+
+## Larger application: scientific calculator
+
+The [calculator repository](https://github.com/zackmsa777-a11y/ramos-calculator)
+is a complete application consumer of Ramos 0.19.1: a shared expression engine,
+CLI/REPL and resizable native desktop GUI. It demonstrates `weave`, strings,
+structs, float64, fallible decimal input, reusable functions and GUI event loops.
+The parser handles precedence, parentheses, integer powers and bounded
+scientific functions implemented in Ramos. Its README documents numerical
+limits and setup; its checks compare independent references and native UI behavior.
+
+Find smaller programs in [ramos-examples](https://github.com/zackmsa777-a11y/ramos-examples).
+The existing sources bundled with this book remain pinned and runnable. Browse
+all five repositories from the [Ramos hub](https://github.com/zackmsa777-a11y/ramos/blob/main/docs/ecosystem.md).

@@ -56,7 +56,17 @@ remains static. <a href="19-devtools.html">Authoring tools</a> explain arguments
 <li><a href="https://github.com/zackmsa777-a11y/ramos">Compiler and source</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.19.1">Ramos 0.19.1 release</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation source</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos-examples">Small runnable examples</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos-calculator">Scientific calculator: CLI, REPL and GUI</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos-benchmarks">Benchmarks and raw historical evidence</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos/blob/main/docs/ecosystem.md">Five-repository project hub</a></li>
+<li><a href="https://github.com/topics/ramos">Shared Ramos topic</a></li>
 </ul>
+<p>The application repositories pin their compiler and standard-library snapshot.
+The calculator's scientific functions are application library code in Ramos;
+they do not add new compiler intrinsics to this book's released baseline.
+Existing compiler test/release examples and the book's bundled examples remain
+available while new standalone example development takes place in <code>ramos-examples</code>.</p>
 <p>The limits and negative results matter as much as working features. Native
 output is not proof of speed, and compiling for an OS is not proof that its
 interactive applications have been tested there.</p></section><section id="01-getting-started"><h1 id="01-getting-started--install-build-and-run">Install, build and run</h1>
@@ -2447,7 +2457,18 @@ pixels; an image viewer opens the result. Existing output is preserved. Read
 <p><a href="examples/rstats.ramos">Source</a>. Read one decimal number per line and report
 count/min/max/sum/mean. Omit the argument to read stdin. Input files are preserved.
 <a href="22-math-input.html">Decimal input contracts</a> explain status precedence, strict
-syntax, fixed output and checked summation.</p></section><section id="12-self-hosting"><h1 id="12-self-hosting--how-the-compiler-builds-itself">How the compiler builds itself</h1>
+syntax, fixed output and checked summation.</p>
+<h2 id="11-cookbook--larger-application-scientific-calculator">Larger application: scientific calculator</h2>
+<p>The <a href="https://github.com/zackmsa777-a11y/ramos-calculator">calculator repository</a>
+is a complete application consumer of Ramos 0.19.1: a shared expression engine,
+CLI/REPL and resizable native desktop GUI. It demonstrates <code>weave</code>, strings,
+structs, float64, fallible decimal input, reusable functions and GUI event loops.
+The parser handles precedence, parentheses, integer powers and bounded
+scientific functions implemented in Ramos. Its README documents numerical
+limits and setup; its checks compare independent references and native UI behavior.</p>
+<p>Find smaller programs in <a href="https://github.com/zackmsa777-a11y/ramos-examples">ramos-examples</a>.
+The existing sources bundled with this book remain pinned and runnable. Browse
+all five repositories from the <a href="https://github.com/zackmsa777-a11y/ramos/blob/main/docs/ecosystem.md">Ramos hub</a>.</p></section><section id="12-self-hosting"><h1 id="12-self-hosting--how-the-compiler-builds-itself">How the compiler builds itself</h1>
 <p>The compiler implementation is <a href="https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/compiler/ramos.ramos">compiler/ramos.ramos</a>.
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,

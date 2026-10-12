@@ -50,6 +50,17 @@ remains static. [Authoring tools](19-devtools.md) explain arguments, errors and 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
 - [Ramos 0.19.1 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.19.1)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
+- [Small runnable examples](https://github.com/zackmsa777-a11y/ramos-examples)
+- [Scientific calculator: CLI, REPL and GUI](https://github.com/zackmsa777-a11y/ramos-calculator)
+- [Benchmarks and raw historical evidence](https://github.com/zackmsa777-a11y/ramos-benchmarks)
+- [Five-repository project hub](https://github.com/zackmsa777-a11y/ramos/blob/main/docs/ecosystem.md)
+- [Shared Ramos topic](https://github.com/topics/ramos)
+
+The application repositories pin their compiler and standard-library snapshot.
+The calculator's scientific functions are application library code in Ramos;
+they do not add new compiler intrinsics to this book's released baseline.
+Existing compiler test/release examples and the book's bundled examples remain
+available while new standalone example development takes place in `ramos-examples`.
 
 The limits and negative results matter as much as working features. Native
 output is not proof of speed, and compiling for an OS is not proof that its

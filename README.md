@@ -13,6 +13,16 @@ readable HTML edition for people, generated from the same source.
 The language rules are **simple programming** and **measured native speed**.
 This edition describes released features; proposed upgrades are clearly marked.
 
+## Ramos project family
+
+This book is the documentation repository in the
+[five-repository Ramos hub](https://github.com/zackmsa777-a11y/ramos/blob/main/docs/ecosystem.md).
+Find [small examples](https://github.com/zackmsa777-a11y/ramos-examples), the
+[native scientific calculator](https://github.com/zackmsa777-a11y/ramos-calculator)
+and [benchmarks](https://github.com/zackmsa777-a11y/ramos-benchmarks) there.
+All five use the shared [`ramos` topic](https://github.com/topics/ramos).
+The existing compiler release and book URLs remain stable.
+
 ## Contents
 
 1. Welcome to the Ramos Book
