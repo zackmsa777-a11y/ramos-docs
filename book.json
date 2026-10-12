@@ -1,7 +1,7 @@
 {
-  "version": "0.19.0",
+  "version": "0.19.1",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "c8a209124cc877c572a28e23da406fa5869f6bbd",
+  "source_commit": "6c263c5023bc8a71c036d9b8151b82dc558adfde",
   "chapters": [
     {
       "slug": "00-welcome",

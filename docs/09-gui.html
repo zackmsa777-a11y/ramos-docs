@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.19.0, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.19.1, with Markdown for agents and HTML for people.">
 <title>Desktop GUI on Windows and Linux · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.19.0</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.19.1</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
 <aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="09-gui.html" aria-current="page"><span>15</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>16</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>17</span>Runnable projects</a><a href="12-self-hosting.html"><span>18</span>How the compiler builds itself</a><a href="13-reference.html"><span>19</span>Limits and standard library reference</a><a href="14-performance.html"><span>20</span>Performance and evidence</a><a href="15-roadmap.html"><span>21</span>What comes next</a><a href="16-agent-guide.html"><span>22</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
 <main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="desktop-gui-on-windows-and-linux">Desktop GUI on Windows and Linux</h1>
 <p><code>weave "stdlib/gui.ramos"</code> adds real desktop windows and native controls on
 <strong>Windows x64 and Linux x64</strong>, using the same application source. Windows uses
-system USER32/GDI32 APIs and needs no C runtime or extra toolkit. Linux GUI
+system USER32/GDI32/COMDLG32 APIs and needs no C runtime or extra toolkit. Linux GUI
 executables dynamically link system <strong>GTK3, GObject, GLib and Cairo</strong>, including
 their libc/platform dependencies. The library and application logic are ordinary
 Ramos; its compiler emits x86-64 instructions and ELF/PE imports directly, with
@@ -64,10 +64,13 @@ output still needs <code>--force</code>, and every source remains protected from
 replacement. Windows GUI apps launched from Explorer should report errors in
 controls instead of relying on inherited stdout/stderr handles.</p>
 <p>The included <strong>Ramos Notes</strong> app supports Unicode editing, a file-path input,
-Save/Clear buttons, a colored panel and resizing. Save creates a new UTF-8 file
-atomically and refuses to overwrite an existing file. Choose a new filename for
-another save. File errors appear in the status label. It is a small example,
-not an editor with open dialogs, unsaved-change confirmation or autosave.</p>
+Open, Save, Save As and Clear buttons, a colored panel and resizing. Open reads a
+selected UTF-8 file; cancellation, I/O failure, invalid UTF-8, embedded NUL or
+text beyond the 32767-byte setter limit leaves the current editor and path intact.
+Save and Save As create a new UTF-8 file atomically and refuse to overwrite an
+existing file. File errors appear in the status label. Opening a valid file
+replaces the current note immediately; unsaved-change confirmation and autosave
+are not implemented.</p>
 <h2 id="library-api">Library API</h2>
 <p>Coordinates and dimensions are integer client-area pixels. The native toolkit supplies
 font rendering, focus, Tab navigation, button activation, text selection and
@@ -110,6 +113,10 @@ installed fonts. These are native desktop controls, not terminal escape codes.</
 <td>Construct an opaque color; each component is 0..255</td>
 </tr>
 <tr>
+<td><code>gui_set_bytes(id, text: bytes) -&gt; int64</code></td>
+<td>Fallible UTF-8 setter; validation failure preserves current text</td>
+</tr>
+<tr>
 <td><code>gui_set(id, text)</code></td>
 <td>Update a label, button or editor's text</td>
 </tr>
@@ -120,6 +127,34 @@ installed fonts. These are native desktop controls, not terminal escape codes.</
 <tr>
 <td><code>gui_move(id, x, y, w, h)</code></td>
 <td>Move or resize a control</td>
+</tr>
+<tr>
+<td><code>gui_rect(x, y, w, h) -&gt; GuiRect</code></td>
+<td>Checked explicit rectangle</td>
+</tr>
+<tr>
+<td><code>gui_inset(w, h, padding) -&gt; GuiRect</code></td>
+<td>Rectangle inside uniform padding</td>
+</tr>
+<tr>
+<td><code>gui_row(bounds, index, count, gap) -&gt; GuiRect</code></td>
+<td>One horizontal cell, indexed from zero</td>
+</tr>
+<tr>
+<td><code>gui_column(bounds, index, count, gap) -&gt; GuiRect</code></td>
+<td>One vertical cell, indexed from zero</td>
+</tr>
+<tr>
+<td><code>gui_move_to(id, bounds)</code></td>
+<td>Move a control to a checked rectangle</td>
+</tr>
+<tr>
+<td><code>gui_open_file(title, initial) -&gt; GuiPath</code></td>
+<td>Select one existing local file path</td>
+</tr>
+<tr>
+<td><code>gui_save_file(title, initial) -&gt; GuiPath</code></td>
+<td>Select a local destination path; does not write it</td>
 </tr>
 <tr>
 <td><code>gui_event(timeout_ms) -&gt; GuiEvent</code></td>
@@ -185,7 +220,7 @@ There are no arbitrary callbacks into Ramos or exposed native handles.</p>
 </table>
 <p>Text inputs consume normal editing keys themselves; kind 4 is not a global
 keyboard hook. Native controls handle mouse input and activation; raw pointer
-motion, canvas drawing, images, menus, file dialogs and multiple windows are not
+motion, canvas drawing, images, menus and multiple windows are not
 part of this first API. Colored panels provide basic rectangular drawing.
 Resize events include the initial layout; Windows also reports minimization as zero dimensions.
 Control layout is explicit; there is no automatic layout manager or DPI scaling.
@@ -196,6 +231,52 @@ client is smaller. Clipboard/editing behavior belongs to the native controls.</p
 <code>1..2147483647</code> milliseconds. Waiting uses the native message wait API rather
 than spinning. Calling poll after close is an error. Resize/paint/focus events
 can exist before user input; don't assume the first event is a button press.</p>
+<h2 id="simple-layout">Simple layout</h2>
+<p><code>GuiRect</code> has integer <code>x</code>, <code>y</code>, <code>width</code>, <code>height</code> fields. For a resize event:</p>
+<pre><code class="language-ramos">let bounds = gui_inset(360, 180, 20)
+let first = gui_row(bounds, 0, 2, 12)
+let second = gui_row(bounds, 1, 2, 12)
+gui_move_to(1, first)
+gui_move_to(2, second)
+</code></pre>
+<p>Use the actual client dimensions, with a sensible minimum as Notes does. Rows
+and columns split the available axis equally after gaps and distribute remainder
+pixels at cell boundaries: the cells and gaps exactly fill that axis. Indices
+are <code>0..count-1</code>, count is <code>1..64</code>, and gap/padding is <code>0..8192</code>. Every cell must
+have positive dimensions. Rectangles have nonnegative origins, dimensions
+<code>1..8192</code>, and right/bottom extents at most 8192. Helpers recheck mutable structs.
+Invalid geometry exits 1 with a layout diagnostic. Pure geometry helpers need no
+active window. They provide explicit pixel geometry; automatic layout and DPI
+scaling remain application responsibilities.</p>
+<h2 id="open-and-save-paths">Open and Save paths</h2>
+<pre><code class="language-ramos">let chosen = gui_open_file(s&quot;Open a document&quot;, s&quot;&quot;)
+if chosen.status == 0 {
+    let contents = read_file(to_bytes(chosen.path))
+    if io_error() == 0 {
+        let status = gui_set_bytes(4, contents)
+        // Handle status without losing the previous editor text on validation failure.
+    }
+}
+</code></pre>
+<p><code>GuiPath</code> has <code>path: string</code> and <code>status: int64</code>. Status <strong>0</strong> means an absolute
+UTF-8 path was selected, <strong>1</strong> means cancellation, and a <strong>negative</strong> value means
+failure. Cancellation/failure returns an empty path. Handle these statuses
+explicitly; cancellation is not an error to pass to <code>gui_check</code>.</p>
+<p>The window must already be open. Both pickers select a single local path and
+pump native modal dialog events until selection or cancellation; Ramos code
+resumes afterwards. Parent events can be queued meanwhile. Pickers do not read,
+create or overwrite files. Save has no overwrite confirmation because it only
+returns a path: use <code>write_file</code> or stream APIs with an explicit publication
+policy. Notes keeps exclusive creation even when an existing path is selected.</p>
+<p>Title and initial hint are valid UTF-8 without NUL, at most 4095 bytes each.
+An empty hint uses the platform default. Hints are best effort: Linux Open can
+preselect an absolute file; Linux Save suggests the leaf filename, while Windows
+can use the supplied path. The toolkit chooses the starting folder. Selected
+paths are limited to 32767 UTF-8 bytes; Windows uses a 32768-unit UTF-16 native
+buffer. Linux filenames that are not UTF-8 return <code>-22</code>, preserving the raw path
+contract rather than changing filename bytes. No file filters, multiple
+selection or directory picker are exposed. A selection does not guarantee a
+later I/O operation will succeed. Pickers preserve the process working directory.</p>
 <h2 id="limits-statuses-and-lifetime">Limits, statuses and lifetime</h2>
 <p>Window titles are at most 4095 UTF-8 bytes. Text passed to controls is at most
 32767 UTF-8 bytes. Native editing is capped at 32767 UTF-16 units on Windows
@@ -205,9 +286,10 @@ empty labels and edits are allowed. Initial client width is 160..4096 and height
 80..4096. Control positions are 0..8192 and dimensions 1..8192; drawing is clipped
 by the native client area. There are at most 64 controls and 64 queued events.
 A full queue fails explicitly instead of silently losing user actions.</p>
-<p><code>gui_open</code> and <code>gui_close</code> return fallible statuses. Widget/event helpers call
+<p><code>gui_open</code> and <code>gui_close</code> return fallible statuses. Creation/event helpers call
 <code>gui_check</code>, so they fail with a diagnostic and exit 1. Low-level <code>_gui_*</code>
-intrinsics are reserved library machinery; they return negative statuses (or
+intrinsics are reserved library machinery; file selection additionally reports
+cancellation as <code>io_error() == 1</code>. Other failures return negative statuses (or
 empty bytes with <code>io_error</code>) and validate every property independently:
 <code>-9</code> inactive window/unknown control, <code>-19</code> unavailable Linux display, <code>-16</code> second active window, <code>-17</code> duplicate
 ID, <code>-22</code> invalid argument/encoding, <code>-27</code> oversized read, <code>-38</code> missing platform
@@ -222,19 +304,22 @@ and native Ramos traps attempt GUI cleanup automatically. Process termination
 also releases OS resources; no durability or user-data save is promised on an
 abrupt termination. GUI calls run on the program's single main thread.</p>
 <h2 id="validation">Validation</h2>
-<p>0.19 tests the same Notes source on Linux and Windows. The Linux desktop corpus
-creates real GTK widgets, checks panel pixels, pastes Arabic/emoji via the native
-clipboard, types an editing key, activates Save/Clear, resizes and closes through
-WM_DELETE_WINDOW. It verifies exact saved bytes, exclusive overwrite refusal,
-empty saves after resize, 12 open/close cycles, GC after 40 MiB cumulative
-allocations, queue overflow, timeout/headless errors and cleanup on return/exit/trap.
-It also exercises <code>run --gui</code> with real windows and temporary-file cleanup.
-ELF checks validate loader/import segments, ordering, alignment and W^X.
-Test-only tools: <code>Xvfb</code>, <code>xdotool</code>, <code>xclip</code>, Python and libX11; none are application
-runtime dependencies. CI installs them and runs the corpus against stages 2/3.
-Native CI passed <strong>271 Linux tests</strong> (276 discovered, five platform skips)
-and <strong>212 Windows tests</strong> (213 discovered, one Linux fixture skip), with both
-compiler fixed points matching. See <a href="evidence/portable-gui-verification.json">0.19 verification</a> and the current
+<p>0.19.1 exercises exact row/column fill for all counts 1..64, invalid geometry,
+mutated rectangles, private intrinsic typing, and inactive/static GUI behavior.
+Real GTK and native Windows Notes tests open Arabic/emoji filenames, cancel
+pickers, reject invalid text without losing the note, save to new Unicode paths,
+refuse existing destinations, resize and open another dialog. The GTK fixture
+also verifies cancellation/error statuses, managed collection between pickers,
+unchanged working directory and that Save selection creates no file.</p>
+<p>The retained desktop corpus covers native keyboard/clipboard editing, colored
+panel pixels, lifecycle/GC, queue limits, headless errors and process cleanup.
+Linux <code>run --gui</code> is tested with a real window and temporary-file cleanup; ELF
+checks validate imports, ordering, alignment and W^X. Test-only tools are Xvfb,
+xdotool, xclip, Python and libX11; none implement application behavior.
+<strong>276 Linux tests</strong> (282 discovered, six platform skips) and <strong>216 native
+Windows tests</strong> (217 discovered, one Linux fixture skip) pass, with both compiler
+fixed points and an empty-PATH Linux rebuild. See
+<a href="evidence/gui-dialogs-verification.json">0.19.1 verification</a> and the current
 <a href="evidence/bootstrap-proof.json">Linux/Windows self-hosting proofs</a>. No new speed claim.</p>
 <h3 id="retained-windows-acceptance-introduced-in-013">Retained Windows acceptance (introduced in 0.13)</h3>
 <p>The focused corpus checks raw argument/type errors, PE subsystem selection,
@@ -253,5 +338,5 @@ The harness reads another process's editor with <code>WM_GETTEXT</code>, as requ
 Native CI passed <strong>194 Linux tests and 140 Windows tests</strong>, including the GUI
 corpus and both compiler fixed points. See <a href="evidence/gui-verification.json">verification evidence</a>
 and <a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38057232751">the successful run</a>.
-No new speed claim is made.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="08-cli-tui.html">← CLI tools and terminal interfaces</a><a href="10-windows.html">Windows and cross-compilation →</a></nav><footer>Ramos 0.19.0 · <a href="book/09-gui.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+No new speed claim is made.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="08-cli-tui.html">← CLI tools and terminal interfaces</a><a href="10-windows.html">Windows and cross-compilation →</a></nav><footer>Ramos 0.19.1 · <a href="book/09-gui.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

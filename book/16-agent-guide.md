@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.19.0** unless the task explicitly provides a newer compiler
+programs. Target **0.19.1** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -64,8 +64,12 @@ Windows uses system controls; Linux requires GTK3 and a display. A static Linux
 build returns -38 from GUI startup, a missing display returns -19, and missing
 shared libraries prevent loader startup. X11 is verified; Wayland is unverified.
 GTK memory is outside the Ramos managed heap. Pump events regularly, use blocking
-waits when idle and close the window. Do not invent file dialogs, automatic
-layout/DPI handling, multiple windows or general canvas APIs. For TUI, require an interactive terminal and restore it before exit.
+waits when idle and close the window. Use checked `gui_rect`/`gui_inset`/`gui_row`/`gui_column` geometry and
+`gui_open_file`/`gui_save_file` path pickers. Picker status 0 selects, 1 cancels,
+and negatives fail. Selection does not read/create/overwrite a file. Use
+`gui_set_bytes` to reject invalid file text before changing an editor. Notes
+keeps exclusive creation and preserves editor/path when Open fails. Do not invent
+automatic layout/DPI handling, multiple windows or general canvas APIs. For TUI, require an interactive terminal and restore it before exit.
 
 For incremental text, use the [text builder](20-text-builder.md). Check append
 status (0 or -27); byte count differs from Unicode scalar count. Snapshot

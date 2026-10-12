@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.19.0, not pseudocode. The repository
+These are complete programs from Ramos 0.19.1, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -50,9 +50,11 @@ and control bytes. It is not a complete Unicode text editor.
 .\notes.exe
 ```
 
-[Source: notes.ramos](../examples/notes.ramos). Unicode editor, Save/Clear
+[Source: notes.ramos](../examples/notes.ramos). Unicode editor, Open/Save/Save As/Clear
 buttons, status messages and resizing. Save creates a new file and refuses an
-existing path. This version has no open dialog or unsaved-change prompt.
+existing path. Open chooses and loads a valid UTF-8 file; cancellation or invalid text preserves
+the current note. Save As chooses a new path and keeps exclusive creation. Shared
+row/padding helpers handle resize. There is no unsaved-change prompt.
 
 ## A small GUI event loop
 

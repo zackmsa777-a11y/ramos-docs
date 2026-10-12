@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.19.0, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.19.1, with Markdown for agents and HTML for people.">
 <title>Runnable projects · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.19.0</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.19.1</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
 <aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>15</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>16</span>Windows and cross-compilation</a><a href="11-cookbook.html" aria-current="page"><span>17</span>Runnable projects</a><a href="12-self-hosting.html"><span>18</span>How the compiler builds itself</a><a href="13-reference.html"><span>19</span>Limits and standard library reference</a><a href="14-performance.html"><span>20</span>Performance and evidence</a><a href="15-roadmap.html"><span>21</span>What comes next</a><a href="16-agent-guide.html"><span>22</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
 <main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="runnable-projects">Runnable projects</h1>
-<p>These are complete programs from Ramos 0.19.0, not pseudocode. The repository
+<p>These are complete programs from Ramos 0.19.1, not pseudocode. The repository
 includes their exact source under <code>examples/</code> and the matching <code>stdlib/</code>.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add <code>--force</code> when intentionally rebuilding an output.</p>
@@ -44,9 +44,11 @@ and control bytes. It is not a complete Unicode text editor.</p>
 <pre><code class="language-powershell">.\ramos.exe build .\examples\notes.ramos -o .\notes.exe --gui
 .\notes.exe
 </code></pre>
-<p><a href="examples/notes.ramos">Source: notes.ramos</a>. Unicode editor, Save/Clear
+<p><a href="examples/notes.ramos">Source: notes.ramos</a>. Unicode editor, Open/Save/Save As/Clear
 buttons, status messages and resizing. Save creates a new file and refuses an
-existing path. This version has no open dialog or unsaved-change prompt.</p>
+existing path. Open chooses and loads a valid UTF-8 file; cancellation or invalid text preserves
+the current note. Save As chooses a new path and keeps exclusive creation. Shared
+row/padding helpers handle resize. There is no unsaved-change prompt.</p>
 <h2 id="a-small-gui-event-loop">A small GUI event loop</h2>
 <p><a href="examples/gui_hello.ramos">Source: gui_hello.ramos</a>:</p>
 <pre><code class="language-ramos">weave &quot;stdlib/gui.ramos&quot;
@@ -129,5 +131,5 @@ pixels; an image viewer opens the result. Existing output is preserved. Read
 <p><a href="examples/rstats.ramos">Source</a>. Read one decimal number per line and report
 count/min/max/sum/mean. Omit the argument to read stdin. Input files are preserved.
 <a href="22-math-input.html">Decimal input contracts</a> explain status precedence, strict
-syntax, fixed output and checked summation.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="10-windows.html">← Windows and cross-compilation</a><a href="12-self-hosting.html">How the compiler builds itself →</a></nav><footer>Ramos 0.19.0 · <a href="book/11-cookbook.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+syntax, fixed output and checked summation.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="10-windows.html">← Windows and cross-compilation</a><a href="12-self-hosting.html">How the compiler builds itself →</a></nav><footer>Ramos 0.19.1 · <a href="book/11-cookbook.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

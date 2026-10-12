@@ -1,4 +1,4 @@
-# The Ramos Book — 0.19.0
+# The Ramos Book — 0.19.1
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.19.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.19.1**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -36,7 +36,7 @@ reuse/release for streamed tools.
 [Native math](21-math.md) adds explicit conversions, square root and fixed
 decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.19.0. Read
+in 0.19.1. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -50,7 +50,7 @@ remains static. [Authoring tools](19-devtools.md) explain arguments, errors and 
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.19.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.19.0)
+- [Ramos 0.19.1 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.19.1)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 
 The limits and negative results matter as much as working features. Native
@@ -63,7 +63,7 @@ interactive applications have been tested there.
 # Install, build and run
 
 Use the complete
-[0.19.0 portable-GUI bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.19.0/ramos-0.19.0-portable-gui.zip),
+[0.19.1 GUI-dialogs bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.19.1/ramos-0.19.1-gui-dialogs.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS.txt` file lists asset hashes for integrity checking.
@@ -281,7 +281,7 @@ remain byte-based rather than terminal display-cell positions.
 
 ## Verification and limits
 
-The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/tests/test_devtools.py) check caret/type
+The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/tests/test_devtools.py) check caret/type
 messages, original library locations, EOF/control escaping, formatter idempotence,
 comments/literals/CRLF, byte-identical compiled output before/after formatting,
 atomic publication and source protection, argument quoting, inherited I/O,
@@ -435,7 +435,7 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 
@@ -1169,19 +1169,19 @@ OS process cleanup. There is no file replacement mode.
 
 ## Measurements and release checks
 
-[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/benchmarks/text-builder/run.py) compares repeated
+[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/benchmarks/text-builder/run.py) compares repeated
 string `+=` with the builder on the same compiler and machine. It appends 64-byte
 pieces, then independently checks all result bytes using `text_repeat`. One
 warmup and five alternating-order measurements include process startup and
 verification. Raw samples, machine and binary/library hashes are recorded in
 [the raw report](../evidence/text-builder.json) and
-[measured table](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
+[measured table](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
 the recorded Linux medians were 287 ms for concatenation and 13.8 ms for the
 builder (about 20.8×). This measures one Linux text
 assembly workload; it is not a C/Rust/Python comparison or an overall language
 score. Historical 0.14 comparative results remain historical.
 
-[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/tests/test_text_builder.py) cover Unicode/NUL/empty values,
+[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/tests/test_text_builder.py) cover Unicode/NUL/empty values,
 shared builder aliases, immutable snapshots, capacity reuse/release, exact-limit
 success and nonmutating rejection, invalid counts, automatic reclamation across
 6000 results, CRLF/empty/final lines, large streamed files and fallible size/I/O
@@ -1222,7 +1222,7 @@ allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
 Metadata and alignment count toward the heap limit. Invalid sizes, indices,
 byte values or allocation failures report a runtime error and exit 1.
 Unreachable allocations can be collected automatically or with `collect()`.
-See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/docs/buffers.md).
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/docs/buffers.md).
 
 ## Bytes versus strings
 
@@ -2006,7 +2006,7 @@ checks. Both self-hosting targets reached their byte-identical fixed points.
 
 `weave "stdlib/gui.ramos"` adds real desktop windows and native controls on
 **Windows x64 and Linux x64**, using the same application source. Windows uses
-system USER32/GDI32 APIs and needs no C runtime or extra toolkit. Linux GUI
+system USER32/GDI32/COMDLG32 APIs and needs no C runtime or extra toolkit. Linux GUI
 executables dynamically link system **GTK3, GObject, GLib and Cairo**, including
 their libc/platform dependencies. The library and application logic are ordinary
 Ramos; its compiler emits x86-64 instructions and ELF/PE imports directly, with
@@ -2068,10 +2068,13 @@ replacement. Windows GUI apps launched from Explorer should report errors in
 controls instead of relying on inherited stdout/stderr handles.
 
 The included **Ramos Notes** app supports Unicode editing, a file-path input,
-Save/Clear buttons, a colored panel and resizing. Save creates a new UTF-8 file
-atomically and refuses to overwrite an existing file. Choose a new filename for
-another save. File errors appear in the status label. It is a small example,
-not an editor with open dialogs, unsaved-change confirmation or autosave.
+Open, Save, Save As and Clear buttons, a colored panel and resizing. Open reads a
+selected UTF-8 file; cancellation, I/O failure, invalid UTF-8, embedded NUL or
+text beyond the 32767-byte setter limit leaves the current editor and path intact.
+Save and Save As create a new UTF-8 file atomically and refuse to overwrite an
+existing file. File errors appear in the status label. Opening a valid file
+replaces the current note immediately; unsaved-change confirmation and autosave
+are not implemented.
 
 ## Library API
 
@@ -2089,9 +2092,17 @@ installed fonts. These are native desktop controls, not terminal escape codes.
 | `gui_editor(id, x, y, w, h, text)` | Multiline editor with vertical scrolling |
 | `gui_panel(id, x, y, w, h, color)` | Solid colored rectangular panel; The toolkit repaints it automatically |
 | `gui_rgb(r, g, b) -> int64` | Construct an opaque color; each component is 0..255 |
+| `gui_set_bytes(id, text: bytes) -> int64` | Fallible UTF-8 setter; validation failure preserves current text |
 | `gui_set(id, text)` | Update a label, button or editor's text |
 | `gui_text(id) -> string` | Read label/button/editor text as validated UTF-8 |
 | `gui_move(id, x, y, w, h)` | Move or resize a control |
+| `gui_rect(x, y, w, h) -> GuiRect` | Checked explicit rectangle |
+| `gui_inset(w, h, padding) -> GuiRect` | Rectangle inside uniform padding |
+| `gui_row(bounds, index, count, gap) -> GuiRect` | One horizontal cell, indexed from zero |
+| `gui_column(bounds, index, count, gap) -> GuiRect` | One vertical cell, indexed from zero |
+| `gui_move_to(id, bounds)` | Move a control to a checked rectangle |
+| `gui_open_file(title, initial) -> GuiPath` | Select one existing local file path |
+| `gui_save_file(title, initial) -> GuiPath` | Select a local destination path; does not write it |
 | `gui_event(timeout_ms) -> GuiEvent` | Pump messages and retrieve one typed event |
 | `gui_close() -> int64` | Destroy the window and its controls; repeated close succeeds |
 | `gui_check(status)` | Close the GUI and exit 1 with a diagnostic on failure |
@@ -2116,7 +2127,7 @@ There are no arbitrary callbacks into Ramos or exposed native handles.
 
 Text inputs consume normal editing keys themselves; kind 4 is not a global
 keyboard hook. Native controls handle mouse input and activation; raw pointer
-motion, canvas drawing, images, menus, file dialogs and multiple windows are not
+motion, canvas drawing, images, menus and multiple windows are not
 part of this first API. Colored panels provide basic rectangular drawing.
 Resize events include the initial layout; Windows also reports minimization as zero dimensions.
 Control layout is explicit; there is no automatic layout manager or DPI scaling.
@@ -2129,6 +2140,63 @@ Timeouts are `-1` for indefinite wait, `0` for immediate polling, or
 than spinning. Calling poll after close is an error. Resize/paint/focus events
 can exist before user input; don't assume the first event is a button press.
 
+## Simple layout
+
+`GuiRect` has integer `x`, `y`, `width`, `height` fields. For a resize event:
+
+```ramos
+let bounds = gui_inset(360, 180, 20)
+let first = gui_row(bounds, 0, 2, 12)
+let second = gui_row(bounds, 1, 2, 12)
+gui_move_to(1, first)
+gui_move_to(2, second)
+```
+
+Use the actual client dimensions, with a sensible minimum as Notes does. Rows
+and columns split the available axis equally after gaps and distribute remainder
+pixels at cell boundaries: the cells and gaps exactly fill that axis. Indices
+are `0..count-1`, count is `1..64`, and gap/padding is `0..8192`. Every cell must
+have positive dimensions. Rectangles have nonnegative origins, dimensions
+`1..8192`, and right/bottom extents at most 8192. Helpers recheck mutable structs.
+Invalid geometry exits 1 with a layout diagnostic. Pure geometry helpers need no
+active window. They provide explicit pixel geometry; automatic layout and DPI
+scaling remain application responsibilities.
+
+## Open and Save paths
+
+```ramos
+let chosen = gui_open_file(s"Open a document", s"")
+if chosen.status == 0 {
+    let contents = read_file(to_bytes(chosen.path))
+    if io_error() == 0 {
+        let status = gui_set_bytes(4, contents)
+        // Handle status without losing the previous editor text on validation failure.
+    }
+}
+```
+
+`GuiPath` has `path: string` and `status: int64`. Status **0** means an absolute
+UTF-8 path was selected, **1** means cancellation, and a **negative** value means
+failure. Cancellation/failure returns an empty path. Handle these statuses
+explicitly; cancellation is not an error to pass to `gui_check`.
+
+The window must already be open. Both pickers select a single local path and
+pump native modal dialog events until selection or cancellation; Ramos code
+resumes afterwards. Parent events can be queued meanwhile. Pickers do not read,
+create or overwrite files. Save has no overwrite confirmation because it only
+returns a path: use `write_file` or stream APIs with an explicit publication
+policy. Notes keeps exclusive creation even when an existing path is selected.
+
+Title and initial hint are valid UTF-8 without NUL, at most 4095 bytes each.
+An empty hint uses the platform default. Hints are best effort: Linux Open can
+preselect an absolute file; Linux Save suggests the leaf filename, while Windows
+can use the supplied path. The toolkit chooses the starting folder. Selected
+paths are limited to 32767 UTF-8 bytes; Windows uses a 32768-unit UTF-16 native
+buffer. Linux filenames that are not UTF-8 return `-22`, preserving the raw path
+contract rather than changing filename bytes. No file filters, multiple
+selection or directory picker are exposed. A selection does not guarantee a
+later I/O operation will succeed. Pickers preserve the process working directory.
+
 ## Limits, statuses and lifetime
 
 Window titles are at most 4095 UTF-8 bytes. Text passed to controls is at most
@@ -2140,9 +2208,10 @@ empty labels and edits are allowed. Initial client width is 160..4096 and height
 by the native client area. There are at most 64 controls and 64 queued events.
 A full queue fails explicitly instead of silently losing user actions.
 
-`gui_open` and `gui_close` return fallible statuses. Widget/event helpers call
+`gui_open` and `gui_close` return fallible statuses. Creation/event helpers call
 `gui_check`, so they fail with a diagnostic and exit 1. Low-level `_gui_*`
-intrinsics are reserved library machinery; they return negative statuses (or
+intrinsics are reserved library machinery; file selection additionally reports
+cancellation as `io_error() == 1`. Other failures return negative statuses (or
 empty bytes with `io_error`) and validate every property independently:
 `-9` inactive window/unknown control, `-19` unavailable Linux display, `-16` second active window, `-17` duplicate
 ID, `-22` invalid argument/encoding, `-27` oversized read, `-38` missing platform
@@ -2160,19 +2229,23 @@ abrupt termination. GUI calls run on the program's single main thread.
 
 ## Validation
 
-0.19 tests the same Notes source on Linux and Windows. The Linux desktop corpus
-creates real GTK widgets, checks panel pixels, pastes Arabic/emoji via the native
-clipboard, types an editing key, activates Save/Clear, resizes and closes through
-WM_DELETE_WINDOW. It verifies exact saved bytes, exclusive overwrite refusal,
-empty saves after resize, 12 open/close cycles, GC after 40 MiB cumulative
-allocations, queue overflow, timeout/headless errors and cleanup on return/exit/trap.
-It also exercises `run --gui` with real windows and temporary-file cleanup.
-ELF checks validate loader/import segments, ordering, alignment and W^X.
-Test-only tools: `Xvfb`, `xdotool`, `xclip`, Python and libX11; none are application
-runtime dependencies. CI installs them and runs the corpus against stages 2/3.
-Native CI passed **271 Linux tests** (276 discovered, five platform skips)
-and **212 Windows tests** (213 discovered, one Linux fixture skip), with both
-compiler fixed points matching. See [0.19 verification](../evidence/portable-gui-verification.json) and the current
+0.19.1 exercises exact row/column fill for all counts 1..64, invalid geometry,
+mutated rectangles, private intrinsic typing, and inactive/static GUI behavior.
+Real GTK and native Windows Notes tests open Arabic/emoji filenames, cancel
+pickers, reject invalid text without losing the note, save to new Unicode paths,
+refuse existing destinations, resize and open another dialog. The GTK fixture
+also verifies cancellation/error statuses, managed collection between pickers,
+unchanged working directory and that Save selection creates no file.
+
+The retained desktop corpus covers native keyboard/clipboard editing, colored
+panel pixels, lifecycle/GC, queue limits, headless errors and process cleanup.
+Linux `run --gui` is tested with a real window and temporary-file cleanup; ELF
+checks validate imports, ordering, alignment and W^X. Test-only tools are Xvfb,
+xdotool, xclip, Python and libX11; none implement application behavior.
+**276 Linux tests** (282 discovered, six platform skips) and **216 native
+Windows tests** (217 discovered, one Linux fixture skip) pass, with both compiler
+fixed points and an empty-PATH Linux rebuild. See
+[0.19.1 verification](../evidence/gui-dialogs-verification.json) and the current
 [Linux/Windows self-hosting proofs](../evidence/bootstrap-proof.json). No new speed claim.
 
 ### Retained Windows acceptance (introduced in 0.13)
@@ -2209,7 +2282,7 @@ There is no interpreter, Python dependency or C runtime in generated programs.
 
 ## Use Ramos on Windows
 
-Download [ramos.exe from the 0.19.0 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.19.0/ramos.exe)
+Download [ramos.exe from the 0.19.1 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.19.1/ramos.exe)
 and open PowerShell in its directory. CI artifacts are also available from the
 [Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
 
@@ -2345,7 +2418,7 @@ on native USER32/GDI32. See [portable GUI setup](09-gui.md).
 
 # Runnable projects
 
-These are complete programs from Ramos 0.19.0, not pseudocode. The repository
+These are complete programs from Ramos 0.19.1, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -2395,9 +2468,11 @@ and control bytes. It is not a complete Unicode text editor.
 .\notes.exe
 ```
 
-[Source: notes.ramos](../examples/notes.ramos). Unicode editor, Save/Clear
+[Source: notes.ramos](../examples/notes.ramos). Unicode editor, Open/Save/Save As/Clear
 buttons, status messages and resizing. Save creates a new file and refuses an
-existing path. This version has no open dialog or unsaved-change prompt.
+existing path. Open chooses and loads a valid UTF-8 file; cancellation or invalid text preserves
+the current note. Save As chooses a new path and keeps exclusive creation. Shared
+row/padding helpers handle resize. There is no unsaved-change prompt.
 
 ## A small GUI event loop
 
@@ -2524,7 +2599,7 @@ syntax, fixed output and checked summation.
 
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -2589,7 +2664,7 @@ seed it. User programs can use the new structs and typed arrays; no preprocessin
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -2598,7 +2673,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -2610,7 +2685,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.19.0 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.19.1 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.
@@ -2667,6 +2742,14 @@ release prerequisites; see [the GUI contracts](09-gui.md) and
 [0.19 evidence](../evidence/portable-gui-verification.json). Wayland, dialogs, automatic
 layout/DPI policy and general drawing are not claimed as verified features.
 
+Version 0.19.1 appends private native slot 68 (compiler intrinsic 324) for
+single-file path selection. The Windows boundary uses system COMDLG32; Linux
+adds fixed GTK modal chooser imports. The typed path/status result and checked
+geometry helpers are Ramos library code. File publication remains separate.
+See [0.19.1 evidence](../evidence/gui-dialogs-verification.json); dialogs are now verified
+on native Windows and Linux X11. Automatic DPI/layout policy and general
+canvas drawing remain follow-ups.
+
 
 ---
 
@@ -2680,13 +2763,13 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
-permissions. General canvas graphics, file dialogs, automatic layout/DPI policy, games and
+permissions. General canvas graphics, automatic layout/DPI policy, games and
 browser support need further work. Linux GUI requires GTK3; X11 is verified,
 Wayland remains unverified.
 
@@ -2752,10 +2835,21 @@ fn gui_button(id: int64, x: int64, y: int64, width: int64, height: int64, text: 
 fn gui_input(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
 fn gui_editor(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
 fn gui_panel(id: int64, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn gui_set_bytes(id: int64, text: bytes) -> int64
 fn gui_set(id: int64, text: string)
 fn gui_move(id: int64, x: int64, y: int64, width: int64, height: int64)
 fn gui_text(id: int64) -> string
 fn gui_event(timeout_ms: int64) -> GuiEvent
+fn gui_layout_error()
+fn gui_rect(x: int64, y: int64, width: int64, height: int64) -> GuiRect
+fn gui_inset(width: int64, height: int64, padding: int64) -> GuiRect
+fn gui_cell(bounds: GuiRect, index: int64, count: int64, gap: int64, vertical: bool) -> GuiRect
+fn gui_row(bounds: GuiRect, index: int64, count: int64, gap: int64) -> GuiRect
+fn gui_column(bounds: GuiRect, index: int64, count: int64, gap: int64) -> GuiRect
+fn gui_move_to(id: int64, bounds: GuiRect)
+fn gui_choose_file(title: string, initial: string, mode: int64) -> GuiPath
+fn gui_open_file(title: string, initial: string) -> GuiPath
+fn gui_save_file(title: string, initial: string) -> GuiPath
 ```
 
 ### io.ramos
@@ -2922,9 +3016,9 @@ fn tui_key(timeout_ms: int64) -> int64
 
 # Performance and evidence
 
-This 0.19.0 edition retains measured **0.14** cross-language results below.
+This 0.19.1 edition retains measured **0.14** cross-language results below.
 They are historical; no C/Rust/Python comparison or overall language score
-for 0.19.0 is claimed. Historical focused 0.17 text-assembly measurements follow.
+for 0.19.1 is claimed. Historical focused 0.17 text-assembly measurements follow.
 0.18 numerical tests prove results, not a comparative speed measurement.
 
 These are recorded **Ramos 0.14.0** measurements, including exact outputs,
@@ -3017,7 +3111,7 @@ Median of three builds per task, including compiler startup and linking/publicat
 ## Next work for Ramos
 
 1. Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (6.1× C time), Runtime-seeded recursive tree (5.1× C time), Scan 16 KiB ASCII text (3.9× C time). Version 0.7.1 already reduces buffer-call and stack traffic and specializes constant arithmetic. Further changes need their own measurements.
-2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/benchmarks/optimization.md).
+2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/benchmarks/optimization.md).
 3. Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.
 
 ![Overall index and task ratios](../assets/performance-0.14.0.png)
@@ -3041,9 +3135,9 @@ make
 python3 benchmarks/run_suite.py --work-counts benchmarks/baseline-0.13.0/results.json --output-dir work/reproduced-0.14.0
 ```
 
-Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
+Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
 
-Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/benchmarks/results-0.2.json); they are not directly comparable to this suite.
 
 ## 0.17 focused text assembly
 
@@ -3066,7 +3160,7 @@ applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.
 
-This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI are now
+This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -3094,7 +3188,7 @@ self-hosting. Any change in those contracts must be explicit and tested.
 0.13 already has immutable strings, reusable managed memory, structs, typed
 arrays, `weave`, a small standard library, streamed files, stdin, CLI/TUI tools
 and a Windows GUI library. Those foundations should be extended, not rebuilt.
-0.19 adds a GTK3 Linux desktop backend; automatic layout/DPI policy and file dialogs remain missing. Live memory, individual values,
+0.19 adds a GTK3 Linux desktop backend; 0.19.1 supplies simple layout helpers and file pickers; automatic layout/DPI policy remains missing. Live memory, individual values,
 recursion and source size have documented limits. The published comparative
 timings are historical; they are not a performance result for 0.13.
 
@@ -3110,7 +3204,8 @@ timings are historical; they are not a performance result for 0.13.
 | 0.18.1: numerical input (implemented; see [contracts](22-math-input.md)) | Fallible decimal parsing with exact rounding in the Ramos math library | Streamed file/stdin statistics, independent references and long-running memory checks |
 | Follow-up: collections and limits | Profile collection growth and review memory/recursion limits before changing contracts | Bounded collection workloads and long-running live-memory checks |
 | 0.19: portable GUI (implemented; see [contracts](09-gui.md)) | GTK3 Linux backend, existing native controls/events/panels, `run --gui` | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
-| GUI follow-up | Simple layout helpers, explicit DPI policy, file dialogs, drawing | A small app uses shared layout and open/save dialogs on both OSes |
+| 0.19.1: GUI helpers (implemented; see [contracts](09-gui.md)) | Checked rectangles, padding, rows/columns and native Open/Save path pickers | Notes opens Unicode files, cancels safely and saves new files on both OSes |
+| GUI follow-up | Explicit DPI policy and general drawing | A drawing app handles desktop scaling on both OSes |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
 
 ### 0.14: specify the small syntax changes first
@@ -3229,7 +3324,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.19.0** unless the task explicitly provides a newer compiler
+programs. Target **0.19.1** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -3292,8 +3387,12 @@ Windows uses system controls; Linux requires GTK3 and a display. A static Linux
 build returns -38 from GUI startup, a missing display returns -19, and missing
 shared libraries prevent loader startup. X11 is verified; Wayland is unverified.
 GTK memory is outside the Ramos managed heap. Pump events regularly, use blocking
-waits when idle and close the window. Do not invent file dialogs, automatic
-layout/DPI handling, multiple windows or general canvas APIs. For TUI, require an interactive terminal and restore it before exit.
+waits when idle and close the window. Use checked `gui_rect`/`gui_inset`/`gui_row`/`gui_column` geometry and
+`gui_open_file`/`gui_save_file` path pickers. Picker status 0 selects, 1 cancels,
+and negatives fail. Selection does not read/create/overwrite a file. Use
+`gui_set_bytes` to reject invalid file text before changing an editor. Notes
+keeps exclusive creation and preserves editor/path when Open fails. Do not invent
+automatic layout/DPI handling, multiple windows or general canvas APIs. For TUI, require an interactive terminal and restore it before exit.
 
 For incremental text, use the [text builder](20-text-builder.md). Check append
 status (0 or -27); byte count differs from Unicode scalar count. Snapshot

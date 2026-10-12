@@ -8,13 +8,13 @@ types with 16 fields each; array type nesting to 16. Expression and block
 depth remain bounded at 128; generated programs allow 64 active calls.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c8a209124cc877c572a28e23da406fa5869f6bbd/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
-permissions. General canvas graphics, file dialogs, automatic layout/DPI policy, games and
+permissions. General canvas graphics, automatic layout/DPI policy, games and
 browser support need further work. Linux GUI requires GTK3; X11 is verified,
 Wayland remains unverified.
 
@@ -80,10 +80,21 @@ fn gui_button(id: int64, x: int64, y: int64, width: int64, height: int64, text: 
 fn gui_input(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
 fn gui_editor(id: int64, x: int64, y: int64, width: int64, height: int64, text: string)
 fn gui_panel(id: int64, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn gui_set_bytes(id: int64, text: bytes) -> int64
 fn gui_set(id: int64, text: string)
 fn gui_move(id: int64, x: int64, y: int64, width: int64, height: int64)
 fn gui_text(id: int64) -> string
 fn gui_event(timeout_ms: int64) -> GuiEvent
+fn gui_layout_error()
+fn gui_rect(x: int64, y: int64, width: int64, height: int64) -> GuiRect
+fn gui_inset(width: int64, height: int64, padding: int64) -> GuiRect
+fn gui_cell(bounds: GuiRect, index: int64, count: int64, gap: int64, vertical: bool) -> GuiRect
+fn gui_row(bounds: GuiRect, index: int64, count: int64, gap: int64) -> GuiRect
+fn gui_column(bounds: GuiRect, index: int64, count: int64, gap: int64) -> GuiRect
+fn gui_move_to(id: int64, bounds: GuiRect)
+fn gui_choose_file(title: string, initial: string, mode: int64) -> GuiPath
+fn gui_open_file(title: string, initial: string) -> GuiPath
+fn gui_save_file(title: string, initial: string) -> GuiPath
 ```
 
 ### io.ramos
