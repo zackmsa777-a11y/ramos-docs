@@ -9,13 +9,13 @@ depth remain bounded at 128; generated programs allow 1,024 active calls within 
 See [the stack policy](25-stack.md); use an OS stack of at least 8 MiB.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
-permissions. General canvas graphics, automatic layout/DPI policy, games and
+permissions. Automatic layout/DPI policy, games and
 browser support need further work. Linux GUI requires GTK3; X11 is verified,
 Wayland remains unverified.
 
@@ -274,4 +274,23 @@ fn tui_at(row: int64, column: int64, value: string)
 fn tui_box(row: int64, column: int64, width: int64, height: int64)
 fn tui_safe(value: bytes, width: int64) -> string
 fn tui_key(timeout_ms: int64) -> int64
+```
+
+### draw.ramos
+
+[Read the source](../stdlib/draw.ramos) and [drawing contracts](27-canvas.md).
+
+```ramos
+struct Canvas { data: bytes, count: int64 }
+fn draw_new() -> Canvas
+fn draw_reset(canvas: Canvas)
+fn draw_clear(canvas: Canvas, color: int64)
+fn draw_rect(canvas: Canvas, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn draw_box(canvas: Canvas, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn draw_line(canvas: Canvas, x: int64, y: int64, x2: int64, y2: int64, color: int64)
+fn draw_circle(canvas: Canvas, x: int64, y: int64, radius: int64, color: int64)
+fn draw_disk(canvas: Canvas, x: int64, y: int64, radius: int64, color: int64)
+fn draw_pixel(canvas: Canvas, x: int64, y: int64, color: int64)
+fn gui_canvas(id: int64, x: int64, y: int64, width: int64, height: int64)
+fn draw_present(id: int64, canvas: Canvas) -> int64
 ```

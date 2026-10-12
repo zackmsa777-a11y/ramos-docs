@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.22.0, not pseudocode. The repository
+These are complete programs from Ramos 0.23.0, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -210,3 +210,9 @@ printf '3\n-4\n3\n0\n' | ./rsort
 with duplicates, handles LF/CRLF and Unicode file paths, and reports malformed
 input or more than 131072 numbers with a line number and exit 2. See
 [collection status and ownership](24-collections.md).
+
+## Interactive native plot
+
+[plot.ramos](../examples/plot.ramos) draws a curve using [the drawing library](27-canvas.md),
+changes it with a button and rebuilds its scene on resize. It is verified on both
+native desktops. Build with `ramos build examples/plot.ramos -o plot --gui`.

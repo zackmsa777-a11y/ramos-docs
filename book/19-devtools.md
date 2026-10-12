@@ -116,7 +116,7 @@ remain byte-based rather than terminal display-cell positions.
 
 ## Verification and limits
 
-The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/tests/test_devtools.py) check caret/type
+The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/tests/test_devtools.py) check caret/type
 messages, original library locations, EOF/control escaping, formatter idempotence,
 comments/literals/CRLF, byte-identical compiled output before/after formatting,
 atomic publication and source protection, argument quoting, inherited I/O,

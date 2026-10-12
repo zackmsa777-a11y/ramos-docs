@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.23.0, with Markdown for agents and HTML for people.">
+<title>Native drawing and retained canvas frames · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.23.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>09</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>10</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>11</span>Working with bytes</a><a href="05-input.html"><span>12</span>Stdin and number conversion</a><a href="06-files.html"><span>13</span>Arguments and file I/O</a><a href="07-libraries.html"><span>14</span>Libraries with weave</a><a href="18-system.html"><span>15</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>16</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>17</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>18</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html" aria-current="page"><span>19</span>Native drawing and retained canvas frames</a><a href="10-windows.html"><span>20</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>21</span>Runnable projects</a><a href="12-self-hosting.html"><span>22</span>How the compiler builds itself</a><a href="13-reference.html"><span>23</span>Limits and standard library reference</a><a href="14-performance.html"><span>24</span>Performance and evidence</a><a href="26-compatibility.html"><span>25</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>26</span>What comes next</a><a href="16-agent-guide.html"><span>27</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="native-canvas-drawing-023">Native canvas drawing (0.23)</h1>
+<p>Use <code>weave "stdlib/draw.ramos"</code> with a GUI build. The library adds an ordinary
+<code>Canvas</code> struct and helpers; there is no new language syntax or foreign app code.
+Linux uses the existing GTK3/Cairo dependency; Windows uses native GDI.</p>
+<pre><code class="language-ramos">weave &quot;stdlib/draw.ramos&quot;
+fn main() {
+    gui_check(gui_open(s&quot;Drawing&quot;,320,240))
+    gui_canvas(1,10,10,300,200)
+    let canvas = draw_new()
+    draw_clear(canvas,gui_rgb(245,247,250))
+    draw_rect(canvas,20,20,80,40,gui_rgb(220,70,40))
+    draw_line(canvas,0,100,250,140,0)
+    draw_disk(canvas,160,60,20,gui_rgb(40,110,220))
+    gui_check(draw_present(1,canvas))
+    while gui_event(-1).kind != 1 {}
+    gui_check(gui_close())
+}
+</code></pre>
+<p>Build with <code>ramos build app.ramos -o app --gui</code> on Linux, or
+<code>ramos build app.ramos -o app.exe --target windows --gui</code> for Windows.
+<code>ramos run app.ramos --gui</code> compiles and opens the app. Static Linux binaries
+return -38 from GUI operations. See <a href="09-gui.html">the GUI contract</a> for prerequisites,
+events and errors, and <a href="examples/plot.ramos">the interactive plot</a> for resizing.</p>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>draw_new()</code></td>
+<td>New reusable command buffer; empty scene</td>
+</tr>
+<tr>
+<td><code>draw_reset(canvas)</code></td>
+<td>Clear recorded commands; keep buffer capacity</td>
+</tr>
+<tr>
+<td><code>draw_clear(canvas,color)</code></td>
+<td>Append a whole-canvas background fill</td>
+</tr>
+<tr>
+<td><code>draw_rect(canvas,x,y,width,height,color)</code></td>
+<td>Filled rectangle</td>
+</tr>
+<tr>
+<td><code>draw_box(canvas,x,y,width,height,color)</code></td>
+<td>Outlined rectangle</td>
+</tr>
+<tr>
+<td><code>draw_line(canvas,x,y,x2,y2,color)</code></td>
+<td>One-unit line</td>
+</tr>
+<tr>
+<td><code>draw_circle(canvas,cx,cy,radius,color)</code></td>
+<td>Outlined circle</td>
+</tr>
+<tr>
+<td><code>draw_disk(canvas,cx,cy,radius,color)</code></td>
+<td>Filled circle</td>
+</tr>
+<tr>
+<td><code>draw_pixel(canvas,x,y,color)</code></td>
+<td>Filled 1×1 rectangle</td>
+</tr>
+<tr>
+<td><code>gui_canvas(id,x,y,width,height)</code></td>
+<td>Create a canvas in the existing 64-ID GUI table</td>
+</tr>
+<tr>
+<td><code>draw_present(id,canvas)</code></td>
+<td>Validate and snapshot recorded commands; return status</td>
+</tr>
+</tbody>
+</table>
+<p>Commands draw in order. An empty scene repaints white. A later <code>draw_clear</code>
+replaces earlier drawing in that frame. Colors are opaque <code>gui_rgb</code> values;
+there is no alpha, image loading, font drawing or user drawing callback yet.
+The canvas has no separate mouse event API in this release.</p>
+<h2 id="limits-ownership-and-errors">Limits, ownership and errors</h2>
+<p>Each canvas owns a reusable 49,160-byte buffer, holding up to 1,024 commands.
+Signed drawing coordinates and line endpoints are -8192..8192; rectangle
+width/height and circle radius are 1..8192. Shapes crossing the canvas bounds
+are clipped, including negative coordinates. Window/control geometry retains
+its existing nonnegative domain. Library misuse exits with <code>Ramos drawing error</code>;
+checked arithmetic and heap limits still apply.</p>
+<p><code>draw_present</code> returns 0 on success, -9 for an absent ID or a control that is
+not a canvas, and -22 for a malformed drawing packet. Other native OS failures
+remain possible. Use <code>gui_check</code> when the app cannot recover. Native code checks
+the full active packet before publication; rejection preserves the displayed
+frame. <code>io_error()</code> also reports the status. Canvas controls cannot be read or
+changed using the GUI text API.</p>
+<p>Presentation copies only the active command prefix into a private managed
+snapshot. Reusing/resetting the caller's buffer, editing its bytes or collecting
+garbage does not change the published scene. Replacing a frame or closing the
+window releases that snapshot's root for normal managed reclamation. Painting
+uses no Ramos allocation or application callback. GDI stock objects are borrowed
+and the device context is restored; Cairo/GDI drawing failures use status -5 in the event
+error channel (queue overflow retains -75). Out-of-memory still follows the checked managed-heap trap.</p>
+<p>Public <code>Canvas</code> handles alias like other structs. Sharing the handle shares its
+recorded commands. Native display snapshots are independent. Applications should
+use helpers rather than mutate the packet's <code>data</code>/<code>count</code> fields.</p>
+<h2 id="resize-and-scaling">Resize and scaling</h2>
+<p>Coordinates are local to the canvas. Resizing clips or reveals recorded geometry;
+it does not stretch the picture. To reflow a plot, handle resize events, call
+<code>gui_move</code>, record the new scene and present it. Linux uses GTK logical units;
+Windows retains its default DPI virtualization. Explicit per-monitor DPI events
+and policy are future work. X11 is verified; Wayland remains unverified.</p>
+<p>Cairo and GDI rasterize boundaries differently. Filled interiors, order, clipping
+and repaint behavior have the same contract; edge pixels and circle outlines
+are not promised to be byte-identical between desktops. This release adds no
+comparative graphics-speed claim.</p>
+<p>The tests inspect actual native windows: negative clipping, interior colors,
+lines, circles, boxes and single pixels; reset/GC repaint; resize; replacement;
+empty-frame white; repeated maximum-size snapshots; close. GTK is exercised at
+1× and 2× scaling. Native Windows also checks GDI resource stability. See
+<a href="evidence/canvas-verification.json">canvas verification</a> for the exact published build.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="09-gui.html">← Desktop GUI on Windows and Linux</a><a href="10-windows.html">Windows and cross-compilation →</a></nav><footer>Ramos 0.23.0 · <a href="book/27-canvas.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

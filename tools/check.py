@@ -53,7 +53,7 @@ def main():
     meta = json.loads((ROOT / 'book.json').read_text())
     for chapter in meta['chapters']:
         assert (ROOT / 'book' / (chapter['slug'] + '.md')).exists(), chapter['slug']
-    assert len(list((ROOT / 'stdlib').glob('*.ramos'))) == 13
+    assert len(list((ROOT / 'stdlib').glob('*.ramos'))) == 14
     if problems:
         raise SystemExit('\n'.join(problems))
     print(f'Checked {checked} local links; {len(pages)} HTML pages have valid anchors and unique IDs.')

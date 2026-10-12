@@ -63,7 +63,7 @@ signed end-exclusive bound it cannot need to advance beyond INT64_MAX:
 
 Each range reserves one source counter and one hidden bound slot. Both count
 against the checked 4096-declaration budget; frame storage and cleared scope
-slots remain part of the existing memory model. The historical 0.14 release kept active-call depth at 64. Current 0.22 supports
+slots remain part of the existing memory model. The historical 0.14 release kept active-call depth at 64. Current Ramos supports
 1,024 active calls with a reviewed [stack budget](25-stack.md).
 
 ## Compound assignment

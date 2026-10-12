@@ -1,4 +1,4 @@
-# Desktop GUI on Windows and Linux
+# Desktop GUI library (Ramos 0.19.1)
 
 `weave "stdlib/gui.ramos"` adds real desktop windows and native controls on
 **Windows x64 and Linux x64**, using the same application source. Windows uses
@@ -123,8 +123,8 @@ There are no arbitrary callbacks into Ramos or exposed native handles.
 
 Text inputs consume normal editing keys themselves; kind 4 is not a global
 keyboard hook. Native controls handle mouse input and activation; raw pointer
-motion, canvas drawing, images, menus and multiple windows are not
-part of this first API. Colored panels provide basic rectangular drawing.
+motion, images, menus and multiple windows are not
+part of this first API. Colored panels provide basic rectangular drawing. The 0.23 [drawing library](27-canvas.md) adds native canvas shapes and pixels.
 Resize events include the initial layout; Windows also reports minimization as zero dimensions.
 Control layout is explicit; there is no automatic layout manager or DPI scaling.
 Apps should handle small dimensions without requesting zero-sized controls.
@@ -237,11 +237,11 @@ The retained desktop corpus covers native keyboard/clipboard editing, colored
 panel pixels, lifecycle/GC, queue limits, headless errors and process cleanup.
 Linux `run --gui` is tested with a real window and temporary-file cleanup; ELF
 checks validate imports, ordering, alignment and W^X. Test-only tools are Xvfb,
-xdotool, xclip, Python and libX11; none implement application behavior.
-The 0.19.1 milestone passed **276 Linux tests** (282 discovered, six platform skips) and **216 native
-Windows tests** (217 discovered, one Linux fixture skip), with both compiler
+xdotool, xclip, Python and libX11; none implement application behavior. See
+**276 Linux tests** (282 discovered, six platform skips) and **216 native
+Windows tests** (217 discovered, one Linux fixture skip) pass, with both compiler
 fixed points and an empty-PATH Linux rebuild. See
-[0.19.1 verification](../evidence/gui-dialogs-verification.json) and the 0.20.0
+[0.19.1 verification](../evidence/gui-dialogs-verification.json) and the current
 [Linux/Windows self-hosting proofs](../evidence/bootstrap-proof.json). No new speed claim.
 
 ### Retained Windows acceptance (introduced in 0.13)

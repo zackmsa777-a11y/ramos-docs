@@ -134,7 +134,7 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 

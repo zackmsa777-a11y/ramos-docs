@@ -1,4 +1,4 @@
-# The Ramos Book — 0.22.0
+# The Ramos Book — 0.23.0
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.22.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.23.0**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -17,7 +17,7 @@ identify when a feature arrived; they do not change this book's baseline.
   [the language](02-language.md) and [values](03-values.md).
 - Building a tool? Read [files](06-files.md), [libraries](07-libraries.md) and
   [OS libraries](18-system.md) and [CLI/TUI](08-cli-tui.md), then try the [projects](11-cookbook.md).
-- Building a desktop window? Read [desktop GUI](09-gui.md). Windows uses native
+- Building a desktop window? Read [desktop GUI](09-gui.md) and [native drawing](27-canvas.md). Windows uses native
   system controls; Linux GUI requires GTK3 and a display.
 - Writing Ramos with an AI agent? Start with the [agent guide](16-agent-guide.md)
   and [API reference](13-reference.md).
@@ -36,7 +36,7 @@ reuse/release for streamed tools.
 [Native math](21-math.md) adds explicit conversions, square root and fixed
 decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.22.0. Read
+in 0.23.0. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -57,7 +57,7 @@ status handling and signed integer sorting. `rsort` sorts stdin or a streamed fi
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.22.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.22.0)
+- [Ramos 0.23.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.23.0)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 - [Small runnable examples](https://github.com/zackmsa777-a11y/ramos-examples)
 - [Scientific calculator: CLI, REPL and GUI](https://github.com/zackmsa777-a11y/ramos-calculator)
@@ -79,13 +79,17 @@ interactive applications have been tested there.
 4 MiB stack budget. The scientific calculator uses it for 64 expression levels.
 Read [compatibility and installation](26-compatibility.md) before updating a project.
 
+[Canvas drawing](27-canvas.md) supplies bounded reusable commands for native lines,
+shapes and pixels. Repaint snapshots survive buffer reuse and garbage collection.
+The interactive plot runs on both desktops; per-monitor DPI policy remains future work.
+
 
 ---
 
 # Install, build and run
 
 Use the complete
-[0.22.0 recursion bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.22.0/ramos-0.22.0-recursion.zip),
+[0.23.0 canvas bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.23.0/ramos-0.23.0-canvas.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS` file lists asset hashes for integrity checking.
@@ -303,7 +307,7 @@ remain byte-based rather than terminal display-cell positions.
 
 ## Verification and limits
 
-The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/tests/test_devtools.py) check caret/type
+The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/tests/test_devtools.py) check caret/type
 messages, original library locations, EOF/control escaping, formatter idempotence,
 comments/literals/CRLF, byte-identical compiled output before/after formatting,
 atomic publication and source protection, argument quoting, inherited I/O,
@@ -459,7 +463,7 @@ check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 
@@ -544,7 +548,7 @@ signed end-exclusive bound it cannot need to advance beyond INT64_MAX:
 
 Each range reserves one source counter and one hidden bound slot. Both count
 against the checked 4096-declaration budget; frame storage and cleared scope
-slots remain part of the existing memory model. The historical 0.14 release kept active-call depth at 64. Current 0.22 supports
+slots remain part of the existing memory model. The historical 0.14 release kept active-call depth at 64. Current Ramos supports
 1,024 active calls with a reviewed [stack budget](25-stack.md).
 
 ## Compound assignment
@@ -1193,19 +1197,19 @@ OS process cleanup. There is no file replacement mode.
 
 ## Measurements and release checks
 
-[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/text-builder/run.py) compares repeated
+[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/benchmarks/text-builder/run.py) compares repeated
 string `+=` with the builder on the same compiler and machine. It appends 64-byte
 pieces, then independently checks all result bytes using `text_repeat`. One
 warmup and five alternating-order measurements include process startup and
 verification. Raw samples, machine and binary/library hashes are recorded in
 [the raw report](../evidence/text-builder.json) and
-[measured table](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
+[measured table](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
 the recorded Linux medians were 287 ms for concatenation and 13.8 ms for the
 builder (about 20.8×). This measures one Linux text
 assembly workload; it is not a C/Rust/Python comparison or an overall language
 score. Historical 0.14 comparative results remain historical.
 
-[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/tests/test_text_builder.py) cover Unicode/NUL/empty values,
+[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/tests/test_text_builder.py) cover Unicode/NUL/empty values,
 shared builder aliases, immutable snapshots, capacity reuse/release, exact-limit
 success and nonmutating rejection, invalid counts, automatic reclamation across
 6000 results, CRLF/empty/final lines, large streamed files and fallible size/I/O
@@ -1449,7 +1453,7 @@ allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
 Metadata and alignment count toward the heap limit. Invalid sizes, indices,
 byte values or allocation failures report a runtime error and exit 1.
 Unreachable allocations can be collected automatically or with `collect()`.
-See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/buffers.md).
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/docs/buffers.md).
 
 ## Bytes versus strings
 
@@ -2299,7 +2303,7 @@ compiler fixed points and the empty-PATH Linux rebuild.
 
 ---
 
-# Desktop GUI on Windows and Linux
+# Desktop GUI library (Ramos 0.19.1)
 
 `weave "stdlib/gui.ramos"` adds real desktop windows and native controls on
 **Windows x64 and Linux x64**, using the same application source. Windows uses
@@ -2424,8 +2428,8 @@ There are no arbitrary callbacks into Ramos or exposed native handles.
 
 Text inputs consume normal editing keys themselves; kind 4 is not a global
 keyboard hook. Native controls handle mouse input and activation; raw pointer
-motion, canvas drawing, images, menus and multiple windows are not
-part of this first API. Colored panels provide basic rectangular drawing.
+motion, images, menus and multiple windows are not
+part of this first API. Colored panels provide basic rectangular drawing. The 0.23 [drawing library](27-canvas.md) adds native canvas shapes and pixels.
 Resize events include the initial layout; Windows also reports minimization as zero dimensions.
 Control layout is explicit; there is no automatic layout manager or DPI scaling.
 Apps should handle small dimensions without requesting zero-sized controls.
@@ -2538,11 +2542,11 @@ The retained desktop corpus covers native keyboard/clipboard editing, colored
 panel pixels, lifecycle/GC, queue limits, headless errors and process cleanup.
 Linux `run --gui` is tested with a real window and temporary-file cleanup; ELF
 checks validate imports, ordering, alignment and W^X. Test-only tools are Xvfb,
-xdotool, xclip, Python and libX11; none implement application behavior.
-The 0.19.1 milestone passed **276 Linux tests** (282 discovered, six platform skips) and **216 native
-Windows tests** (217 discovered, one Linux fixture skip), with both compiler
+xdotool, xclip, Python and libX11; none implement application behavior. See
+**276 Linux tests** (282 discovered, six platform skips) and **216 native
+Windows tests** (217 discovered, one Linux fixture skip) pass, with both compiler
 fixed points and an empty-PATH Linux rebuild. See
-[0.19.1 verification](../evidence/gui-dialogs-verification.json) and the 0.20.0
+[0.19.1 verification](../evidence/gui-dialogs-verification.json) and the current
 [Linux/Windows self-hosting proofs](../evidence/bootstrap-proof.json). No new speed claim.
 
 ### Retained Windows acceptance (introduced in 0.13)
@@ -2570,6 +2574,103 @@ No new speed claim is made.
 
 ---
 
+# Native canvas drawing (0.23)
+
+Use `weave "stdlib/draw.ramos"` with a GUI build. The library adds an ordinary
+`Canvas` struct and helpers; there is no new language syntax or foreign app code.
+Linux uses the existing GTK3/Cairo dependency; Windows uses native GDI.
+
+```ramos
+weave "stdlib/draw.ramos"
+fn main() {
+    gui_check(gui_open(s"Drawing",320,240))
+    gui_canvas(1,10,10,300,200)
+    let canvas = draw_new()
+    draw_clear(canvas,gui_rgb(245,247,250))
+    draw_rect(canvas,20,20,80,40,gui_rgb(220,70,40))
+    draw_line(canvas,0,100,250,140,0)
+    draw_disk(canvas,160,60,20,gui_rgb(40,110,220))
+    gui_check(draw_present(1,canvas))
+    while gui_event(-1).kind != 1 {}
+    gui_check(gui_close())
+}
+```
+
+Build with `ramos build app.ramos -o app --gui` on Linux, or
+`ramos build app.ramos -o app.exe --target windows --gui` for Windows.
+`ramos run app.ramos --gui` compiles and opens the app. Static Linux binaries
+return -38 from GUI operations. See [the GUI contract](09-gui.md) for prerequisites,
+events and errors, and [the interactive plot](../examples/plot.ramos) for resizing.
+
+| Helper | Behavior |
+| --- | --- |
+| `draw_new()` | New reusable command buffer; empty scene |
+| `draw_reset(canvas)` | Clear recorded commands; keep buffer capacity |
+| `draw_clear(canvas,color)` | Append a whole-canvas background fill |
+| `draw_rect(canvas,x,y,width,height,color)` | Filled rectangle |
+| `draw_box(canvas,x,y,width,height,color)` | Outlined rectangle |
+| `draw_line(canvas,x,y,x2,y2,color)` | One-unit line |
+| `draw_circle(canvas,cx,cy,radius,color)` | Outlined circle |
+| `draw_disk(canvas,cx,cy,radius,color)` | Filled circle |
+| `draw_pixel(canvas,x,y,color)` | Filled 1×1 rectangle |
+| `gui_canvas(id,x,y,width,height)` | Create a canvas in the existing 64-ID GUI table |
+| `draw_present(id,canvas)` | Validate and snapshot recorded commands; return status |
+
+Commands draw in order. An empty scene repaints white. A later `draw_clear`
+replaces earlier drawing in that frame. Colors are opaque `gui_rgb` values;
+there is no alpha, image loading, font drawing or user drawing callback yet.
+The canvas has no separate mouse event API in this release.
+
+## Limits, ownership and errors
+
+Each canvas owns a reusable 49,160-byte buffer, holding up to 1,024 commands.
+Signed drawing coordinates and line endpoints are -8192..8192; rectangle
+width/height and circle radius are 1..8192. Shapes crossing the canvas bounds
+are clipped, including negative coordinates. Window/control geometry retains
+its existing nonnegative domain. Library misuse exits with `Ramos drawing error`;
+checked arithmetic and heap limits still apply.
+
+`draw_present` returns 0 on success, -9 for an absent ID or a control that is
+not a canvas, and -22 for a malformed drawing packet. Other native OS failures
+remain possible. Use `gui_check` when the app cannot recover. Native code checks
+the full active packet before publication; rejection preserves the displayed
+frame. `io_error()` also reports the status. Canvas controls cannot be read or
+changed using the GUI text API.
+
+Presentation copies only the active command prefix into a private managed
+snapshot. Reusing/resetting the caller's buffer, editing its bytes or collecting
+garbage does not change the published scene. Replacing a frame or closing the
+window releases that snapshot's root for normal managed reclamation. Painting
+uses no Ramos allocation or application callback. GDI stock objects are borrowed
+and the device context is restored; Cairo/GDI drawing failures use status -5 in the event
+error channel (queue overflow retains -75). Out-of-memory still follows the checked managed-heap trap.
+
+Public `Canvas` handles alias like other structs. Sharing the handle shares its
+recorded commands. Native display snapshots are independent. Applications should
+use helpers rather than mutate the packet's `data`/`count` fields.
+
+## Resize and scaling
+
+Coordinates are local to the canvas. Resizing clips or reveals recorded geometry;
+it does not stretch the picture. To reflow a plot, handle resize events, call
+`gui_move`, record the new scene and present it. Linux uses GTK logical units;
+Windows retains its default DPI virtualization. Explicit per-monitor DPI events
+and policy are future work. X11 is verified; Wayland remains unverified.
+
+Cairo and GDI rasterize boundaries differently. Filled interiors, order, clipping
+and repaint behavior have the same contract; edge pixels and circle outlines
+are not promised to be byte-identical between desktops. This release adds no
+comparative graphics-speed claim.
+
+The tests inspect actual native windows: negative clipping, interior colors,
+lines, circles, boxes and single pixels; reset/GC repaint; resize; replacement;
+empty-frame white; repeated maximum-size snapshots; close. GTK is exercised at
+1× and 2× scaling. Native Windows also checks GDI resource stability. See
+[canvas verification](../evidence/canvas-verification.json) for the exact published build.
+
+
+---
+
 # Windows and cross-compilation
 
 Ramos produces native Windows x64 console executables in PE32+ format. The same
@@ -2579,7 +2680,7 @@ There is no interpreter, Python dependency or C runtime in generated programs.
 
 ## Use Ramos on Windows
 
-Download [ramos.exe from the 0.22.0 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.22.0/ramos.exe)
+Download [ramos.exe from the 0.23.0 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.23.0/ramos.exe)
 and open PowerShell in its directory. CI artifacts are also available from the
 [Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
 
@@ -2715,7 +2816,7 @@ on native USER32/GDI32. See [portable GUI setup](09-gui.md).
 
 # Runnable projects
 
-These are complete programs from Ramos 0.22.0, not pseudocode. The repository
+These are complete programs from Ramos 0.23.0, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -2926,12 +3027,18 @@ with duplicates, handles LF/CRLF and Unicode file paths, and reports malformed
 input or more than 131072 numbers with a line number and exit 2. See
 [collection status and ownership](24-collections.md).
 
+## Interactive native plot
+
+[plot.ramos](../examples/plot.ramos) draws a curve using [the drawing library](27-canvas.md),
+changes it with a button and rebuilds its scene on resize. It is verified on both
+native desktops. Build with `ramos build examples/plot.ramos -o plot --gui`.
+
 
 ---
 
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -2996,7 +3103,7 @@ seed it. User programs can use the new structs and typed arrays; no preprocessin
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -3005,7 +3112,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -3017,7 +3124,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.22.0 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.23.0 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.
@@ -3106,13 +3213,13 @@ depth remain bounded at 128; generated programs allow 1,024 active calls within 
 See [the stack policy](25-stack.md); use an OS stack of at least 8 MiB.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
-permissions. General canvas graphics, automatic layout/DPI policy, games and
+permissions. Automatic layout/DPI policy, games and
 browser support need further work. Linux GUI requires GTK3; X11 is verified,
 Wayland remains unverified.
 
@@ -3373,6 +3480,25 @@ fn tui_safe(value: bytes, width: int64) -> string
 fn tui_key(timeout_ms: int64) -> int64
 ```
 
+### draw.ramos
+
+[Read the source](../stdlib/draw.ramos) and [drawing contracts](27-canvas.md).
+
+```ramos
+struct Canvas { data: bytes, count: int64 }
+fn draw_new() -> Canvas
+fn draw_reset(canvas: Canvas)
+fn draw_clear(canvas: Canvas, color: int64)
+fn draw_rect(canvas: Canvas, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn draw_box(canvas: Canvas, x: int64, y: int64, width: int64, height: int64, color: int64)
+fn draw_line(canvas: Canvas, x: int64, y: int64, x2: int64, y2: int64, color: int64)
+fn draw_circle(canvas: Canvas, x: int64, y: int64, radius: int64, color: int64)
+fn draw_disk(canvas: Canvas, x: int64, y: int64, radius: int64, color: int64)
+fn draw_pixel(canvas: Canvas, x: int64, y: int64, color: int64)
+fn gui_canvas(id: int64, x: int64, y: int64, width: int64, height: int64)
+fn draw_present(id: int64, canvas: Canvas) -> int64
+```
+
 
 ---
 
@@ -3586,7 +3712,7 @@ Median of three builds per task, including compiler startup and linking/publicat
 ## Next work for Ramos
 
 1. Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (6.1× C time), Runtime-seeded recursive tree (5.1× C time), Scan 16 KiB ASCII text (3.9× C time). Version 0.7.1 already reduces buffer-call and stack traffic and specializes constant arithmetic. Further changes need their own measurements.
-2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/optimization.md).
+2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/benchmarks/optimization.md).
 3. Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.
 
 ![Overall index and task ratios](../assets/performance-0.14.0.png)
@@ -3610,9 +3736,9 @@ make
 python3 benchmarks/run_suite.py --work-counts benchmarks/baseline-0.13.0/results.json --output-dir work/reproduced-0.14.0
 ```
 
-Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
+Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
 
-Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/benchmarks/results-0.2.json); they are not directly comparable to this suite.
 
 ## 0.17 focused text assembly
 
@@ -3689,7 +3815,7 @@ applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.
 
-This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion are now
+This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion and 0.23 canvas drawing are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -3736,7 +3862,8 @@ timings are historical; they are not a performance result for 0.13.
 | Live-memory follow-up | Profile real live-data workloads before changing the 16 MiB heap budget | Measured bounded and heap-pressure workloads |
 | 0.19: portable GUI (implemented; see [contracts](09-gui.md)) | GTK3 Linux backend, existing native controls/events/panels, `run --gui` | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
 | 0.19.1: GUI helpers (implemented; see [contracts](09-gui.md)) | Checked rectangles, padding, rows/columns and native Open/Save path pickers | Notes opens Unicode files, cancels safely and saves new files on both OSes |
-| GUI follow-up | Explicit DPI policy and general drawing | A drawing app handles desktop scaling on both OSes |
+| 0.23: canvas drawing (implemented; see [contracts](27-canvas.md)) | Bounded reusable commands, native shapes/pixels, retained repaint snapshots | Interactive plot and actual native pixels, clipping, GC, resize and resource checks on both OSes |
+| GUI follow-up | Explicit DPI policy/events | A drawing app handles per-monitor desktop scaling on both OSes |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
 
 ### 0.14: specify the small syntax changes first
@@ -3855,7 +3982,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.22.0** unless the task explicitly provides a newer compiler
+programs. Target **0.23.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 

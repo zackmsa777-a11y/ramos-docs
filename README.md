@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.21.0**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.23.0**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -35,25 +35,28 @@ The existing compiler release and book URLs remain stable.
 8. Strings, structs, arrays and memory
 9. Reusable text builders and streamed text tools
 10. Collection capacity, release and integer sorting
-11. Working with bytes
-12. Stdin and number conversion
-13. Arguments and file I/O
-14. Libraries with weave
-15. Paths, directories, environment and child processes
-16. CLI tools and terminal interfaces
-17. Monotonic timing and terminal animation
-18. Desktop GUI on Windows and Linux
-19. Windows and cross-compilation
-20. Runnable projects
-21. How the compiler builds itself
-22. Limits and standard library reference
-23. Performance and evidence
-24. What comes next
-25. Guide for AI coding agents
+11. Checked recursion and native stack budgets
+12. Working with bytes
+13. Stdin and number conversion
+14. Arguments and file I/O
+15. Libraries with weave
+16. Paths, directories, environment and child processes
+17. CLI tools and terminal interfaces
+18. Monotonic timing and terminal animation
+19. Desktop GUI on Windows and Linux
+20. Native drawing and retained canvas frames
+21. Windows and cross-compilation
+22. Runnable projects
+23. How the compiler builds itself
+24. Limits and standard library reference
+25. Performance and evidence
+26. Versions, installation and compatibility
+27. What comes next
+28. Guide for AI coding agents
 
 The `examples/` and `stdlib/` folders contain matching source from the compiler
 repository. Download a native compiler from the
-[0.21.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.21.0)
+[0.23.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.23.0)
 and place it at this repository's root to compile those examples. See the
 [quick start](book/01-getting-started.md). This repository does not include or
 implement a second compiler.

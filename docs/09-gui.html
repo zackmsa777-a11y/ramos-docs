@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.22.0, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.23.0, with Markdown for agents and HTML for people.">
 <title>Desktop GUI on Windows and Linux · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.22.0</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.23.0</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>09</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>10</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>11</span>Working with bytes</a><a href="05-input.html"><span>12</span>Stdin and number conversion</a><a href="06-files.html"><span>13</span>Arguments and file I/O</a><a href="07-libraries.html"><span>14</span>Libraries with weave</a><a href="18-system.html"><span>15</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>16</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>17</span>Monotonic timing and terminal animation</a><a href="09-gui.html" aria-current="page"><span>18</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>19</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>20</span>Runnable projects</a><a href="12-self-hosting.html"><span>21</span>How the compiler builds itself</a><a href="13-reference.html"><span>22</span>Limits and standard library reference</a><a href="14-performance.html"><span>23</span>Performance and evidence</a><a href="26-compatibility.html"><span>24</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>25</span>What comes next</a><a href="16-agent-guide.html"><span>26</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
-<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="desktop-gui-on-windows-and-linux">Desktop GUI on Windows and Linux</h1>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>09</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>10</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>11</span>Working with bytes</a><a href="05-input.html"><span>12</span>Stdin and number conversion</a><a href="06-files.html"><span>13</span>Arguments and file I/O</a><a href="07-libraries.html"><span>14</span>Libraries with weave</a><a href="18-system.html"><span>15</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>16</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>17</span>Monotonic timing and terminal animation</a><a href="09-gui.html" aria-current="page"><span>18</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html"><span>19</span>Native drawing and retained canvas frames</a><a href="10-windows.html"><span>20</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>21</span>Runnable projects</a><a href="12-self-hosting.html"><span>22</span>How the compiler builds itself</a><a href="13-reference.html"><span>23</span>Limits and standard library reference</a><a href="14-performance.html"><span>24</span>Performance and evidence</a><a href="26-compatibility.html"><span>25</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>26</span>What comes next</a><a href="16-agent-guide.html"><span>27</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="desktop-gui-library-ramos-0191">Desktop GUI library (Ramos 0.19.1)</h1>
 <p><code>weave "stdlib/gui.ramos"</code> adds real desktop windows and native controls on
 <strong>Windows x64 and Linux x64</strong>, using the same application source. Windows uses
 system USER32/GDI32/COMDLG32 APIs and needs no C runtime or extra toolkit. Linux GUI
@@ -220,8 +220,8 @@ There are no arbitrary callbacks into Ramos or exposed native handles.</p>
 </table>
 <p>Text inputs consume normal editing keys themselves; kind 4 is not a global
 keyboard hook. Native controls handle mouse input and activation; raw pointer
-motion, canvas drawing, images, menus and multiple windows are not
-part of this first API. Colored panels provide basic rectangular drawing.
+motion, images, menus and multiple windows are not
+part of this first API. Colored panels provide basic rectangular drawing. The 0.23 <a href="27-canvas.html">drawing library</a> adds native canvas shapes and pixels.
 Resize events include the initial layout; Windows also reports minimization as zero dimensions.
 Control layout is explicit; there is no automatic layout manager or DPI scaling.
 Apps should handle small dimensions without requesting zero-sized controls.
@@ -315,11 +315,11 @@ unchanged working directory and that Save selection creates no file.</p>
 panel pixels, lifecycle/GC, queue limits, headless errors and process cleanup.
 Linux <code>run --gui</code> is tested with a real window and temporary-file cleanup; ELF
 checks validate imports, ordering, alignment and W^X. Test-only tools are Xvfb,
-xdotool, xclip, Python and libX11; none implement application behavior.
-The 0.19.1 milestone passed <strong>276 Linux tests</strong> (282 discovered, six platform skips) and <strong>216 native
-Windows tests</strong> (217 discovered, one Linux fixture skip), with both compiler
+xdotool, xclip, Python and libX11; none implement application behavior. See
+<strong>276 Linux tests</strong> (282 discovered, six platform skips) and <strong>216 native
+Windows tests</strong> (217 discovered, one Linux fixture skip) pass, with both compiler
 fixed points and an empty-PATH Linux rebuild. See
-<a href="evidence/gui-dialogs-verification.json">0.19.1 verification</a> and the 0.20.0
+<a href="evidence/gui-dialogs-verification.json">0.19.1 verification</a> and the current
 <a href="evidence/bootstrap-proof.json">Linux/Windows self-hosting proofs</a>. No new speed claim.</p>
 <h3 id="retained-windows-acceptance-introduced-in-013">Retained Windows acceptance (introduced in 0.13)</h3>
 <p>The focused corpus checks raw argument/type errors, PE subsystem selection,
@@ -338,5 +338,5 @@ The harness reads another process's editor with <code>WM_GETTEXT</code>, as requ
 Native CI passed <strong>194 Linux tests and 140 Windows tests</strong>, including the GUI
 corpus and both compiler fixed points. See <a href="evidence/gui-verification.json">verification evidence</a>
 and <a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38057232751">the successful run</a>.
-No new speed claim is made.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="23-timing.html">← Monotonic timing and terminal animation</a><a href="10-windows.html">Windows and cross-compilation →</a></nav><footer>Ramos 0.22.0 · <a href="book/09-gui.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+No new speed claim is made.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="23-timing.html">← Monotonic timing and terminal animation</a><a href="27-canvas.html">Native drawing and retained canvas frames →</a></nav><footer>Ramos 0.23.0 · <a href="book/09-gui.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

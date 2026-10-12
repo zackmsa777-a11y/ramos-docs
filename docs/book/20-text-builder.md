@@ -93,19 +93,19 @@ OS process cleanup. There is no file replacement mode.
 
 ## Measurements and release checks
 
-[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/text-builder/run.py) compares repeated
+[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/benchmarks/text-builder/run.py) compares repeated
 string `+=` with the builder on the same compiler and machine. It appends 64-byte
 pieces, then independently checks all result bytes using `text_repeat`. One
 warmup and five alternating-order measurements include process startup and
 verification. Raw samples, machine and binary/library hashes are recorded in
 [the raw report](../evidence/text-builder.json) and
-[measured table](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
+[measured table](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
 the recorded Linux medians were 287 ms for concatenation and 13.8 ms for the
 builder (about 20.8×). This measures one Linux text
 assembly workload; it is not a C/Rust/Python comparison or an overall language
 score. Historical 0.14 comparative results remain historical.
 
-[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/tests/test_text_builder.py) cover Unicode/NUL/empty values,
+[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/tests/test_text_builder.py) cover Unicode/NUL/empty values,
 shared builder aliases, immutable snapshots, capacity reuse/release, exact-limit
 success and nonmutating rejection, invalid counts, automatic reclamation across
 6000 results, CRLF/empty/final lines, large streamed files and fallible size/I/O
