@@ -1,4 +1,4 @@
-# The Ramos Book — 0.21.0
+# The Ramos Book — 0.22.0
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.21.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.22.0**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -36,7 +36,7 @@ reuse/release for streamed tools.
 [Native math](21-math.md) adds explicit conversions, square root and fixed
 decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.21.0. Read
+in 0.22.0. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -57,7 +57,7 @@ status handling and signed integer sorting. `rsort` sorts stdin or a streamed fi
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.21.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.21.0)
+- [Ramos 0.22.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.22.0)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 - [Small runnable examples](https://github.com/zackmsa777-a11y/ramos-examples)
 - [Scientific calculator: CLI, REPL and GUI](https://github.com/zackmsa777-a11y/ramos-calculator)
@@ -75,13 +75,17 @@ The limits and negative results matter as much as working features. Native
 output is not proof of speed, and compiling for an OS is not proof that its
 interactive applications have been tested there.
 
+[Checked recursion](25-stack.md) supports 1,024 active calls within a separate
+4 MiB stack budget. The scientific calculator uses it for 64 expression levels.
+Read [compatibility and installation](26-compatibility.md) before updating a project.
+
 
 ---
 
 # Install, build and run
 
 Use the complete
-[0.21.0 collections bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.21.0/ramos-0.21.0-collections.zip),
+[0.22.0 recursion bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.22.0/ramos-0.22.0-recursion.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS` file lists asset hashes for integrity checking.
@@ -299,7 +303,7 @@ remain byte-based rather than terminal display-cell positions.
 
 ## Verification and limits
 
-The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/tests/test_devtools.py) check caret/type
+The shared [development-tool tests](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/tests/test_devtools.py) check caret/type
 messages, original library locations, EOF/control escaping, formatter idempotence,
 comments/literals/CRLF, byte-identical compiled output before/after formatting,
 atomic publication and source protection, argument quoting, inherited I/O,
@@ -446,14 +450,16 @@ checked conservatively, so even a `while true` needs a return after it for a
 value function. Unreachable statements are still type-checked. Void calls may
 be statements; value calls used as statements discard their result.
 
-Every call has its own local frame. At most 64 Ramos calls may be active,
+Every call has its own local frame. At most 1,024 Ramos calls may be active,
 including `main`; attempting the next call reports a runtime error and exits 1.
-Normal returns release the frame and restore the active-call counter. This
+Normal returns release the frame and restore the active-call counter.
+A separate 4 MiB [stack budget](25-stack.md) is checked before each frame;
+use an OS stack of at least 8 MiB. This
 check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 
@@ -538,8 +544,8 @@ signed end-exclusive bound it cannot need to advance beyond INT64_MAX:
 
 Each range reserves one source counter and one hidden bound slot. Both count
 against the checked 4096-declaration budget; frame storage and cleared scope
-slots remain part of the existing memory model. Active-call depth stays at 64;
-this release does not raise it without a reviewed stack budget.
+slots remain part of the existing memory model. The historical 0.14 release kept active-call depth at 64. Current 0.22 supports
+1,024 active calls with a reviewed [stack budget](25-stack.md).
 
 ## Compound assignment
 
@@ -1187,19 +1193,19 @@ OS process cleanup. There is no file replacement mode.
 
 ## Measurements and release checks
 
-[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/text-builder/run.py) compares repeated
+[The focused benchmark](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/text-builder/run.py) compares repeated
 string `+=` with the builder on the same compiler and machine. It appends 64-byte
 pieces, then independently checks all result bytes using `text_repeat`. One
 warmup and five alternating-order measurements include process startup and
 verification. Raw samples, machine and binary/library hashes are recorded in
 [the raw report](../evidence/text-builder.json) and
-[measured table](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
+[measured table](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/0.17.0/text-builder.md). At 8192 appends / 512 KiB,
 the recorded Linux medians were 287 ms for concatenation and 13.8 ms for the
 builder (about 20.8×). This measures one Linux text
 assembly workload; it is not a C/Rust/Python comparison or an overall language
 score. Historical 0.14 comparative results remain historical.
 
-[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/tests/test_text_builder.py) cover Unicode/NUL/empty values,
+[Shared tests](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/tests/test_text_builder.py) cover Unicode/NUL/empty values,
 shared builder aliases, immutable snapshots, capacity reuse/release, exact-limit
 success and nonmutating rejection, invalid counts, automatic reclamation across
 6000 results, CRLF/empty/final lines, large streamed files and fallible size/I/O
@@ -1358,6 +1364,68 @@ runtime speed improvement. No new overall language score is claimed.
 
 ---
 
+# Checked deeper recursion (0.22)
+
+Generated programs support **1,024 active Ramos calls**, including `main`.
+A second guard checks stack use before allocating each function's local frame.
+The first guard exceeded prints either `Ramos runtime error: call depth limit
+exceeded` or `Ramos runtime error: stack budget exceeded`, restores terminal
+state through the existing failure path, and exits 1.
+
+The stack guard measures the distance from the process-entry context (`r15`)
+to the current `rsp`, adds the complete prospective rounded local frame, saved
+`rbp` (8 bytes), and 16 KiB of expression scratch, and requires the result to
+be at most **4 MiB**. Pending arguments, expression values, return addresses
+and caller frames are therefore included by their actual stack addresses.
+The compiler's 1,024-value expression type stack bounds expression scratch;
+indexed destinations and temporary arithmetic operands fit within the extra
+16 KiB allowance. Runtime helpers and OS/toolkit calls use the remaining
+stack headroom; they do not increment the Ramos call counter.
+
+Windows PE already reserves 8 MiB (4 KiB initially committed); the existing
+page probes remain before large frame allocations. Use an ordinary Linux
+stack of at least 8 MiB. A deliberately smaller OS stack can still exhaust
+before the guard, and callbacks/third-party GUI libraries have their own
+stack requirements. This is a bounded language stack policy, not an OS stack
+size detector or a proof about arbitrary toolkit internals.
+
+Small frames can reach the 1,024-call boundary. Functions with large frames
+stop earlier: the shared tests run 221 active 16 KiB recursive frames and
+reject a request for 301 with a clean stack-budget error on each target.
+The unchanged 4,096 declaration cap includes declarations across functions;
+slot reuse and frame rounding remain unchanged. Normal returns restore `rsp`
+and decrement the counter, so repeated deep calls do not accumulate usage.
+Managed values in deeper frames remain GC roots under the existing stack scan.
+
+The retained assembly seed still generates its historical 64-call ABI. It
+builds the first Ramos compiler; all later compiler generations emit both
+new guards. There is no new user keyword, runtime option or allocation API.
+
+## Practical example
+
+The scientific calculator uses the extra headroom to support 64 recursive
+expression levels, with a recoverable error when an expression exceeds that
+app limit. Its parser and scientific helpers are ordinary Ramos source.
+The app's own limit is intentionally lower than the compiler's active-call
+limit because one expression level can involve several Ramos functions.
+
+## Validation
+
+Shared Linux/Windows tests exercise the exact active-call boundary, repeated
+returns, mutual recursion with pending expression values, large-frame success
+and failure, and collection while hundreds of managed values remain rooted.
+The deterministic compiler fixed points and the full language/application
+corpus are release gates. Fresh eight-task measurements accompany this change:
+every generated function now performs an extra stack-budget check, so older
+performance reports cannot establish this release's speed.
+
+[Native release verification](../evidence/recursion-verification.json) records
+289 passing Linux tests (6 skipped), 230 passing Windows tests (1 skipped),
+both compiler fixed points and clean native bundle checks.
+
+
+---
+
 # Working with bytes
 
 ```text
@@ -1381,7 +1449,7 @@ allocated blocks plus an 8 MiB ownership map, and at most 1 MiB per payload.
 Metadata and alignment count toward the heap limit. Invalid sizes, indices,
 byte values or allocation failures report a runtime error and exit 1.
 Unreachable allocations can be collected automatically or with `collect()`.
-See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/docs/buffers.md).
+See [buffer semantics](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/buffers.md).
 
 ## Bytes versus strings
 
@@ -2511,7 +2579,7 @@ There is no interpreter, Python dependency or C runtime in generated programs.
 
 ## Use Ramos on Windows
 
-Download [ramos.exe from the 0.21.0 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.21.0/ramos.exe)
+Download [ramos.exe from the 0.22.0 release](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.22.0/ramos.exe)
 and open PowerShell in its directory. CI artifacts are also available from the
 [Self-hosting proof workflow](https://github.com/zackmsa777-a11y/ramos/actions/workflows/selfhost.yml). Save a UTF-8 `hello.ramos`:
 
@@ -2647,7 +2715,7 @@ on native USER32/GDI32. See [portable GUI setup](09-gui.md).
 
 # Runnable projects
 
-These are complete programs from Ramos 0.21.0, not pseudocode. The repository
+These are complete programs from Ramos 0.22.0, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -2863,7 +2931,7 @@ input or more than 131072 numbers with a line number and exit 2. See
 
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -2922,13 +2990,13 @@ time; once stage 1 is seeded, the next stages require no assembler or linker.
 
 The compiler uses byte buffers as packed token, function, symbol, operator,
 block and fixup tables. A bounded iterative expression parser and explicit block
-stack avoid depending on the generated runtime's 64-call limit for deep syntax.
+stack avoid depending on the generated runtime's checked call/stack limits for deep syntax.
 The compiler deliberately retains byte-buffer source so the old grammar can
 seed it. User programs can use the new structs and typed arrays; no preprocessing
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -2937,7 +3005,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -2949,7 +3017,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.21.0 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.22.0 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.
@@ -3034,10 +3102,11 @@ The self-hosted compiler accepts up to 64 regular source files totaling 1 MiB
 tokens including EOF, 4,096 total declarations including parameters and ended
 blocks and hidden range-bound slots, 256 functions and 16 parameters per function. Structs are limited to 64
 types with 16 fields each; array type nesting to 16. Expression and block
-depth remain bounded at 128; generated programs allow 64 active calls.
+depth remain bounded at 128; generated programs allow 1,024 active calls within a checked 4 MiB stack budget.
+See [the stack policy](25-stack.md); use an OS stack of at least 8 MiB.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need
@@ -3307,12 +3376,125 @@ fn tui_key(timeout_ms: int64) -> int64
 
 ---
 
-# Performance and evidence
+# Ramos 0.22.0 performance: eight-task index
 
-This 0.19.1 edition retains measured **0.14** cross-language results below.
-They are historical; no C/Rust/Python comparison or overall language score
-for 0.19.1 is claimed. Historical focused 0.17 text-assembly measurements follow.
-0.18 numerical tests prove results, not a comparative speed measurement.
+Measured 2026-10-12T17:48:33.683094+00:00 on x86-64 Linux. Higher scores are faster; optimized C = 100.
+
+| Language | Overall execution index | Within-run bootstrap 95% interval |
+|---|---:|---:|
+| Rust | 119.24 | 110.66–126.02 |
+| C | 100.00 | 100.00–100.00 |
+| Ramos | 36.02 | 34.76–39.32 |
+| Python | 2.42 | 2.37–2.64 |
+
+Across these tasks, Ramos is **14.87× faster than Python**, and takes **2.78× the time of C** and **3.31× the time of Rust** (geometric means of per-task median ratios).
+
+## Per-task execution time
+
+Median wall time in milliseconds for the same work and seed. Includes process creation, loading, argument parsing, allocation, computation and one checked output line.
+
+| Task | Work count | Ramos | C | Rust | Python | Ramos vs Python |
+|---|---:|---:|---:|---:|---:|---:|
+| Serial integer arithmetic / modulo | 5,862,882 | 41.501 | 27.338 | 29.457 | 1009.986 | 24.34× |
+| Data-dependent branches | 2,287,934 | 46.265 | 25.485 | 25.629 | 603.905 | 13.05× |
+| Euclidean GCD | 460,468 | 51.264 | 32.239 | 27.158 | 339.584 | 6.62× |
+| Runtime-seeded recursive tree | 1,050 | 138.463 | 26.742 | 35.993 | 1068.172 | 7.71× |
+| Rolling byte-buffer hash | 5,458,812 | 48.707 | 24.861 | 30.771 | 768.952 | 15.79× |
+| Insertion sort of 128 bytes | 8,168 | 174.105 | 29.872 | 27.533 | 2712.838 | 15.58× |
+| 16×16 byte matrix multiplication | 18,472 | 384.342 | 136.403 | 26.784 | 8952.307 | 23.29× |
+| Scan 16 KiB ASCII text | 1,619 | 145.742 | 30.147 | 26.812 | 3742.955 | 25.68× |
+
+## Score definition
+
+`Index(language) = 100 × geometric_mean(C_median(task) / language_median(task))`
+
+All eight tasks have equal weight. The suite measures execution of ordinary programs, not patched code, an in-process kernel, compilation throughput or a universal language score. Startup is included in task timings but its separate probe is excluded from the index. The 95% intervals resample the collected timing samples; they do not capture uncertainty from different machines, task selection or operating systems.
+
+## Tasks and correctness
+
+- LCG: serial multiply/add/modulo recurrence with runtime seed.
+- Branches: runtime-generated parity and divisibility branches with checksum.
+- GCD: Euclidean remainder loops on varying positive inputs.
+- Recursion: traverse a depth-12 binary tree with runtime-dependent child values and leaf checksum.
+- Byte hash: visit a 4 KiB buffer and update a bounded polynomial hash.
+- Insertion sort: refill and sort 128 bytes; checksum weights sorted positions.
+- Matrix: multiply two 16×16 byte matrices, writing one input cell per pass, reduce output cells modulo 256, then checksum weighted positions.
+- Text scan: classify digits, uppercase ASCII and spaces in 16 KiB; write one byte per pass.
+
+Programs use the same algorithms, sizes, deterministic data and work count in all four languages. Work counts and seeds come from command-line arguments, so answers are not compile-time constants. All 32 task implementations pass independent reference checks at counts 0, 1 and 7 with seeds 1, 17 and 123. Full-size outputs are checked against references on every warmup and timed execution. Native compilers can optimize code normally; recursive calls may be transformed or inlined.
+
+## Measurement method
+
+- 5 timed samples per task/language; randomized language order within each round, sequential execution, two verified warmups.
+- Work counts calibrated until both C and Rust took at least about 25 ms in the calibration probes. The same count is then held fixed for all languages.
+- Work counts were calibrated for this run.
+- Pinned to logical CPU 0; Python `perf_counter_ns` wall clock.
+- Shared virtual machine; CPU frequency, other tenants and background activity are not controlled. Warm filesystem caches; no Windows performance claim.
+- CPython executes source scripts normally, including parsing on every launch. C/Rust/Ramos binaries are built before execution timing.
+- GCC: `-O3 -std=c11`, with checked add/subtract/multiply builtins and explicit byte bounds.
+- Rust: `-C opt-level=3 -C overflow-checks=yes -C panic=abort`; safe byte indexing/conversion.
+- Ramos: default native backend (release instruction selection described in the repository); arithmetic, buffer and call-depth checks retained. Python integers stay within signed 64-bit range for these inputs. C/Rust can eliminate provably redundant checks; Python has no Ramos-style call-depth or byte arena limit. Limits are not reached by the suite.
+
+Raw nanosecond samples, p10/p90, calibration probes, build commands, source hashes and compiler/environment versions are retained in [current raw results](../evidence/performance-0.22.0.json).
+
+## Startup probe (excluded from index)
+
+Argument parsing and printing a supplied integer; median over 51 randomized launches.
+
+| Ramos | C | Rust | Python |
+|---:|---:|---:|---:|
+| 0.427 ms | 0.805 ms | 1.325 ms | 17.780 ms |
+
+## Builds and output size (excluded from index)
+
+Median of three builds per task, including compiler startup and linking/publication. The table shows geometric means across tasks. It is not a general compiler throughput ranking: source sizes differ, and C/Rust use broader optimizers than the local Ramos emitter. Python is run as source and has no native binary in this experiment. Sizes are unstripped compiler outputs with different standard-library/linkage choices.
+
+| Language | Build time | Native binary size | Source size |
+|---|---:|---:|---:|
+| Ramos | 8.252 ms | 20480 B | 750 B |
+| C | 64.241 ms | 16616 B | 1547 B |
+| Rust | 168.758 ms | 4506097 B | 925 B |
+| Python | — | — | 475 B |
+
+## Next work for Ramos
+
+1. Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (5.8× C time), Runtime-seeded recursive tree (5.2× C time), Scan 16 KiB ASCII text (4.8× C time). Changes need their own measurements.
+2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See the archived [0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/optimization.md).
+3. Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.
+
+Optional chart: generate `score.png` with `benchmarks/plot_results.py --results RESULTS --output IMAGE`.
+
+## Environment
+
+- CPU: Intel(R) Xeon(R) Platinum 8358 CPU @ 2.60GHz
+- Platform: Linux-6.17.0-1020-oracle-x86_64-with-glibc2.39
+- Ramos 0.22.0 — compiler written in Ramos; Linux and Windows x64
+- gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+- rustc 1.98.1 (48a229cea 2026-09-01)
+- Python 3.12.3
+- Ramos executable SHA-256: `a034ea48f838c056c87c085450f0e96e727247b91f098d281f9ec4fa8cc801cc`
+
+## Reproduce
+
+From the repository root on x86-64 Linux with GCC, Rust and Python:
+
+```sh
+mkdir -p work
+curl -fL https://github.com/zackmsa777-a11y/ramos/releases/download/v0.22.0/ramos-linux-x86_64 -o work/ramos-0.22
+printf 'a034ea48f838c056c87c085450f0e96e727247b91f098d281f9ec4fa8cc801cc  work/ramos-0.22\n' | sha256sum -c -
+chmod +x work/ramos-0.22
+python3 benchmarks/run_suite.py --compiler work/ramos-0.22 --samples 5 --target-native-ms 25 --work-counts benchmarks/0.22.0/results.json --output-dir work/results-0.22
+```
+
+Use `--validate-only` for output verification without timings. `--work-counts benchmarks/0.22.0/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures](https://github.com/zackmsa777-a11y/ramos-benchmarks/tree/main/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
+
+Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+
+The measured compiler is the final 0.22 Linux release binary, not the earlier
+pre-alignment candidate. [Paired 0.21/0.22 samples](https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/0.22.0/stack/report.md) measure
+the cost of the extra call/stack guards separately.
+
+## Historical 0.14 evidence
 
 These are recorded **Ramos 0.14.0** measurements, including exact outputs,
 source/compiler hashes, flags and raw samples. The shared VM and selected
@@ -3404,7 +3586,7 @@ Median of three builds per task, including compiler startup and linking/publicat
 ## Next work for Ramos
 
 1. Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (6.1× C time), Runtime-seeded recursive tree (5.1× C time), Scan 16 KiB ASCII text (3.9× C time). Version 0.7.1 already reduces buffer-call and stack traffic and specializes constant arithmetic. Further changes need their own measurements.
-2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/optimization.md).
+2. Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See [the paired 0.7.0/0.7.1 comparison](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/optimization.md).
 3. Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.
 
 ![Overall index and task ratios](../assets/performance-0.14.0.png)
@@ -3428,9 +3610,9 @@ make
 python3 benchmarks/run_suite.py --work-counts benchmarks/baseline-0.13.0/results.json --output-dir work/reproduced-0.14.0
 ```
 
-Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
+Use `--validate-only` for output verification without timings. `--work-counts benchmarks/results.json` reuses the published work counts; `--output-dir` keeps results from another machine separate. Workload sources are in [fixtures/](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/fixtures). This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows [the established ratio aggregation method](https://open.spec.org/cpu2026/docs/runrules.html). See [GCC checked arithmetic](https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html) and [Rust code generation settings](https://doc.rust-lang.org/rustc/codegen-options/index.html).
 
-Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/results-0.2.json); they are not directly comparable to this suite.
+Historical results from a different machine and Ramos 0.2 are preserved in [report-0.2.md](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/report-0.2.md) and [results-0.2.json](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/results-0.2.json); they are not directly comparable to this suite.
 
 ## 0.17 focused text assembly
 
@@ -3446,14 +3628,68 @@ a shared container, not a general speedup or native Windows timing.
 
 ---
 
-# What comes next
+# Versions, installation and compatibility
+
+Ramos is still **pre-1.0**. Pin a compiler release and the matching standard
+library when distributing a project. Minor releases can extend or change
+contracts; read their release notes before updating. A patch release is intended
+for corrections within the documented contract, and any behavior correction
+must be identified. The release notes and contract documents describe what is
+supported; a future roadmap entry does not make an API available.
+
+## What a project needs
+
+Keep the native compiler and the `stdlib/` snapshot from the release bundle.
+Library paths in `weave` are relative to the file containing them. There is no
+global library search path, registry or downloaded dependency resolution. A
+simple project can keep `app.ramos` next to its own `stdlib/` directory:
+
+```ramos
+weave "stdlib/numbers.ramos"
+fn main() { print(num_text(42)) }
+```
+
+Run `ramos run app.ramos` during development. Use `build app.ramos -o app`
+(or `app.exe` on Windows) to distribute an executable. The compiler, source and
+stdlib are not needed to run that executable. CLI/TUI programs include their
+Ramos runtime; Linux GUI programs additionally need the documented system GTK3
+libraries and a display. Windows GUI uses system controls and libraries.
+The release's `SHA256SUMS` identifies downloadable assets.
+
+## Update and rollback
+
+Keep the previous compiler and stdlib snapshot until the project builds and
+its application checks pass with the replacement. Rebuild executables when
+updating so they contain the intended runtime. Rolling back means restoring
+that pair and rebuilding, or restoring the previous complete executable.
+There is no runtime module ABI to mix across releases. The private native call
+ABI is a compiler implementation detail, not a C/Rust foreign-function ABI.
+
+Check native behavior on each target. Cross-compilation verifies compilation;
+it does not verify window interaction, terminal input or OS file behavior.
+Do not describe Wine results as native Windows results.
+
+## First stable release
+
+The practical 1.0 goal requires the [application acceptance checks](15-roadmap.md),
+installation proof, published current measurements and explicit resource limits.
+It also needs a reviewed stable-language/library compatibility policy. That
+policy is a remaining milestone; this document does not promise that all 0.x
+APIs have been frozen. General graphics/DPI work and broader practical libraries
+remain active work. A stable version would not imply all of C or Rust's APIs,
+platforms, tooling or ecosystem.
+
+
+---
+
+# Ramos application-language goal
 
 **Goal:** make Ramos a simple native language for useful CLI, TUI and desktop
 applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.
 
-This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls are now
+This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -3496,7 +3732,8 @@ timings are historical; they are not a performance result for 0.13.
 | 0.18: native math (implemented; see [contracts](21-math.md)) | Finite `float64`, explicit conversions, square root, exact fixed formatting and Ramos math helpers | Native Mandelbrot image renderer, independently checked numerical results on both OSes |
 | 0.18.1: numerical input (implemented; see [contracts](22-math-input.md)) | Fallible decimal parsing with exact rounding in the Ramos math library | Streamed file/stdin statistics, independent references and long-running memory checks |
 | 0.21: collection controls (implemented; see [contracts](24-collections.md)) | Reservation, fallible full-capacity status, storage release, integer sorting; limits remain unchanged | Native `rsort`, alias/boundary and long-running memory checks |
-| Limits follow-up | Review live-memory and recursion budgets before changing contracts | Measured stack/live-data workloads |
+| 0.22: recursion review (implemented; see [stack policy](25-stack.md)) | 1,024 active calls within a checked 4 MiB stack budget; heap cap stays explicit | Deep managed roots, large-frame rejection, 64-level calculator expressions |
+| Live-memory follow-up | Profile real live-data workloads before changing the 16 MiB heap budget | Measured bounded and heap-pressure workloads |
 | 0.19: portable GUI (implemented; see [contracts](09-gui.md)) | GTK3 Linux backend, existing native controls/events/panels, `run --gui` | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
 | 0.19.1: GUI helpers (implemented; see [contracts](09-gui.md)) | Checked rectangles, padding, rows/columns and native Open/Save path pickers | Notes opens Unicode files, cancels safely and saves new files on both OSes |
 | GUI follow-up | Explicit DPI policy and general drawing | A drawing app handles desktop scaling on both OSes |
@@ -3618,7 +3855,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.21.0** unless the task explicitly provides a newer compiler
+programs. Target **0.22.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 

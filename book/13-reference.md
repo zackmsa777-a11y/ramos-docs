@@ -5,10 +5,11 @@ The self-hosted compiler accepts up to 64 regular source files totaling 1 MiB
 tokens including EOF, 4,096 total declarations including parameters and ended
 blocks and hidden range-bound slots, 256 functions and 16 parameters per function. Structs are limited to 64
 types with 16 fields each; array type nesting to 16. Expression and block
-depth remain bounded at 128; generated programs allow 64 active calls.
+depth remain bounded at 128; generated programs allow 1,024 active calls within a checked 4 MiB stack budget.
+See [the stack policy](25-stack.md); use an OS stack of at least 8 MiB.
 Its output and decoded string-data arenas are each 1 MiB; labels and fixups each
 have a 40,000-entry bound. These are checked limits. The retained bootstrap has
-the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/README.md).
+the older 4 MiB output and IR limits. See [compiler representation limits](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/README.md).
 
 The compiler is self-hosted; namespaces, more library types, wrapping arithmetic,
 broader optimization and additional targets remain future work. Performance claims need

@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.21.0, not pseudocode. The repository
+These are complete programs from Ramos 0.22.0, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.

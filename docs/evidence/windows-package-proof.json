@@ -1,0 +1,13 @@
+{
+  "version": "Ramos 0.22.0 \u2014 compiler written in Ramos; Linux and Windows x64",
+  "target": "windows-x64",
+  "compiler_sha256": "b7bd3d7111579eee77dc3fc25ebbb572622e53f044639f0cb7428055100bc6f6",
+  "unicode_install_path": true,
+  "empty_path": true,
+  "run_arguments_exit_status": true,
+  "library_build_and_sort": true,
+  "executable_runs_without_compiler_or_sources": true,
+  "checks": 5,
+  "package_sha256": null,
+  "scope": "Native CLI packaging; desktop and terminal interactions have separate native tests."
+}

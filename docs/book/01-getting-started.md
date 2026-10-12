@@ -1,7 +1,7 @@
 # Install, build and run
 
 Use the complete
-[0.21.0 collections bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.21.0/ramos-0.21.0-collections.zip),
+[0.22.0 recursion bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.22.0/ramos-0.22.0-recursion.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS` file lists asset hashes for integrity checking.

@@ -1,6 +1,6 @@
 # How the compiler builds itself
 
-The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/ramos.ramos).
+The compiler implementation is [compiler/ramos.ramos](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/ramos.ramos).
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -59,13 +59,13 @@ time; once stage 1 is seeded, the next stages require no assembler or linker.
 
 The compiler uses byte buffers as packed token, function, symbol, operator,
 block and fixup tables. A bounded iterative expression parser and explicit block
-stack avoid depending on the generated runtime's 64-call limit for deep syntax.
+stack avoid depending on the generated runtime's checked call/stack limits for deep syntax.
 The compiler deliberately retains byte-buffer source so the old grammar can
 seed it. User programs can use the new structs and typed arrays; no preprocessing
 or host-language parser is required.
 
 The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/compiler/README.md). Diagnostics
+which are documented in [compiler/README.md](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/compiler/README.md). Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.
@@ -74,7 +74,7 @@ are covered by the shared corpus.
 
 Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/docs/github-language.md). The bootstrap and Python test
+[GitHub language recognition](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/github-language.md). The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.
 
 ## Windows fixed point
@@ -86,7 +86,7 @@ shared language tests and records the native Windows proof. See
 [Windows bootstrap instructions](10-windows.md).
 
 The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.21.0 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.22.0 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.

@@ -1,7 +1,7 @@
 {
-  "version": "0.21.0",
+  "version": "0.22.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "bdb5d63344d62e5700dc9b5db6264dde0d29ed4d",
+  "source_commit": "c01b06eaae2df2b6879f87c911fbebbc7a140237",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -52,6 +52,11 @@
       "slug": "24-collections",
       "title": "Collection capacity, release and integer sorting",
       "source": "docs/collections.md"
+    },
+    {
+      "slug": "25-stack",
+      "title": "Checked recursion and native stack budgets",
+      "source": "docs/stack-budget.md"
     },
     {
       "slug": "04-bytes",
@@ -117,6 +122,11 @@
       "slug": "14-performance",
       "title": "Performance and evidence",
       "source": "benchmarks/0.14.0/report.md"
+    },
+    {
+      "slug": "26-compatibility",
+      "title": "Versions, installation and compatibility",
+      "source": "docs/compatibility.md"
     },
     {
       "slug": "15-roadmap",

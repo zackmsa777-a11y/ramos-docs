@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.21.0** unless the task explicitly provides a newer compiler
+programs. Target **0.22.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 

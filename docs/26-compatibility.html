@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.22.0, with Markdown for agents and HTML for people.">
+<title>Versions, installation and compatibility · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.22.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>09</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>10</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>11</span>Working with bytes</a><a href="05-input.html"><span>12</span>Stdin and number conversion</a><a href="06-files.html"><span>13</span>Arguments and file I/O</a><a href="07-libraries.html"><span>14</span>Libraries with weave</a><a href="18-system.html"><span>15</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>16</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>17</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>18</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>19</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>20</span>Runnable projects</a><a href="12-self-hosting.html"><span>21</span>How the compiler builds itself</a><a href="13-reference.html"><span>22</span>Limits and standard library reference</a><a href="14-performance.html"><span>23</span>Performance and evidence</a><a href="26-compatibility.html" aria-current="page"><span>24</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>25</span>What comes next</a><a href="16-agent-guide.html"><span>26</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="versions-installation-and-compatibility">Versions, installation and compatibility</h1>
+<p>Ramos is still <strong>pre-1.0</strong>. Pin a compiler release and the matching standard
+library when distributing a project. Minor releases can extend or change
+contracts; read their release notes before updating. A patch release is intended
+for corrections within the documented contract, and any behavior correction
+must be identified. The release notes and contract documents describe what is
+supported; a future roadmap entry does not make an API available.</p>
+<h2 id="what-a-project-needs">What a project needs</h2>
+<p>Keep the native compiler and the <code>stdlib/</code> snapshot from the release bundle.
+Library paths in <code>weave</code> are relative to the file containing them. There is no
+global library search path, registry or downloaded dependency resolution. A
+simple project can keep <code>app.ramos</code> next to its own <code>stdlib/</code> directory:</p>
+<pre><code class="language-ramos">weave &quot;stdlib/numbers.ramos&quot;
+fn main() { print(num_text(42)) }
+</code></pre>
+<p>Run <code>ramos run app.ramos</code> during development. Use <code>build app.ramos -o app</code>
+(or <code>app.exe</code> on Windows) to distribute an executable. The compiler, source and
+stdlib are not needed to run that executable. CLI/TUI programs include their
+Ramos runtime; Linux GUI programs additionally need the documented system GTK3
+libraries and a display. Windows GUI uses system controls and libraries.
+The release's <code>SHA256SUMS</code> identifies downloadable assets.</p>
+<h2 id="update-and-rollback">Update and rollback</h2>
+<p>Keep the previous compiler and stdlib snapshot until the project builds and
+its application checks pass with the replacement. Rebuild executables when
+updating so they contain the intended runtime. Rolling back means restoring
+that pair and rebuilding, or restoring the previous complete executable.
+There is no runtime module ABI to mix across releases. The private native call
+ABI is a compiler implementation detail, not a C/Rust foreign-function ABI.</p>
+<p>Check native behavior on each target. Cross-compilation verifies compilation;
+it does not verify window interaction, terminal input or OS file behavior.
+Do not describe Wine results as native Windows results.</p>
+<h2 id="first-stable-release">First stable release</h2>
+<p>The practical 1.0 goal requires the <a href="15-roadmap.html">application acceptance checks</a>,
+installation proof, published current measurements and explicit resource limits.
+It also needs a reviewed stable-language/library compatibility policy. That
+policy is a remaining milestone; this document does not promise that all 0.x
+APIs have been frozen. General graphics/DPI work and broader practical libraries
+remain active work. A stable version would not imply all of C or Rust's APIs,
+platforms, tooling or ecosystem.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="14-performance.html">← Performance and evidence</a><a href="15-roadmap.html">What comes next →</a></nav><footer>Ramos 0.22.0 · <a href="book/26-compatibility.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

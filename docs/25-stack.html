@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.22.0, with Markdown for agents and HTML for people.">
+<title>Checked recursion and native stack budgets · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.22.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>09</span>Collection capacity, release and integer sorting</a><a href="25-stack.html" aria-current="page"><span>10</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>11</span>Working with bytes</a><a href="05-input.html"><span>12</span>Stdin and number conversion</a><a href="06-files.html"><span>13</span>Arguments and file I/O</a><a href="07-libraries.html"><span>14</span>Libraries with weave</a><a href="18-system.html"><span>15</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>16</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>17</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>18</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>19</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>20</span>Runnable projects</a><a href="12-self-hosting.html"><span>21</span>How the compiler builds itself</a><a href="13-reference.html"><span>22</span>Limits and standard library reference</a><a href="14-performance.html"><span>23</span>Performance and evidence</a><a href="26-compatibility.html"><span>24</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>25</span>What comes next</a><a href="16-agent-guide.html"><span>26</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="checked-deeper-recursion-022">Checked deeper recursion (0.22)</h1>
+<p>Generated programs support <strong>1,024 active Ramos calls</strong>, including <code>main</code>.
+A second guard checks stack use before allocating each function's local frame.
+The first guard exceeded prints either <code>Ramos runtime error: call depth limit
+exceeded</code> or <code>Ramos runtime error: stack budget exceeded</code>, restores terminal
+state through the existing failure path, and exits 1.</p>
+<p>The stack guard measures the distance from the process-entry context (<code>r15</code>)
+to the current <code>rsp</code>, adds the complete prospective rounded local frame, saved
+<code>rbp</code> (8 bytes), and 16 KiB of expression scratch, and requires the result to
+be at most <strong>4 MiB</strong>. Pending arguments, expression values, return addresses
+and caller frames are therefore included by their actual stack addresses.
+The compiler's 1,024-value expression type stack bounds expression scratch;
+indexed destinations and temporary arithmetic operands fit within the extra
+16 KiB allowance. Runtime helpers and OS/toolkit calls use the remaining
+stack headroom; they do not increment the Ramos call counter.</p>
+<p>Windows PE already reserves 8 MiB (4 KiB initially committed); the existing
+page probes remain before large frame allocations. Use an ordinary Linux
+stack of at least 8 MiB. A deliberately smaller OS stack can still exhaust
+before the guard, and callbacks/third-party GUI libraries have their own
+stack requirements. This is a bounded language stack policy, not an OS stack
+size detector or a proof about arbitrary toolkit internals.</p>
+<p>Small frames can reach the 1,024-call boundary. Functions with large frames
+stop earlier: the shared tests run 221 active 16 KiB recursive frames and
+reject a request for 301 with a clean stack-budget error on each target.
+The unchanged 4,096 declaration cap includes declarations across functions;
+slot reuse and frame rounding remain unchanged. Normal returns restore <code>rsp</code>
+and decrement the counter, so repeated deep calls do not accumulate usage.
+Managed values in deeper frames remain GC roots under the existing stack scan.</p>
+<p>The retained assembly seed still generates its historical 64-call ABI. It
+builds the first Ramos compiler; all later compiler generations emit both
+new guards. There is no new user keyword, runtime option or allocation API.</p>
+<h2 id="practical-example">Practical example</h2>
+<p>The scientific calculator uses the extra headroom to support 64 recursive
+expression levels, with a recoverable error when an expression exceeds that
+app limit. Its parser and scientific helpers are ordinary Ramos source.
+The app's own limit is intentionally lower than the compiler's active-call
+limit because one expression level can involve several Ramos functions.</p>
+<h2 id="validation">Validation</h2>
+<p>Shared Linux/Windows tests exercise the exact active-call boundary, repeated
+returns, mutual recursion with pending expression values, large-frame success
+and failure, and collection while hundreds of managed values remain rooted.
+The deterministic compiler fixed points and the full language/application
+corpus are release gates. Fresh eight-task measurements accompany this change:
+every generated function now performs an extra stack-budget check, so older
+performance reports cannot establish this release's speed.</p>
+<p><a href="evidence/recursion-verification.json">Native release verification</a> records
+289 passing Linux tests (6 skipped), 230 passing Windows tests (1 skipped),
+both compiler fixed points and clean native bundle checks.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="24-collections.html">← Collection capacity, release and integer sorting</a><a href="04-bytes.html">Working with bytes →</a></nav><footer>Ramos 0.22.0 · <a href="book/25-stack.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

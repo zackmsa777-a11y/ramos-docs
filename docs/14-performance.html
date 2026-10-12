@@ -2,20 +2,255 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.21.0, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.22.0, with Markdown for agents and HTML for people.">
 <title>Performance and evidence · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.21.0</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.22.0</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>09</span>Collection capacity, release and integer sorting</a><a href="04-bytes.html"><span>10</span>Working with bytes</a><a href="05-input.html"><span>11</span>Stdin and number conversion</a><a href="06-files.html"><span>12</span>Arguments and file I/O</a><a href="07-libraries.html"><span>13</span>Libraries with weave</a><a href="18-system.html"><span>14</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>15</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>16</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>17</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>18</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>19</span>Runnable projects</a><a href="12-self-hosting.html"><span>20</span>How the compiler builds itself</a><a href="13-reference.html"><span>21</span>Limits and standard library reference</a><a href="14-performance.html" aria-current="page"><span>22</span>Performance and evidence</a><a href="15-roadmap.html"><span>23</span>What comes next</a><a href="16-agent-guide.html"><span>24</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
-<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="performance-and-evidence">Performance and evidence</h1>
-<p>This 0.19.1 edition retains measured <strong>0.14</strong> cross-language results below.
-They are historical; no C/Rust/Python comparison or overall language score
-for 0.19.1 is claimed. Historical focused 0.17 text-assembly measurements follow.
-0.18 numerical tests prove results, not a comparative speed measurement.</p>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>09</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>10</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>11</span>Working with bytes</a><a href="05-input.html"><span>12</span>Stdin and number conversion</a><a href="06-files.html"><span>13</span>Arguments and file I/O</a><a href="07-libraries.html"><span>14</span>Libraries with weave</a><a href="18-system.html"><span>15</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>16</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>17</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>18</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>19</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>20</span>Runnable projects</a><a href="12-self-hosting.html"><span>21</span>How the compiler builds itself</a><a href="13-reference.html"><span>22</span>Limits and standard library reference</a><a href="14-performance.html" aria-current="page"><span>23</span>Performance and evidence</a><a href="26-compatibility.html"><span>24</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>25</span>What comes next</a><a href="16-agent-guide.html"><span>26</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="ramos-0220-performance-eight-task-index">Ramos 0.22.0 performance: eight-task index</h1>
+<p>Measured 2026-10-12T17:48:33.683094+00:00 on x86-64 Linux. Higher scores are faster; optimized C = 100.</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th style="text-align: right;">Overall execution index</th>
+<th style="text-align: right;">Within-run bootstrap 95% interval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rust</td>
+<td style="text-align: right;">119.24</td>
+<td style="text-align: right;">110.66–126.02</td>
+</tr>
+<tr>
+<td>C</td>
+<td style="text-align: right;">100.00</td>
+<td style="text-align: right;">100.00–100.00</td>
+</tr>
+<tr>
+<td>Ramos</td>
+<td style="text-align: right;">36.02</td>
+<td style="text-align: right;">34.76–39.32</td>
+</tr>
+<tr>
+<td>Python</td>
+<td style="text-align: right;">2.42</td>
+<td style="text-align: right;">2.37–2.64</td>
+</tr>
+</tbody>
+</table>
+<p>Across these tasks, Ramos is <strong>14.87× faster than Python</strong>, and takes <strong>2.78× the time of C</strong> and <strong>3.31× the time of Rust</strong> (geometric means of per-task median ratios).</p>
+<h2 id="per-task-execution-time">Per-task execution time</h2>
+<p>Median wall time in milliseconds for the same work and seed. Includes process creation, loading, argument parsing, allocation, computation and one checked output line.</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th style="text-align: right;">Work count</th>
+<th style="text-align: right;">Ramos</th>
+<th style="text-align: right;">C</th>
+<th style="text-align: right;">Rust</th>
+<th style="text-align: right;">Python</th>
+<th style="text-align: right;">Ramos vs Python</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serial integer arithmetic / modulo</td>
+<td style="text-align: right;">5,862,882</td>
+<td style="text-align: right;">41.501</td>
+<td style="text-align: right;">27.338</td>
+<td style="text-align: right;">29.457</td>
+<td style="text-align: right;">1009.986</td>
+<td style="text-align: right;">24.34×</td>
+</tr>
+<tr>
+<td>Data-dependent branches</td>
+<td style="text-align: right;">2,287,934</td>
+<td style="text-align: right;">46.265</td>
+<td style="text-align: right;">25.485</td>
+<td style="text-align: right;">25.629</td>
+<td style="text-align: right;">603.905</td>
+<td style="text-align: right;">13.05×</td>
+</tr>
+<tr>
+<td>Euclidean GCD</td>
+<td style="text-align: right;">460,468</td>
+<td style="text-align: right;">51.264</td>
+<td style="text-align: right;">32.239</td>
+<td style="text-align: right;">27.158</td>
+<td style="text-align: right;">339.584</td>
+<td style="text-align: right;">6.62×</td>
+</tr>
+<tr>
+<td>Runtime-seeded recursive tree</td>
+<td style="text-align: right;">1,050</td>
+<td style="text-align: right;">138.463</td>
+<td style="text-align: right;">26.742</td>
+<td style="text-align: right;">35.993</td>
+<td style="text-align: right;">1068.172</td>
+<td style="text-align: right;">7.71×</td>
+</tr>
+<tr>
+<td>Rolling byte-buffer hash</td>
+<td style="text-align: right;">5,458,812</td>
+<td style="text-align: right;">48.707</td>
+<td style="text-align: right;">24.861</td>
+<td style="text-align: right;">30.771</td>
+<td style="text-align: right;">768.952</td>
+<td style="text-align: right;">15.79×</td>
+</tr>
+<tr>
+<td>Insertion sort of 128 bytes</td>
+<td style="text-align: right;">8,168</td>
+<td style="text-align: right;">174.105</td>
+<td style="text-align: right;">29.872</td>
+<td style="text-align: right;">27.533</td>
+<td style="text-align: right;">2712.838</td>
+<td style="text-align: right;">15.58×</td>
+</tr>
+<tr>
+<td>16×16 byte matrix multiplication</td>
+<td style="text-align: right;">18,472</td>
+<td style="text-align: right;">384.342</td>
+<td style="text-align: right;">136.403</td>
+<td style="text-align: right;">26.784</td>
+<td style="text-align: right;">8952.307</td>
+<td style="text-align: right;">23.29×</td>
+</tr>
+<tr>
+<td>Scan 16 KiB ASCII text</td>
+<td style="text-align: right;">1,619</td>
+<td style="text-align: right;">145.742</td>
+<td style="text-align: right;">30.147</td>
+<td style="text-align: right;">26.812</td>
+<td style="text-align: right;">3742.955</td>
+<td style="text-align: right;">25.68×</td>
+</tr>
+</tbody>
+</table>
+<h2 id="score-definition">Score definition</h2>
+<p><code>Index(language) = 100 × geometric_mean(C_median(task) / language_median(task))</code></p>
+<p>All eight tasks have equal weight. The suite measures execution of ordinary programs, not patched code, an in-process kernel, compilation throughput or a universal language score. Startup is included in task timings but its separate probe is excluded from the index. The 95% intervals resample the collected timing samples; they do not capture uncertainty from different machines, task selection or operating systems.</p>
+<h2 id="tasks-and-correctness">Tasks and correctness</h2>
+<ul>
+<li>LCG: serial multiply/add/modulo recurrence with runtime seed.</li>
+<li>Branches: runtime-generated parity and divisibility branches with checksum.</li>
+<li>GCD: Euclidean remainder loops on varying positive inputs.</li>
+<li>Recursion: traverse a depth-12 binary tree with runtime-dependent child values and leaf checksum.</li>
+<li>Byte hash: visit a 4 KiB buffer and update a bounded polynomial hash.</li>
+<li>Insertion sort: refill and sort 128 bytes; checksum weights sorted positions.</li>
+<li>Matrix: multiply two 16×16 byte matrices, writing one input cell per pass, reduce output cells modulo 256, then checksum weighted positions.</li>
+<li>Text scan: classify digits, uppercase ASCII and spaces in 16 KiB; write one byte per pass.</li>
+</ul>
+<p>Programs use the same algorithms, sizes, deterministic data and work count in all four languages. Work counts and seeds come from command-line arguments, so answers are not compile-time constants. All 32 task implementations pass independent reference checks at counts 0, 1 and 7 with seeds 1, 17 and 123. Full-size outputs are checked against references on every warmup and timed execution. Native compilers can optimize code normally; recursive calls may be transformed or inlined.</p>
+<h2 id="measurement-method">Measurement method</h2>
+<ul>
+<li>5 timed samples per task/language; randomized language order within each round, sequential execution, two verified warmups.</li>
+<li>Work counts calibrated until both C and Rust took at least about 25 ms in the calibration probes. The same count is then held fixed for all languages.</li>
+<li>Work counts were calibrated for this run.</li>
+<li>Pinned to logical CPU 0; Python <code>perf_counter_ns</code> wall clock.</li>
+<li>Shared virtual machine; CPU frequency, other tenants and background activity are not controlled. Warm filesystem caches; no Windows performance claim.</li>
+<li>CPython executes source scripts normally, including parsing on every launch. C/Rust/Ramos binaries are built before execution timing.</li>
+<li>GCC: <code>-O3 -std=c11</code>, with checked add/subtract/multiply builtins and explicit byte bounds.</li>
+<li>Rust: <code>-C opt-level=3 -C overflow-checks=yes -C panic=abort</code>; safe byte indexing/conversion.</li>
+<li>Ramos: default native backend (release instruction selection described in the repository); arithmetic, buffer and call-depth checks retained. Python integers stay within signed 64-bit range for these inputs. C/Rust can eliminate provably redundant checks; Python has no Ramos-style call-depth or byte arena limit. Limits are not reached by the suite.</li>
+</ul>
+<p>Raw nanosecond samples, p10/p90, calibration probes, build commands, source hashes and compiler/environment versions are retained in <a href="evidence/performance-0.22.0.json">current raw results</a>.</p>
+<h2 id="startup-probe-excluded-from-index">Startup probe (excluded from index)</h2>
+<p>Argument parsing and printing a supplied integer; median over 51 randomized launches.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Ramos</th>
+<th style="text-align: right;">C</th>
+<th style="text-align: right;">Rust</th>
+<th style="text-align: right;">Python</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.427 ms</td>
+<td style="text-align: right;">0.805 ms</td>
+<td style="text-align: right;">1.325 ms</td>
+<td style="text-align: right;">17.780 ms</td>
+</tr>
+</tbody>
+</table>
+<h2 id="builds-and-output-size-excluded-from-index">Builds and output size (excluded from index)</h2>
+<p>Median of three builds per task, including compiler startup and linking/publication. The table shows geometric means across tasks. It is not a general compiler throughput ranking: source sizes differ, and C/Rust use broader optimizers than the local Ramos emitter. Python is run as source and has no native binary in this experiment. Sizes are unstripped compiler outputs with different standard-library/linkage choices.</p>
+<table>
+<thead>
+<tr>
+<th>Language</th>
+<th style="text-align: right;">Build time</th>
+<th style="text-align: right;">Native binary size</th>
+<th style="text-align: right;">Source size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ramos</td>
+<td style="text-align: right;">8.252 ms</td>
+<td style="text-align: right;">20480 B</td>
+<td style="text-align: right;">750 B</td>
+</tr>
+<tr>
+<td>C</td>
+<td style="text-align: right;">64.241 ms</td>
+<td style="text-align: right;">16616 B</td>
+<td style="text-align: right;">1547 B</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td style="text-align: right;">168.758 ms</td>
+<td style="text-align: right;">4506097 B</td>
+<td style="text-align: right;">925 B</td>
+</tr>
+<tr>
+<td>Python</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">475 B</td>
+</tr>
+</tbody>
+</table>
+<h2 id="next-work-for-ramos">Next work for Ramos</h2>
+<ol>
+<li>Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (5.8× C time), Runtime-seeded recursive tree (5.2× C time), Scan 16 KiB ASCII text (4.8× C time). Changes need their own measurements.</li>
+<li>Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See the archived <a href="https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/optimization.md">0.7.0/0.7.1 comparison</a>.</li>
+<li>Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.</li>
+</ol>
+<p>Optional chart: generate <code>score.png</code> with <code>benchmarks/plot_results.py --results RESULTS --output IMAGE</code>.</p>
+<h2 id="environment">Environment</h2>
+<ul>
+<li>CPU: Intel(R) Xeon(R) Platinum 8358 CPU @ 2.60GHz</li>
+<li>Platform: Linux-6.17.0-1020-oracle-x86_64-with-glibc2.39</li>
+<li>Ramos 0.22.0 — compiler written in Ramos; Linux and Windows x64</li>
+<li>gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0</li>
+<li>rustc 1.98.1 (48a229cea 2026-09-01)</li>
+<li>Python 3.12.3</li>
+<li>Ramos executable SHA-256: <code>a034ea48f838c056c87c085450f0e96e727247b91f098d281f9ec4fa8cc801cc</code></li>
+</ul>
+<h2 id="reproduce">Reproduce</h2>
+<p>From the repository root on x86-64 Linux with GCC, Rust and Python:</p>
+<pre><code class="language-sh">mkdir -p work
+curl -fL https://github.com/zackmsa777-a11y/ramos/releases/download/v0.22.0/ramos-linux-x86_64 -o work/ramos-0.22
+printf 'a034ea48f838c056c87c085450f0e96e727247b91f098d281f9ec4fa8cc801cc  work/ramos-0.22\n' | sha256sum -c -
+chmod +x work/ramos-0.22
+python3 benchmarks/run_suite.py --compiler work/ramos-0.22 --samples 5 --target-native-ms 25 --work-counts benchmarks/0.22.0/results.json --output-dir work/results-0.22
+</code></pre>
+<p>Use <code>--validate-only</code> for output verification without timings. <code>--work-counts benchmarks/0.22.0/results.json</code> reuses the published work counts; <code>--output-dir</code> keeps results from another machine separate. Workload sources are in <a href="https://github.com/zackmsa777-a11y/ramos-benchmarks/tree/main/benchmarks/fixtures">fixtures</a>. This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows <a href="https://open.spec.org/cpu2026/docs/runrules.html">the established ratio aggregation method</a>. See <a href="https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html">GCC checked arithmetic</a> and <a href="https://doc.rust-lang.org/rustc/codegen-options/index.html">Rust code generation settings</a>.</p>
+<p>Historical results from a different machine and Ramos 0.2 are preserved in <a href="https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/report-0.2.md">report-0.2.md</a> and <a href="https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/results-0.2.json">results-0.2.json</a>; they are not directly comparable to this suite.</p>
+<p>The measured compiler is the final 0.22 Linux release binary, not the earlier
+pre-alignment candidate. <a href="https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/0.22.0/stack/report.md">Paired 0.21/0.22 samples</a> measure
+the cost of the extra call/stack guards separately.</p>
+<h2 id="historical-014-evidence">Historical 0.14 evidence</h2>
 <p>These are recorded <strong>Ramos 0.14.0</strong> measurements, including exact outputs,
 source/compiler hashes, flags and raw samples. The shared VM and selected
 workloads limit the conclusions. This is an execution index, not a score for
@@ -56,7 +291,7 @@ syntax milestone makes no general speedup claim. See the
 </tbody>
 </table>
 <p>Across these tasks, Ramos is <strong>14.88× faster than Python</strong>, and takes <strong>2.67× the time of C</strong> and <strong>3.17× the time of Rust</strong> (geometric means of per-task median ratios).</p>
-<h2 id="per-task-execution-time">Per-task execution time</h2>
+<h2 id="per-task-execution-time_1">Per-task execution time</h2>
 <p>Median wall time in milliseconds for the same work and seed. Includes process creation, loading, argument parsing, allocation, computation and one checked output line.</p>
 <table>
 <thead>
@@ -145,10 +380,10 @@ syntax milestone makes no general speedup claim. See the
 </tr>
 </tbody>
 </table>
-<h2 id="score-definition">Score definition</h2>
+<h2 id="score-definition_1">Score definition</h2>
 <p><code>Index(language) = 100 × geometric_mean(C_median(task) / language_median(task))</code></p>
 <p>All eight tasks have equal weight. The suite measures execution of ordinary programs, not patched code, an in-process kernel, compilation throughput or a universal language score. Startup is included in task timings but its separate probe is excluded from the index. The 95% intervals resample the collected timing samples; they do not capture uncertainty from different machines, task selection or operating systems.</p>
-<h2 id="tasks-and-correctness">Tasks and correctness</h2>
+<h2 id="tasks-and-correctness_1">Tasks and correctness</h2>
 <ul>
 <li>LCG: serial multiply/add/modulo recurrence with runtime seed.</li>
 <li>Branches: runtime-generated parity and divisibility branches with checksum.</li>
@@ -160,7 +395,7 @@ syntax milestone makes no general speedup claim. See the
 <li>Text scan: classify digits, uppercase ASCII and spaces in 16 KiB; write one byte per pass.</li>
 </ul>
 <p>Programs use the same algorithms, sizes, deterministic data and work count in all four languages. Work counts and seeds come from command-line arguments, so answers are not compile-time constants. All 32 task implementations pass independent reference checks at counts 0, 1 and 7 with seeds 1, 17 and 123. Full-size outputs are checked against references on every warmup and timed execution. Native compilers can optimize code normally; recursive calls may be transformed or inlined.</p>
-<h2 id="measurement-method">Measurement method</h2>
+<h2 id="measurement-method_1">Measurement method</h2>
 <ul>
 <li>9 timed samples per task/language; randomized language order within each round, sequential execution, two verified warmups.</li>
 <li>Work counts calibrated until both C and Rust took at least about 30 ms in the calibration probes. The same count is then held fixed for all languages.</li>
@@ -173,7 +408,7 @@ syntax milestone makes no general speedup claim. See the
 <li>Ramos: default native backend (release instruction selection described in the repository); arithmetic, buffer and call-depth checks retained. Python integers stay within signed 64-bit range for these inputs. C/Rust can eliminate provably redundant checks; Python has no Ramos-style call-depth or byte arena limit. Limits are not reached by the suite.</li>
 </ul>
 <p>Raw nanosecond samples, p10/p90, calibration probes, build commands, source hashes and compiler/environment versions are retained in <a href="evidence/performance-0.14.0.json">results.json</a>.</p>
-<h2 id="startup-probe-excluded-from-index">Startup probe (excluded from index)</h2>
+<h2 id="startup-probe-excluded-from-index_1">Startup probe (excluded from index)</h2>
 <p>Argument parsing and printing a supplied integer; median over 51 randomized launches.</p>
 <table>
 <thead>
@@ -193,7 +428,7 @@ syntax milestone makes no general speedup claim. See the
 </tr>
 </tbody>
 </table>
-<h2 id="builds-and-output-size-excluded-from-index">Builds and output size (excluded from index)</h2>
+<h2 id="builds-and-output-size-excluded-from-index_1">Builds and output size (excluded from index)</h2>
 <p>Median of three builds per task, including compiler startup and linking/publication. The table shows geometric means across tasks. It is not a general compiler throughput ranking: source sizes differ, and C/Rust use broader optimizers than the local Ramos emitter. Python is run as source and has no native binary in this experiment. Sizes are unstripped compiler outputs with different standard-library/linkage choices.</p>
 <table>
 <thead>
@@ -231,14 +466,14 @@ syntax milestone makes no general speedup claim. See the
 </tr>
 </tbody>
 </table>
-<h2 id="next-work-for-ramos">Next work for Ramos</h2>
+<h2 id="next-work-for-ramos_1">Next work for Ramos</h2>
 <ol>
 <li>Profile the largest native gaps before adding an optimization pass: Insertion sort of 128 bytes (6.1× C time), Runtime-seeded recursive tree (5.1× C time), Scan 16 KiB ASCII text (3.9× C time). Version 0.7.1 already reduces buffer-call and stack traffic and specializes constant arithmetic. Further changes need their own measurements.</li>
-<li>Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See <a href="https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/optimization.md">the paired 0.7.0/0.7.1 comparison</a>.</li>
+<li>Compare each optimizer change against these exact work counts and compiler hashes, with fresh samples, language correctness tests and both self-hosting proofs. See <a href="https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/optimization.md">the paired 0.7.0/0.7.1 comparison</a>.</li>
 <li>Measure native Windows separately, then extend the suite with real file-processing programs. Keep syntax small while improving generated code.</li>
 </ol>
 <p><img alt="Overall index and task ratios" src="assets/performance-0.14.0.png" /></p>
-<h2 id="environment">Environment</h2>
+<h2 id="environment_1">Environment</h2>
 <ul>
 <li>CPU: Intel(R) Xeon(R) Platinum 8358 CPU @ 2.60GHz</li>
 <li>Platform: Linux-6.17.0-1020-oracle-x86_64-with-glibc2.39</li>
@@ -248,13 +483,13 @@ syntax milestone makes no general speedup claim. See the
 <li>Python 3.12.3</li>
 <li>Ramos executable SHA-256: <code>84c2eec9cca7bf655a0e78baf000e2e71db4404b844939b14402c158fc3e9d48</code></li>
 </ul>
-<h2 id="reproduce">Reproduce</h2>
+<h2 id="reproduce_1">Reproduce</h2>
 <p>From the repository root on x86-64 Linux with GCC, Rust and Python:</p>
 <pre><code class="language-sh">make
 python3 benchmarks/run_suite.py --work-counts benchmarks/baseline-0.13.0/results.json --output-dir work/reproduced-0.14.0
 </code></pre>
-<p>Use <code>--validate-only</code> for output verification without timings. <code>--work-counts benchmarks/results.json</code> reuses the published work counts; <code>--output-dir</code> keeps results from another machine separate. Workload sources are in <a href="https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/fixtures">fixtures/</a>. This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows <a href="https://open.spec.org/cpu2026/docs/runrules.html">the established ratio aggregation method</a>. See <a href="https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html">GCC checked arithmetic</a> and <a href="https://doc.rust-lang.org/rustc/codegen-options/index.html">Rust code generation settings</a>.</p>
-<p>Historical results from a different machine and Ramos 0.2 are preserved in <a href="https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/report-0.2.md">report-0.2.md</a> and <a href="https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/benchmarks/results-0.2.json">results-0.2.json</a>; they are not directly comparable to this suite.</p>
+<p>Use <code>--validate-only</code> for output verification without timings. <code>--work-counts benchmarks/results.json</code> reuses the published work counts; <code>--output-dir</code> keeps results from another machine separate. Workload sources are in <a href="https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/fixtures">fixtures/</a>. This is a custom Ramos suite, not a SPEC benchmark. The geometric mean follows <a href="https://open.spec.org/cpu2026/docs/runrules.html">the established ratio aggregation method</a>. See <a href="https://gcc.gnu.org/onlinedocs/gcc/Integer-Overflow-Builtins.html">GCC checked arithmetic</a> and <a href="https://doc.rust-lang.org/rustc/codegen-options/index.html">Rust code generation settings</a>.</p>
+<p>Historical results from a different machine and Ramos 0.2 are preserved in <a href="https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/report-0.2.md">report-0.2.md</a> and <a href="https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/benchmarks/results-0.2.json">results-0.2.json</a>; they are not directly comparable to this suite.</p>
 <h2 id="017-focused-text-assembly">0.17 focused text assembly</h2>
 <p>At 8192 appends / 512 KiB, medians on the recorded Linux machine were 287 ms
 for repeated string concatenation versus 13.8 ms for the reusable text builder
@@ -262,5 +497,5 @@ for repeated string concatenation versus 13.8 ms for the reusable text builder
 and complete content verification. This is a single application workload on
 a shared container, not a general speedup or native Windows timing.</p>
 <p><a href="evidence/text-builder.json">Raw samples and machine/hash evidence</a>. See
-<a href="20-text-builder.html">text-builder APIs and reproducible measurement</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="13-reference.html">← Limits and standard library reference</a><a href="15-roadmap.html">What comes next →</a></nav><footer>Ramos 0.21.0 · <a href="book/14-performance.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+<a href="20-text-builder.html">text-builder APIs and reproducible measurement</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="13-reference.html">← Limits and standard library reference</a><a href="26-compatibility.html">Versions, installation and compatibility →</a></nav><footer>Ramos 0.22.0 · <a href="book/14-performance.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

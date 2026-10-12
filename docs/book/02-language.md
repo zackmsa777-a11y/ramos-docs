@@ -125,14 +125,16 @@ checked conservatively, so even a `while true` needs a return after it for a
 value function. Unreachable statements are still type-checked. Void calls may
 be statements; value calls used as statements discard their result.
 
-Every call has its own local frame. At most 64 Ramos calls may be active,
+Every call has its own local frame. At most 1,024 Ramos calls may be active,
 including `main`; attempting the next call reports a runtime error and exits 1.
-Normal returns release the frame and restore the active-call counter. This
+Normal returns release the frame and restore the active-call counter.
+A separate 4 MiB [stack budget](25-stack.md) is checked before each frame;
+use an OS stack of at least 8 MiB. This
 check assumes an ordinary Linux process stack; it cannot compensate for an
 unusually small stack limit selected by the caller.
 
 Run `make functions` for factorial, a digit classifier and a void helper.
-See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/bdb5d63344d62e5700dc9b5db6264dde0d29ed4d/docs/functions.md) for compiler details.
+See [the native calling convention](https://github.com/zackmsa777-a11y/ramos/blob/c01b06eaae2df2b6879f87c911fbebbc7a140237/docs/functions.md) for compiler details.
 
 ## Arithmetic behavior
 
