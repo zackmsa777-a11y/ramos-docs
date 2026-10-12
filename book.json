@@ -1,7 +1,7 @@
 {
-  "version": "0.19.1",
+  "version": "0.20.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "6c263c5023bc8a71c036d9b8151b82dc558adfde",
+  "source_commit": "039d8eb944d96419b0e6805ab957f80af0ef0aee",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -77,6 +77,11 @@
       "slug": "08-cli-tui",
       "title": "CLI tools and terminal interfaces",
       "source": "docs/cli-tui.md"
+    },
+    {
+      "slug": "23-timing",
+      "title": "Monotonic timing and terminal animation",
+      "source": "docs/timing.md"
     },
     {
       "slug": "09-gui",

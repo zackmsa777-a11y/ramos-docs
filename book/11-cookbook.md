@@ -1,6 +1,6 @@
 # Runnable projects
 
-These are complete programs from Ramos 0.19.1, not pseudocode. The repository
+These are complete programs from Ramos 0.20.0, not pseudocode. The repository
 includes their exact source under `examples/` and the matching `stdlib/`.
 Compile commands below assume you placed the native compiler in this
 repository's root. Add `--force` when intentionally rebuilding an output.
@@ -189,3 +189,11 @@ limits and setup; its checks compare independent references and native UI behavi
 Find smaller programs in [ramos-examples](https://github.com/zackmsa777-a11y/ramos-examples).
 The existing sources bundled with this book remain pinned and runnable. Browse
 all five repositories from the [Ramos hub](https://github.com/zackmsa777-a11y/ramos/blob/main/docs/ecosystem.md).
+
+## Larger terminal project: rmatrix
+
+[rmatrix](https://github.com/zackmsa777-a11y/ramos-examples/tree/main/projects/rmatrix)
+is a Ramos port of Rust nmatrix with twelve terminal scenes. It requires 0.20.0
+for monotonic timing and demonstrates cached changed-cell drawing, frame
+deadlines, help/picker overlays and idle pauses. See its build commands, checked
+platform limits and [timing chapter](23-timing.md).

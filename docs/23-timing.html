@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.20.0, with Markdown for agents and HTML for people.">
+<title>Monotonic timing and terminal animation · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.20.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="23-timing.html" aria-current="page"><span>15</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>16</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>17</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>18</span>Runnable projects</a><a href="12-self-hosting.html"><span>19</span>How the compiler builds itself</a><a href="13-reference.html"><span>20</span>Limits and standard library reference</a><a href="14-performance.html"><span>21</span>Performance and evidence</a><a href="15-roadmap.html"><span>22</span>What comes next</a><a href="16-agent-guide.html"><span>23</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="monotonic-timing-and-terminal-animation">Monotonic timing and terminal animation</h1>
+<p><code>monotonic_ms() -&gt; int64</code> reads a native monotonic clock in integer milliseconds.
+Use differences between readings to measure elapsed time or schedule frames.
+It takes no arguments, allocates no managed memory and works without terminal
+or GUI initialization, including when stdin/stdout are redirected.</p>
+<pre><code class="language-ramos">fn main() {
+    let start = monotonic_ms()
+    if io_error() != 0 { stderr(&quot;clock unavailable\n&quot;)
+        exit(1) }
+    // Do work here, then subtract the same clock's next reading.
+    let finish = monotonic_ms()
+    if io_error() != 0 { stderr(&quot;clock unavailable\n&quot;)
+        exit(1) }
+    print(finish - start)
+}
+</code></pre>
+<p>Success returns a nonnegative value and resets <code>io_error()</code> to zero. Failure
+returns -1: Linux reports the negative syscall error; Windows reports -5 for a
+failed/invalid counter; conversion beyond signed milliseconds reports -75.
+Inspect <code>io_error()</code> immediately. The origin is unspecified; values are not
+Unix timestamps, dates, durations since program start or portable saved data.
+Readings can repeat within one millisecond. OS clock resolution and scheduling
+still determine actual timing; millisecond units do not promise exact deadlines.
+Suspend/resume semantics are OS-dependent. Do not compare clocks across machines.</p>
+<p>Linux x64 uses <code>clock_gettime(CLOCK_MONOTONIC)</code> directly, with static executables
+and no libc dependency. Windows x64 uses <code>QueryPerformanceCounter</code> and
+<code>QueryPerformanceFrequency</code> from the existing KERNEL32 import table, converting
+quotient and remainder separately to avoid multiplying an entire uptime counter.
+No external application backend, interpreter or GUI toolkit is added.</p>
+<p>For animation, keep the next frame deadline and wait only for the time remaining
+before it. Rendering/output consume that budget. Advance simulation time from
+elapsed milliseconds, not a guessed number of frames. Diff the last displayed
+cells and skip writes when the UI is unchanged. Slow terminals can still limit
+rendering; a clock cannot make terminal output instantaneous.</p>
+<p>The Ramos rmatrix port demonstrates those techniques. Its twelve scenes retain
+bounded ASCII/basic-color rendering and fixed-point approximations; it is not
+a feature-complete replacement for Rust nmatrix's truecolor renderer.</p>
+<h2 id="rmatrix-project-and-verification">rmatrix project and verification</h2>
+<p>Build the <a href="https://github.com/zackmsa777-a11y/ramos-examples/tree/main/projects/rmatrix">rmatrix sources</a>
+with the 0.20.0 compiler. The port demonstrates all twelve scenes, changed-cell
+ANSI rendering, cached HUD output, quiet pauses and correct resize/overlay
+invalidation. Its README provides Linux and Windows build commands and controls.</p>
+<p><a href="https://github.com/zackmsa777-a11y/ramos-benchmarks/blob/main/benchmarks/0.20.0/rmatrix/report.md">Application measurements</a>
+include raw Linux PTY output, before/after sources and a reproduction harness.
+These are workload-specific short samples, not visible terminal paint rates or
+an overall language speed index. No Windows animation performance is claimed.
+Linux interactive controls and cleanup are verified. Windows CI checks the
+renderer and noninteractive app behavior; real Windows-terminal interaction
+still needs verification.</p>
+<p><a href="evidence/timing-verification.json">0.20.0 verification</a> records 278 passing
+Linux tests (6 skipped), 218 passing native Windows tests (1 skipped), matching
+compiler fixed points and the empty-PATH Linux rebuild.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="08-cli-tui.html">← CLI tools and terminal interfaces</a><a href="09-gui.html">Desktop GUI on Windows and Linux →</a></nav><footer>Ramos 0.20.0 · <a href="book/23-timing.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

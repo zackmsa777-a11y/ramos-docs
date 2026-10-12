@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.19.1**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.20.0**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -40,18 +40,19 @@ The existing compiler release and book URLs remain stable.
 13. Libraries with weave
 14. Paths, directories, environment and child processes
 15. CLI tools and terminal interfaces
-16. Desktop GUI on Windows and Linux
-17. Windows and cross-compilation
-18. Runnable projects
-19. How the compiler builds itself
-20. Limits and standard library reference
-21. Performance and evidence
-22. What comes next
-23. Guide for AI coding agents
+16. Monotonic timing and terminal animation
+17. Desktop GUI on Windows and Linux
+18. Windows and cross-compilation
+19. Runnable projects
+20. How the compiler builds itself
+21. Limits and standard library reference
+22. Performance and evidence
+23. What comes next
+24. Guide for AI coding agents
 
 The `examples/` and `stdlib/` folders contain matching source from the compiler
 repository. Download a native compiler from the
-[0.19.1 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.19.1)
+[0.20.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.20.0)
 and place it at this repository's root to compile those examples. See the
 [quick start](book/01-getting-started.md). This repository does not include or
 implement a second compiler.

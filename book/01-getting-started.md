@@ -1,10 +1,10 @@
 # Install, build and run
 
 Use the complete
-[0.19.1 GUI-dialogs bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.19.1/ramos-0.19.1-gui-dialogs.zip),
+[0.20.0 timing bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.20.0/ramos-0.20.0-timing.zip),
 which also includes the CLI/TUI tools, both compilers, examples and all thirteen
 libraries. Extract the archive and keep its directory structure. The published
-`SHA256SUMS.txt` file lists asset hashes for integrity checking.
+`SHA256SUMS` file lists asset hashes for integrity checking.
 
 ## Your first source file
 

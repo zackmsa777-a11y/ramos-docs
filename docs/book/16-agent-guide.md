@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.19.1** unless the task explicitly provides a newer compiler
+programs. Target **0.20.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -120,3 +120,8 @@ interaction. Do not claim a speedup without equivalent workloads and timings.
 When changing compiler internals, use the main repository's native suites and
 Linux/Windows fixed-point proofs. This book repository only builds and checks
 documentation. Its build dependency is not a Ramos runtime dependency.
+
+For frame timing, `monotonic_ms()` returns nonnegative milliseconds or -1;
+check `io_error()` immediately. It needs no terminal/GUI setup. Read
+[timing contracts](23-timing.md), use differences and deadlines, and avoid
+repeated rendering while paused. Do not interpret it as a Unix timestamp.

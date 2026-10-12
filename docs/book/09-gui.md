@@ -238,10 +238,10 @@ panel pixels, lifecycle/GC, queue limits, headless errors and process cleanup.
 Linux `run --gui` is tested with a real window and temporary-file cleanup; ELF
 checks validate imports, ordering, alignment and W^X. Test-only tools are Xvfb,
 xdotool, xclip, Python and libX11; none implement application behavior.
-**276 Linux tests** (282 discovered, six platform skips) and **216 native
-Windows tests** (217 discovered, one Linux fixture skip) pass, with both compiler
+The 0.19.1 milestone passed **276 Linux tests** (282 discovered, six platform skips) and **216 native
+Windows tests** (217 discovered, one Linux fixture skip), with both compiler
 fixed points and an empty-PATH Linux rebuild. See
-[0.19.1 verification](../evidence/gui-dialogs-verification.json) and the current
+[0.19.1 verification](../evidence/gui-dialogs-verification.json) and the 0.20.0
 [Linux/Windows self-hosting proofs](../evidence/bootstrap-proof.json). No new speed claim.
 
 ### Retained Windows acceptance (introduced in 0.13)

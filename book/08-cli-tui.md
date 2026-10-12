@@ -215,3 +215,6 @@ See [the staged roadmap](15-roadmap.md). No new speed comparison is claimed.
 passed: 192 Linux tests discovered, 190 passed and two Windows-only checks
 skipped; 134 native Windows tests passed, including both isolated-console
 checks. Both self-hosting targets reached their byte-identical fixed points.
+
+For animation, use [native monotonic timing](23-timing.md) to account for render
+time in frame deadlines and update simulation from elapsed milliseconds.

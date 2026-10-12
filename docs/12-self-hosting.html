@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.19.1, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.20.0, with Markdown for agents and HTML for people.">
 <title>How the compiler builds itself · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.19.1</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.20.0</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="09-gui.html"><span>15</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>16</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>17</span>Runnable projects</a><a href="12-self-hosting.html" aria-current="page"><span>18</span>How the compiler builds itself</a><a href="13-reference.html"><span>19</span>Limits and standard library reference</a><a href="14-performance.html"><span>20</span>Performance and evidence</a><a href="15-roadmap.html"><span>21</span>What comes next</a><a href="16-agent-guide.html"><span>22</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="04-bytes.html"><span>09</span>Working with bytes</a><a href="05-input.html"><span>10</span>Stdin and number conversion</a><a href="06-files.html"><span>11</span>Arguments and file I/O</a><a href="07-libraries.html"><span>12</span>Libraries with weave</a><a href="18-system.html"><span>13</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>14</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>15</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>16</span>Desktop GUI on Windows and Linux</a><a href="10-windows.html"><span>17</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>18</span>Runnable projects</a><a href="12-self-hosting.html" aria-current="page"><span>19</span>How the compiler builds itself</a><a href="13-reference.html"><span>20</span>Limits and standard library reference</a><a href="14-performance.html"><span>21</span>Performance and evidence</a><a href="15-roadmap.html"><span>22</span>What comes next</a><a href="16-agent-guide.html"><span>23</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
 <main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="how-the-compiler-builds-itself">How the compiler builds itself</h1>
-<p>The compiler implementation is <a href="https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/compiler/ramos.ramos">compiler/ramos.ramos</a>.
+<p>The compiler implementation is <a href="https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/compiler/ramos.ramos">compiler/ramos.ramos</a>.
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
 writes ELF64 or PE32+ headers, and publishes the resulting executable. It does not
@@ -63,14 +63,14 @@ The compiler deliberately retains byte-buffer source so the old grammar can
 seed it. User programs can use the new structs and typed arrays; no preprocessing
 or host-language parser is required.</p>
 <p>The self-hosted compiler has tighter token/output limits than the bootstrap,
-which are documented in <a href="https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/compiler/README.md">compiler/README.md</a>. Diagnostics
+which are documented in <a href="https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/compiler/README.md">compiler/README.md</a>. Diagnostics
 preserve filename, line and byte-column formatting and give specific reasons.
 Native behavior, traps, output preservation, scopes, calls and ELF permissions
 are covered by the shared corpus.</p>
 <h2 id="githubs-language-label">GitHub's language label</h2>
 <p>Self-hosting is a compiler property. GitHub's language sidebar is a separate
 Linguist classification service; it does not yet include Ramos. See
-<a href="https://github.com/zackmsa777-a11y/ramos/blob/6c263c5023bc8a71c036d9b8151b82dc558adfde/docs/github-language.md">GitHub language recognition</a>. The bootstrap and Python test
+<a href="https://github.com/zackmsa777-a11y/ramos/blob/039d8eb944d96419b0e6805ab957f80af0ef0aee/docs/github-language.md">GitHub language recognition</a>. The bootstrap and Python test
 harness are retained honestly rather than relabeled as Ramos.</p>
 <h2 id="windows-fixed-point">Windows fixed point</h2>
 <p>The same Ramos source builds the Windows compiler. <code>make windows</code> produces
@@ -79,7 +79,7 @@ requires identical seed/stage-2/stage-3 PE binaries. The CI Windows job runs
 shared language tests and records the native Windows proof. See
 <a href="10-windows.html">Windows bootstrap instructions</a>.</p>
 <p>The retained assembly seed implements the 0.7 grammar. The compiler source uses
-compatible surface syntax while implementing the full 0.19.1 API and grammar itself. Tests
+compatible surface syntax while implementing the full 0.20.0 API and grammar itself. Tests
 for comments, short-circuit booleans and managed-value syntax run on stages 2/3 and native Windows;
 the seed explicitly skips them. The proof JSON records both discovered counts
 and these skips. No source preprocessing or external backend is required.</p>
@@ -131,5 +131,9 @@ adds fixed GTK modal chooser imports. The typed path/status result and checked
 geometry helpers are Ramos library code. File publication remains separate.
 See <a href="evidence/gui-dialogs-verification.json">0.19.1 evidence</a>; dialogs are now verified
 on native Windows and Linux X11. Automatic DPI/layout policy and general
-canvas drawing remain follow-ups.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="11-cookbook.html">← Runnable projects</a><a href="13-reference.html">Limits and standard library reference →</a></nav><footer>Ramos 0.19.1 · <a href="book/12-self-hosting.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+canvas drawing remain follow-ups.</p>
+<p>Version 0.20 appends private native slot 69 (compiler intrinsic 325) for
+<code>monotonic_ms()</code>. Linux emits clock_gettime(CLOCK_MONOTONIC); Windows imports
+QueryPerformanceCounter/Frequency. The compiler still rebuilds byte-identically
+on both native targets. See <a href="23-timing.html">timing and current counts</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="11-cookbook.html">← Runnable projects</a><a href="13-reference.html">Limits and standard library reference →</a></nav><footer>Ramos 0.20.0 · <a href="book/12-self-hosting.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>
