@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.24.0** unless the task explicitly provides a newer compiler
+programs. Target the **0.25.0 preview** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -135,3 +135,8 @@ For numerical display, use `math_format(value, 17)` to preserve finite binary64
 values, or `math_scientific(value, places)` for a fixed mantissa precision.
 `math_text` and `print(float64)` still use fixed-decimal output and can round
 tiny values to zero. Read [output contracts](28-math-output.md).
+
+For explicit DPI policy, use `gui_open_scaled`, check the opening status, then
+handle kind 6 alongside logical resize events. Read [scaling contracts](29-gui-scaling.md)
+for GTK integer scales and Windows requirements. Do not treat fabricated DPI
+messages or initial 100% CI checks as genuine Windows transition proof.

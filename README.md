@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.24.0**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.25.0 preview**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -11,7 +11,8 @@ readable HTML edition for people, generated from the same source.
 - **Compiler:** [zackmsa777-a11y/ramos](https://github.com/zackmsa777-a11y/ramos)
 
 The language rules are **simple programming** and **measured native speed**.
-This edition describes released features; proposed upgrades are clearly marked.
+This edition targets the released 0.25 preview. Genuine Windows display changes
+remain pending; the scaling chapter provides exact test commands.
 
 ## Ramos project family
 
@@ -46,21 +47,15 @@ The existing compiler release and book URLs remain stable.
 19. Monotonic timing and terminal animation
 20. Desktop GUI on Windows and Linux
 21. Native drawing and retained canvas frames
-22. Windows and cross-compilation
-23. Runnable projects
-24. How the compiler builds itself
-25. Limits and standard library reference
-26. Performance and evidence
-27. Versions, installation and compatibility
-28. What comes next
-29. Guide for AI coding agents
-
-The `examples/` and `stdlib/` folders contain matching source from the compiler
-repository. Download a native compiler from the
-[0.24.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.24.0)
-and place it at this repository's root to compile those examples. See the
-[quick start](book/01-getting-started.md). This repository does not include or
-implement a second compiler.
+22. Logical GUI scaling and native resource checks
+23. Windows and cross-compilation
+24. Runnable projects
+25. How the compiler builds itself
+26. Limits and standard library reference
+27. Performance and evidence
+28. Versions, installation and compatibility
+29. What comes next
+30. Guide for AI coding agents
 
 ## Read offline
 

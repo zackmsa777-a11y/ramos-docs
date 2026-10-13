@@ -265,3 +265,9 @@ Native CI passed **194 Linux tests and 140 Windows tests**, including the GUI
 corpus and both compiler fixed points. See [verification evidence](../evidence/gui-verification.json)
 and [the successful run](https://github.com/zackmsa777-a11y/ramos/actions/runs/38057232751).
 No new speed claim is made.
+
+## Logical DPI sizing (0.25 preview)
+
+Use `gui_open_scaled`, `gui_dpi`, and event kind 6 for explicit scaling.
+Read [the contract and Windows agent test](29-gui-scaling.md). Existing
+`gui_open` keeps its policy. Genuine Windows transitions remain pending.

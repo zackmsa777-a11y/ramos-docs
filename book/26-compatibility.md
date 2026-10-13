@@ -48,3 +48,7 @@ policy is a remaining milestone; this document does not promise that all 0.x
 APIs have been frozen. General graphics/DPI work and broader practical libraries
 remain active work. A stable version would not imply all of C or Rust's APIs,
 platforms, tooling or ecosystem.
+
+Opt-in scaling in the 0.25 preview needs Windows per-monitor-v2 support
+(Windows 10 1703 or newer). Existing `gui_open` preserves its policy.
+See [scaling contracts](29-gui-scaling.md); actual Windows transitions remain pending.

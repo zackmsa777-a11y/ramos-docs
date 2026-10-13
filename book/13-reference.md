@@ -15,7 +15,7 @@ The compiler is self-hosted; namespaces, more library types, wrapping arithmetic
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
-permissions. Automatic layout/DPI policy, games and
+permissions. Broader layout/graphics, actual Windows DPI-transition acceptance, games and
 browser support need further work. Linux GUI requires GTK3; X11 is verified,
 Wayland remains unverified.
 
@@ -79,6 +79,8 @@ fn gui_word(out: bytes, at: int64, value: int64)
 fn gui_number(raw: bytes, at: int64) -> int64
 fn gui_check(status: int64)
 fn gui_open(title: string, width: int64, height: int64) -> int64
+fn gui_open_scaled(title: string, width: int64, height: int64) -> int64
+fn gui_dpi() -> int64
 fn gui_close() -> int64
 fn gui_rgb(red: int64, green: int64, blue: int64) -> int64
 fn gui_properties(kind: int64, id: int64, x: int64, y: int64, width: int64, height: int64, color: int64) -> bytes
@@ -296,3 +298,8 @@ fn draw_pixel(canvas: Canvas, x: int64, y: int64, color: int64)
 fn gui_canvas(id: int64, x: int64, y: int64, width: int64, height: int64)
 fn draw_present(id: int64, canvas: Canvas) -> int64
 ```
+
+For scaled windows, control/drawing geometry and resize/scale-event dimensions
+are logical units. Kind 6 carries DPI in `id`. Windows opt-in scaling needs
+per-monitor-v2 support; [scaling contracts](29-gui-scaling.md) distinguish native
+initial checks from the pending actual Windows display transition.

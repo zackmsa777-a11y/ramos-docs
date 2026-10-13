@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.24.0, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.25.0, with Markdown for agents and HTML for people.">
 <title>Complete book · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.24.0</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.25.0</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="28-math-output.html"><span>07</span>Exact scientific and compact numerical output</a><a href="03-values.html"><span>08</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>09</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>10</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>11</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>12</span>Working with bytes</a><a href="05-input.html"><span>13</span>Stdin and number conversion</a><a href="06-files.html"><span>14</span>Arguments and file I/O</a><a href="07-libraries.html"><span>15</span>Libraries with weave</a><a href="18-system.html"><span>16</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>17</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>18</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>19</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html"><span>20</span>Native drawing and retained canvas frames</a><a href="10-windows.html"><span>21</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>22</span>Runnable projects</a><a href="12-self-hosting.html"><span>23</span>How the compiler builds itself</a><a href="13-reference.html"><span>24</span>Limits and standard library reference</a><a href="14-performance.html"><span>25</span>Performance and evidence</a><a href="26-compatibility.html"><span>26</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>27</span>What comes next</a><a href="16-agent-guide.html"><span>28</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
-<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><nav class="contents" aria-label="Full book contents"><h1>The Ramos Book</h1><a href="#00-welcome">Welcome to the Ramos Book</a><a href="#01-getting-started">Install, build and run</a><a href="#19-devtools">Diagnostics, formatting and running source files</a><a href="#02-language">The language</a><a href="#17-easier-syntax">Easier syntax: branches, ranges and assignment</a><a href="#21-math">Native float64 and essential math</a><a href="#22-math-input">Decimal input and streamed numerical tools</a><a href="#28-math-output">Exact scientific and compact numerical output</a><a href="#03-values">Strings, structs, arrays and memory</a><a href="#20-text-builder">Reusable text builders and streamed text tools</a><a href="#24-collections">Collection capacity, release and integer sorting</a><a href="#25-stack">Checked recursion and native stack budgets</a><a href="#04-bytes">Working with bytes</a><a href="#05-input">Stdin and number conversion</a><a href="#06-files">Arguments and file I/O</a><a href="#07-libraries">Libraries with weave</a><a href="#18-system">Paths, directories, environment and child processes</a><a href="#08-cli-tui">CLI tools and terminal interfaces</a><a href="#23-timing">Monotonic timing and terminal animation</a><a href="#09-gui">Desktop GUI on Windows and Linux</a><a href="#27-canvas">Native drawing and retained canvas frames</a><a href="#10-windows">Windows and cross-compilation</a><a href="#11-cookbook">Runnable projects</a><a href="#12-self-hosting">How the compiler builds itself</a><a href="#13-reference">Limits and standard library reference</a><a href="#14-performance">Performance and evidence</a><a href="#26-compatibility">Versions, installation and compatibility</a><a href="#15-roadmap">What comes next</a><a href="#16-agent-guide">Guide for AI coding agents</a></nav><article><section id="00-welcome"><h1 id="00-welcome--welcome-to-the-ramos-book">Welcome to the Ramos Book</h1>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="28-math-output.html"><span>07</span>Exact scientific and compact numerical output</a><a href="03-values.html"><span>08</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>09</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>10</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>11</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>12</span>Working with bytes</a><a href="05-input.html"><span>13</span>Stdin and number conversion</a><a href="06-files.html"><span>14</span>Arguments and file I/O</a><a href="07-libraries.html"><span>15</span>Libraries with weave</a><a href="18-system.html"><span>16</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>17</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>18</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>19</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html"><span>20</span>Native drawing and retained canvas frames</a><a href="29-gui-scaling.html"><span>21</span>Logical GUI scaling and native resource checks</a><a href="10-windows.html"><span>22</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>23</span>Runnable projects</a><a href="12-self-hosting.html"><span>24</span>How the compiler builds itself</a><a href="13-reference.html"><span>25</span>Limits and standard library reference</a><a href="14-performance.html"><span>26</span>Performance and evidence</a><a href="26-compatibility.html"><span>27</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>28</span>What comes next</a><a href="16-agent-guide.html"><span>29</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><nav class="contents" aria-label="Full book contents"><h1>The Ramos Book</h1><a href="#00-welcome">Welcome to the Ramos Book</a><a href="#01-getting-started">Install, build and run</a><a href="#19-devtools">Diagnostics, formatting and running source files</a><a href="#02-language">The language</a><a href="#17-easier-syntax">Easier syntax: branches, ranges and assignment</a><a href="#21-math">Native float64 and essential math</a><a href="#22-math-input">Decimal input and streamed numerical tools</a><a href="#28-math-output">Exact scientific and compact numerical output</a><a href="#03-values">Strings, structs, arrays and memory</a><a href="#20-text-builder">Reusable text builders and streamed text tools</a><a href="#24-collections">Collection capacity, release and integer sorting</a><a href="#25-stack">Checked recursion and native stack budgets</a><a href="#04-bytes">Working with bytes</a><a href="#05-input">Stdin and number conversion</a><a href="#06-files">Arguments and file I/O</a><a href="#07-libraries">Libraries with weave</a><a href="#18-system">Paths, directories, environment and child processes</a><a href="#08-cli-tui">CLI tools and terminal interfaces</a><a href="#23-timing">Monotonic timing and terminal animation</a><a href="#09-gui">Desktop GUI on Windows and Linux</a><a href="#27-canvas">Native drawing and retained canvas frames</a><a href="#29-gui-scaling">Logical GUI scaling and native resource checks</a><a href="#10-windows">Windows and cross-compilation</a><a href="#11-cookbook">Runnable projects</a><a href="#12-self-hosting">How the compiler builds itself</a><a href="#13-reference">Limits and standard library reference</a><a href="#14-performance">Performance and evidence</a><a href="#26-compatibility">Versions, installation and compatibility</a><a href="#15-roadmap">What comes next</a><a href="#16-agent-guide">Guide for AI coding agents</a></nav><article><section id="00-welcome"><h1 id="00-welcome--welcome-to-the-ramos-book">Welcome to the Ramos Book</h1>
 <p>Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are <strong>simple
 programming</strong> and <strong>measured speed</strong>.</p>
-<p>This book describes <strong>Ramos 0.24.0</strong>. Markdown chapters are the canonical edition
+<p>This book describes <strong>Ramos 0.25.0 preview</strong>. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.</p>
@@ -25,7 +25,7 @@ identify when a feature arrived; they do not change this book's baseline.</p>
   <a href="02-language.html">the language</a> and <a href="03-values.html">values</a>.</li>
 <li>Building a tool? Read <a href="06-files.html">files</a>, <a href="07-libraries.html">libraries</a> and
   <a href="18-system.html">OS libraries</a> and <a href="08-cli-tui.html">CLI/TUI</a>, then try the <a href="11-cookbook.html">projects</a>.</li>
-<li>Building a desktop window? Read <a href="09-gui.html">desktop GUI</a> and <a href="27-canvas.html">native drawing</a>. Windows uses native
+<li>Building a desktop window? Read <a href="09-gui.html">desktop GUI</a> and <a href="27-canvas.html">native drawing</a> and <a href="29-gui-scaling.html">logical scaling</a>. Windows uses native
   system controls; Linux GUI requires GTK3 and a display.</li>
 <li>Writing Ramos with an AI agent? Start with the <a href="16-agent-guide.html">agent guide</a>
   and <a href="13-reference.html">API reference</a>.</li>
@@ -42,7 +42,7 @@ reuse/release for streamed tools.</p>
 <p><a href="21-math.html">Native math</a> adds explicit conversions, square root and fixed
 decimal formatting. <a href="22-math-input.html">Decimal input</a> adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.24.0. Read
+in 0.25.0. Read
 <a href="18-system.html">the OS libraries</a> for directory and child-process contracts. See <a href="17-easier-syntax.html">the new syntax</a> for ranges,
 else-if chains and compound assignment. See the
 <a href="13-reference.html">limits</a> and <a href="15-roadmap.html">proposed roadmap</a>. Planned syntax
@@ -59,7 +59,7 @@ status handling and signed integer sorting. <code>rsort</code> sorts stdin or a 
 <h2 id="00-welcome--project-links">Project links</h2>
 <ul>
 <li><a href="https://github.com/zackmsa777-a11y/ramos">Compiler and source</a></li>
-<li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.24.0">Ramos 0.24.0 release</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.25.0">Ramos 0.25.0 release</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation source</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-examples">Small runnable examples</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-calculator">Scientific calculator: CLI, REPL and GUI</a></li>
@@ -83,10 +83,15 @@ shapes and pixels. Repaint snapshots survive buffer reuse and garbage collection
 The interactive plot runs on both desktops; per-monitor DPI policy remains future work.</p>
 <p><a href="28-math-output.html">Exact numerical output</a> provides scientific and compact
 strings. Seventeen significant digits preserve finite binary64 values, including
-signed zero; the calculator uses it for readable tiny and large results.</p></section><section id="01-getting-started"><h1 id="01-getting-started--install-build-and-run">Install, build and run</h1>
+signed zero; the calculator uses it for readable tiny and large results.</p>
+<p>The 0.25 preview verifies initial native Windows DPI behavior and bounded
+resource churn, plus genuine GTK scale changes. Actual Windows display changes
+remain pending an adjustable-display report; see the <a href="29-gui-scaling.html">test commands</a>.
+The practical 1.0 goal remains unfinished.</p></section><section id="01-getting-started"><h1 id="01-getting-started--install-build-and-run">Install, build and run</h1>
 <p>Use the complete
-<a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.24.0/ramos-0.24.0-numerical-output.zip">0.24.0 numerical-output bundle</a>,
-which also includes the CLI/TUI tools, both compilers, examples and all fourteen
+<a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.25.0/ramos-0.25.0-gui-scaling-preview.zip">0.25.0 GUI-scaling preview bundle</a>,
+This is a preview whose actual Windows DPI-transition acceptance is still pending.
+It also includes the CLI/TUI tools, both compilers, examples and all fourteen
 libraries. Extract the archive and keep its directory structure. The published
 <code>SHA256SUMS</code> file lists asset hashes for integrity checking.</p>
 <h2 id="01-getting-started--your-first-source-file">Your first source file</h2>
@@ -2571,7 +2576,11 @@ The harness reads another process's editor with <code>WM_GETTEXT</code>, as requ
 Native CI passed <strong>194 Linux tests and 140 Windows tests</strong>, including the GUI
 corpus and both compiler fixed points. See <a href="evidence/gui-verification.json">verification evidence</a>
 and <a href="https://github.com/zackmsa777-a11y/ramos/actions/runs/38057232751">the successful run</a>.
-No new speed claim is made.</p></section><section id="27-canvas"><h1 id="27-canvas--native-canvas-drawing-023">Native canvas drawing (0.23)</h1>
+No new speed claim is made.</p>
+<h2 id="09-gui--logical-dpi-sizing-025-preview">Logical DPI sizing (0.25 preview)</h2>
+<p>Use <code>gui_open_scaled</code>, <code>gui_dpi</code>, and event kind 6 for explicit scaling.
+Read <a href="29-gui-scaling.html">the contract and Windows agent test</a>. Existing
+<code>gui_open</code> keeps its policy. Genuine Windows transitions remain pending.</p></section><section id="27-canvas"><h1 id="27-canvas--native-canvas-drawing-023">Native canvas drawing (0.23)</h1>
 <p>Use <code>weave "stdlib/draw.ramos"</code> with a GUI build. The library adds an ordinary
 <code>Canvas</code> struct and helpers; there is no new language syntax or foreign app code.
 Linux uses the existing GTK3/Cairo dependency; Windows uses native GDI.</p>
@@ -2689,7 +2698,100 @@ comparative graphics-speed claim.</p>
 lines, circles, boxes and single pixels; reset/GC repaint; resize; replacement;
 empty-frame white; repeated maximum-size snapshots; close. GTK is exercised at
 1× and 2× scaling. Native Windows also checks GDI resource stability. See
-<a href="evidence/canvas-verification.json">canvas verification</a> for the exact published build.</p></section><section id="10-windows"><h1 id="10-windows--windows-and-cross-compilation">Windows and cross-compilation</h1>
+<a href="evidence/canvas-verification.json">canvas verification</a> for the exact published build.</p></section><section id="29-gui-scaling"><h1 id="29-gui-scaling--explicit-gui-scaling-025-preview">Explicit GUI scaling — 0.25 preview</h1>
+<p>This preview adds an opt-in scaling API. Genuine Windows display-transition
+acceptance remains pending a native adjustable-display report. <code>gui_open</code> keeps its existing policy:
+GTK logical units on Linux, default DPI virtualization on Windows. No existing
+program is silently opted into per-monitor Windows awareness.</p>
+<p><code>gui_open_scaled(title: string, width: int64, height: int64) -&gt; int64</code> opens a
+window in logical units (one unit is one pixel at 96 DPI). Existing bounds and
+fallible opening statuses apply. Windows requires per-monitor-v2 support
+(Windows 10 1703 or newer); missing support returns -38. Linux requires GTK3
+and <code>--gui</code>, as before. There is no application scale override.</p>
+<p><code>gui_dpi() -&gt; int64</code> returns the active window's native DPI, or a negative status
+when inactive/unsupported. Success sets <code>io_error()</code> to zero. GTK reports
+96 times its integer widget scale factor. Legacy Windows windows report 96.
+The scaled Windows path supports native DPI 96..768; an unsupported actual
+scale fails with -27. GTK scaling remains toolkit-owned.</p>
+<p>For scaled windows, all existing control geometry, canvas commands and resize
+width/height use logical units. Windows converts control boundaries with
+nearest rounding, scales owned UI fonts and uses a native canvas transform.
+GDI cosmetic outlines can retain a one-device-pixel stroke; raster edges need
+not match Cairo. Positive logical dimensions remain at least one pixel.</p>
+<p><code>GuiEvent.kind == 6</code> is a scale change: <code>id</code> holds the new DPI; width/height are
+the current logical client dimensions. GTK emits it on <code>notify::scale-factor</code>;
+Windows handles actual <code>WM_DPICHANGED</code>, applies the OS-suggested outer rectangle,
+rescales retained control geometry/fonts, and queues the event. Resize events
+may precede it. No Ramos callback or managed allocation runs inside OS callbacks.
+The checked 64-event queue still fails explicitly when full.</p>
+<p>Windows saves the prior thread DPI context and restores it on successful close
+and failed scaled opening. Scaled fonts are owned and deleted after controls
+stop using them. Geometry is privately copied, GC-rooted, and reusable for DPI
+changes even after callers mutate or discard property buffers. Native rendering
+and managed resources retain their separate budgets.</p>
+<p>Verification must distinguish initial DPI, genuine scale changes, simulated
+messages, and resource stress. Initial Windows awareness/native placement and
+resource counts can run in CI. Real multi-monitor Windows transitions require
+an actual desktop whose display scale changes; simulated <code>WM_DPICHANGED</code> is not
+that proof. Do not declare that acceptance completed without the native report.</p>
+<p>Primary contracts: <a href="https://learn.microsoft.com/en-us/windows/win32/hidpi/wm-dpichanged">Windows DPI messages</a>,
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddpiawarenesscontext">thread context restoration</a>,
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdpiforwindow">window DPI</a>,
+<a href="https://docs.gtk.org/gtk3/property.Widget.scale-factor.html">GTK scale factor</a>.</p>
+<h2 id="29-gui-scaling--real-windows-test-for-an-agent">Real Windows test for an agent</h2>
+<p>Use a Windows x64 desktop whose display scale can be adjusted. Start at <strong>100%</strong>.
+Use the matching compiler, <code>stdlib/</code> and <code>examples/</code> from the release bundle.
+Run in PowerShell from the extracted bundle:</p>
+<pre><code class="language-powershell">.\ramos.exe --version
+.\ramos.exe build .\examples\scaling.ramos -o .\scaling.exe --gui
+if ($LASTEXITCODE -ne 0) { throw 'Demo build failed' }
+Get-FileHash .\ramos.exe, .\scaling.exe -Algorithm SHA256
+$demo = Start-Process -FilePath &quot;$PWD\scaling.exe&quot; -PassThru `
+    -RedirectStandardOutput &quot;$PWD\dpi.log&quot; `
+    -RedirectStandardError &quot;$PWD\dpi-error.log&quot;
+Start-Process 'ms-settings:display'
+</code></pre>
+<p>Keep the same demo window open. In <strong>Settings → System → Display → Scale</strong>, set
+<strong>150%</strong>, then <strong>200%</strong>, then <strong>100%</strong>, waiting for the demo label to update each
+time. Stay on the display you changed. Do not use custom scaling that requires
+signing out; that cannot demonstrate a running-window transition. If these
+preset values are unavailable, record the actual offered values instead.</p>
+<p>At each scale, check that the input stays editable, Arabic/emoji remain intact,
+controls do not overlap, the blue box/red disk/green line remain visible, and
+text stays crisp. A geometry comparison should use client coordinates and the
+native DPI, not the outer window frame. Logical dimensions may differ slightly
+because Windows chooses the suggested rectangle and the user may resize.</p>
+<p>Close with the demo's <strong>Close</strong> button, then run:</p>
+<pre><code class="language-powershell">$demo.WaitForExit()
+Get-Content .\dpi.log
+Get-Content .\dpi-error.log
+if ($demo.ExitCode -ne 0) { throw &quot;Demo exited $($demo.ExitCode)&quot; }
+$events = Get-Content .\dpi.log | Where-Object { $_ -match '^scale ' }
+$events
+foreach ($dpi in 144, 192, 96) {
+    if (-not ($events -match &quot;^scale $dpi &quot;)) { throw &quot;Missing real DPI event $dpi&quot; }
+}
+if ((Get-Content .\dpi.log | Select-Object -Last 1) -ne 'closed -9') {
+    throw 'Window did not close cleanly'
+}
+if ((Get-Item .\dpi-error.log).Length -ne 0) { throw 'Unexpected runtime error' }
+</code></pre>
+<p>Return the log, compiler hash, Windows version, actual display scaling sequence,
+and visual observations. Missing genuine events or an unusable control is a
+failure, even if compilation succeeded. Record a sign-out-only setup as unable
+to perform this transition test. This test does not prove multi-monitor movement;
+that needs two real displays at different scales and the same checks while
+moving the open window between them. Never send fabricated <code>WM_DPICHANGED</code>
+messages as a substitute.</p>
+<h2 id="29-gui-scaling--automated-resource-scope">Automated resource scope</h2>
+<p>The native probes exercise 200 acknowledged allocation/control-update steps
+(200 MiB of transient managed buffers with less than 256 KiB retained after
+each collection). Windows also alternates 20 scaled/default windows and checks
+native geometry, fonts, canvas/panel pixels, GDI/USER objects and process handles.
+Linux changes the real GTK XSETTINGS scale 1 → 2 → 1 and checks pixels,
+open file descriptors and resident-memory growth after warm-up. These are
+bounded churn and lifetime checks, not a claim of hours-long soak testing or
+support for more than the existing 16 MiB live managed-memory budget.</p></section><section id="10-windows"><h1 id="10-windows--windows-and-cross-compilation">Windows and cross-compilation</h1>
 <p>Ramos produces native Windows x64 console executables in PE32+ format. The same
 language supports arithmetic, booleans, scopes, control flow, typed functions,
 recursion, byte buffers, arguments and binary file I/O on Linux and Windows.
@@ -3091,7 +3193,7 @@ the older 4 MiB output and IR limits. See <a href="https://github.com/zackmsa777
 broader optimization and additional targets remain future work. Performance claims need
 new repeatable measurements. The runtime provides checked arithmetic and bounded
 buffers, but generated programs execute with the caller's operating-system
-permissions. Automatic layout/DPI policy, games and
+permissions. Broader layout/graphics, actual Windows DPI-transition acceptance, games and
 browser support need further work. Linux GUI requires GTK3; X11 is verified,
 Wayland remains unverified.</p>
 <h2 id="13-reference--compiler-commands">Compiler commands</h2>
@@ -3135,6 +3237,8 @@ fn cli_fail(message: string)
 fn gui_number(raw: bytes, at: int64) -&gt; int64
 fn gui_check(status: int64)
 fn gui_open(title: string, width: int64, height: int64) -&gt; int64
+fn gui_open_scaled(title: string, width: int64, height: int64) -&gt; int64
+fn gui_dpi() -&gt; int64
 fn gui_close() -&gt; int64
 fn gui_rgb(red: int64, green: int64, blue: int64) -&gt; int64
 fn gui_properties(kind: int64, id: int64, x: int64, y: int64, width: int64, height: int64, color: int64) -&gt; bytes
@@ -3307,7 +3411,11 @@ fn draw_disk(canvas: Canvas, x: int64, y: int64, radius: int64, color: int64)
 fn draw_pixel(canvas: Canvas, x: int64, y: int64, color: int64)
 fn gui_canvas(id: int64, x: int64, y: int64, width: int64, height: int64)
 fn draw_present(id: int64, canvas: Canvas) -&gt; int64
-</code></pre></section><section id="14-performance"><h1 id="14-performance--ramos-0220-performance-eight-task-index">Ramos 0.22.0 performance: eight-task index</h1>
+</code></pre>
+<p>For scaled windows, control/drawing geometry and resize/scale-event dimensions
+are logical units. Kind 6 carries DPI in <code>id</code>. Windows opt-in scaling needs
+per-monitor-v2 support; <a href="29-gui-scaling.html">scaling contracts</a> distinguish native
+initial checks from the pending actual Windows display transition.</p></section><section id="14-performance"><h1 id="14-performance--ramos-0220-performance-eight-task-index">Ramos 0.22.0 performance: eight-task index</h1>
 <p>Measured 2026-10-12T17:48:33.683094+00:00 on x86-64 Linux. Higher scores are faster; optimized C = 100.</p>
 <table>
 <thead>
@@ -3831,12 +3939,15 @@ It also needs a reviewed stable-language/library compatibility policy. That
 policy is a remaining milestone; this document does not promise that all 0.x
 APIs have been frozen. General graphics/DPI work and broader practical libraries
 remain active work. A stable version would not imply all of C or Rust's APIs,
-platforms, tooling or ecosystem.</p></section><section id="15-roadmap"><h1 id="15-roadmap--ramos-application-language-goal">Ramos application-language goal</h1>
+platforms, tooling or ecosystem.</p>
+<p>Opt-in scaling in the 0.25 preview needs Windows per-monitor-v2 support
+(Windows 10 1703 or newer). Existing <code>gui_open</code> preserves its policy.
+See <a href="29-gui-scaling.html">scaling contracts</a>; actual Windows transitions remain pending.</p></section><section id="15-roadmap"><h1 id="15-roadmap--ramos-application-language-goal">Ramos application-language goal</h1>
 <p><strong>Goal:</strong> make Ramos a simple native language for useful CLI, TUI and desktop
 applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.</p>
-<p>This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion and 0.23 canvas drawing plus 0.24 exact numerical output are now
+<p>This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion and 0.23 canvas drawing plus 0.24 exact numerical output and 0.25 preview opt-in GUI scaling are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -3937,9 +4048,14 @@ timings are historical; they are not a performance result for 0.13.</p>
 <td>Tiny calculator values remain visible; independent rounding and binary64 round trips on both OSes</td>
 </tr>
 <tr>
-<td>GUI follow-up</td>
-<td>Explicit DPI policy/events</td>
-<td>A drawing app handles per-monitor desktop scaling on both OSes</td>
+<td>0.25 preview: explicit scaling (see <a href="29-gui-scaling.html">contracts</a>)</td>
+<td>Opt-in logical geometry, native fonts/canvas and DPI events; bounded resource probes</td>
+<td>Genuine GTK 1× → 2× → 1×; Windows native initial state and resource checks; actual Windows display transition pending</td>
+</tr>
+<tr>
+<td>GUI acceptance follow-up</td>
+<td>Adjustable-display Windows report and genuine multi-monitor movement</td>
+<td>Keep the same demo open through actual OS scale changes</td>
 </tr>
 <tr>
 <td>1.0 candidate: reliability and measured speed</td>
@@ -4033,7 +4149,7 @@ are published. This is useful application capability, not all of Python or Rust.
 remain follow-up goals. GitHub Linguist recognition is independent of language
 correctness and application readiness.</p></section><section id="16-agent-guide"><h1 id="16-agent-guide--guide-for-ai-coding-agents">Guide for AI coding agents</h1>
 <p>This chapter is a compact capability contract for agents generating Ramos
-programs. Target <strong>0.24.0</strong> unless the task explicitly provides a newer compiler
+programs. Target the <strong>0.25.0 preview</strong> unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.</p>
 <h2 id="16-agent-guide--read-in-this-order">Read in this order</h2>
@@ -4142,5 +4258,9 @@ storage while preserving external aliases. Read <a href="24-collections.html">co
 <p>For numerical display, use <code>math_format(value, 17)</code> to preserve finite binary64
 values, or <code>math_scientific(value, places)</code> for a fixed mantissa precision.
 <code>math_text</code> and <code>print(float64)</code> still use fixed-decimal output and can round
-tiny values to zero. Read <a href="28-math-output.html">output contracts</a>.</p></section></article><nav class="pager" aria-label="Chapter navigation"></nav><footer>Ramos 0.24.0 · <a href="book/BOOK.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+tiny values to zero. Read <a href="28-math-output.html">output contracts</a>.</p>
+<p>For explicit DPI policy, use <code>gui_open_scaled</code>, check the opening status, then
+handle kind 6 alongside logical resize events. Read <a href="29-gui-scaling.html">scaling contracts</a>
+for GTK integer scales and Windows requirements. Do not treat fabricated DPI
+messages or initial 100% CI checks as genuine Windows transition proof.</p></section></article><nav class="pager" aria-label="Chapter navigation"></nav><footer>Ramos 0.25.0 · <a href="book/BOOK.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

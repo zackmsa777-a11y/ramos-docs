@@ -1,7 +1,7 @@
 {
-  "version": "0.24.0",
+  "version": "0.25.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "5b291754ef6a9b4dc2a420b5893fbdbf4b37e3c2",
+  "source_commit": "514694f50380f64c87d174548a355c7f54ba98e2",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -109,6 +109,11 @@
       "source": "docs/canvas.md"
     },
     {
+      "slug": "29-gui-scaling",
+      "title": "Logical GUI scaling and native resource checks",
+      "source": "docs/gui-scaling.md"
+    },
+    {
       "slug": "10-windows",
       "title": "Windows and cross-compilation",
       "source": "docs/windows.md"
@@ -148,5 +153,6 @@
       "title": "Guide for AI coding agents",
       "source": null
     }
-  ]
+  ],
+  "release_status": "preview: genuine Windows display transitions pending"
 }
