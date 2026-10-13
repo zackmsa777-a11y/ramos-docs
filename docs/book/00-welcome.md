@@ -4,7 +4,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.25.0 preview**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.25.1 preview**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -34,7 +34,7 @@ reuse/release for streamed tools.
 [Native math](21-math.md) adds explicit conversions, square root and fixed
 decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.25.0. Read
+in 0.25.1. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -55,7 +55,7 @@ status handling and signed integer sorting. `rsort` sorts stdin or a streamed fi
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.25.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.25.0)
+- [Ramos 0.25.1 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.25.1)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 - [Small runnable examples](https://github.com/zackmsa777-a11y/ramos-examples)
 - [Scientific calculator: CLI, REPL and GUI](https://github.com/zackmsa777-a11y/ramos-calculator)
@@ -79,13 +79,16 @@ Read [compatibility and installation](26-compatibility.md) before updating a pro
 
 [Canvas drawing](27-canvas.md) supplies bounded reusable commands for native lines,
 shapes and pixels. Repaint snapshots survive buffer reuse and garbage collection.
-The interactive plot runs on both desktops; per-monitor DPI policy remains future work.
+The interactive plot runs on both desktops; opt-in logical DPI units are available
+in the scaling preview.
 
 [Exact numerical output](28-math-output.md) provides scientific and compact
 strings. Seventeen significant digits preserve finite binary64 values, including
 signed zero; the calculator uses it for readable tiny and large results.
 
 The 0.25 preview verifies initial native Windows DPI behavior and bounded
-resource churn, plus genuine GTK scale changes. Actual Windows display changes
-remain pending an adjustable-display report; see the [test commands](29-gui-scaling.md).
+resource churn, plus genuine GTK scale changes. The reported native Windows
+144 → 168 → 96 sequence passed events/input/shutdown, but captures showed broken
+canvas shapes. The 0.25.1 repaint candidate needs a real-display visual retest;
+200% was unavailable on the reported display. See the [test commands](29-gui-scaling.md).
 The practical 1.0 goal remains unfinished.

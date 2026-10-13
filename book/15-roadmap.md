@@ -54,8 +54,8 @@ timings are historical; they are not a performance result for 0.13.
 | 0.19.1: GUI helpers (implemented; see [contracts](09-gui.md)) | Checked rectangles, padding, rows/columns and native Open/Save path pickers | Notes opens Unicode files, cancels safely and saves new files on both OSes |
 | 0.23: canvas drawing (implemented; see [contracts](27-canvas.md)) | Bounded reusable commands, native shapes/pixels, retained repaint snapshots | Interactive plot and actual native pixels, clipping, GC, resize and resource checks on both OSes |
 | 0.24: numerical output (implemented; see [contracts](28-math-output.md)) | Exact scientific/compact formatting in Ramos, fixed output preserved | Tiny calculator values remain visible; independent rounding and binary64 round trips on both OSes |
-| 0.25 preview: explicit scaling (see [contracts](29-gui-scaling.md)) | Opt-in logical geometry, native fonts/canvas and DPI events; bounded resource probes | Genuine GTK 1× → 2× → 1×; Windows native initial state and resource checks; actual Windows display transition pending |
-| GUI acceptance follow-up | Adjustable-display Windows report and genuine multi-monitor movement | Keep the same demo open through actual OS scale changes |
+| 0.25 preview: explicit scaling (see [contracts](29-gui-scaling.md)) | Opt-in logical geometry, native fonts/canvas and DPI events; bounded resource probes | Genuine GTK 1× → 2× → 1×; Windows native initial state and resource checks; reported Windows 144 → 168 → 96 events/input passed; canvas visual acceptance failed and repaint retest pending |
+| GUI acceptance follow-up | Intact canvas at native Windows transitions and genuine multi-monitor movement | Keep the same demo open through actual OS scale changes |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
 
 ### 0.14: specify the small syntax changes first

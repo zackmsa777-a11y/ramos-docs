@@ -1,4 +1,4 @@
-# The Ramos Book — 0.25.0
+# The Ramos Book — 0.25.1
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.25.0 preview**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.25.1 preview**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -36,7 +36,7 @@ reuse/release for streamed tools.
 [Native math](21-math.md) adds explicit conversions, square root and fixed
 decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.25.0. Read
+in 0.25.1. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -57,7 +57,7 @@ status handling and signed integer sorting. `rsort` sorts stdin or a streamed fi
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.25.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.25.0)
+- [Ramos 0.25.1 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.25.1)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 - [Small runnable examples](https://github.com/zackmsa777-a11y/ramos-examples)
 - [Scientific calculator: CLI, REPL and GUI](https://github.com/zackmsa777-a11y/ramos-calculator)
@@ -81,15 +81,18 @@ Read [compatibility and installation](26-compatibility.md) before updating a pro
 
 [Canvas drawing](27-canvas.md) supplies bounded reusable commands for native lines,
 shapes and pixels. Repaint snapshots survive buffer reuse and garbage collection.
-The interactive plot runs on both desktops; per-monitor DPI policy remains future work.
+The interactive plot runs on both desktops; opt-in logical DPI units are available
+in the scaling preview.
 
 [Exact numerical output](28-math-output.md) provides scientific and compact
 strings. Seventeen significant digits preserve finite binary64 values, including
 signed zero; the calculator uses it for readable tiny and large results.
 
 The 0.25 preview verifies initial native Windows DPI behavior and bounded
-resource churn, plus genuine GTK scale changes. Actual Windows display changes
-remain pending an adjustable-display report; see the [test commands](29-gui-scaling.md).
+resource churn, plus genuine GTK scale changes. The reported native Windows
+144 → 168 → 96 sequence passed events/input/shutdown, but captures showed broken
+canvas shapes. The 0.25.1 repaint candidate needs a real-display visual retest;
+200% was unavailable on the reported display. See the [test commands](29-gui-scaling.md).
 The practical 1.0 goal remains unfinished.
 
 
@@ -98,8 +101,8 @@ The practical 1.0 goal remains unfinished.
 # Install, build and run
 
 Use the complete
-[0.25.0 GUI-scaling preview bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.25.0/ramos-0.25.0-gui-scaling-preview.zip),
-This is a preview whose actual Windows DPI-transition acceptance is still pending.
+[0.25.1 GUI-scaling preview bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.25.1/ramos-0.25.1-gui-repaint-preview.zip),
+This is a repaint candidate whose real Windows visual acceptance is still pending.
 It also includes the CLI/TUI tools, both compilers, examples and all fourteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS` file lists asset hashes for integrity checking.
@@ -2751,12 +2754,24 @@ empty-frame white; repeated maximum-size snapshots; close. GTK is exercised at
 
 ---
 
-# Explicit GUI scaling — 0.25 preview
+# Explicit GUI scaling — 0.25.1 repaint preview
 
-This preview adds an opt-in scaling API. Genuine Windows display-transition
-acceptance remains pending a native adjustable-display report. `gui_open` keeps its existing policy:
+This preview adds an opt-in scaling API. The 13 October Windows 0.25.0 report confirms genuine
+144 → 168 → 96 DPI events, editable input and clean shutdown, but reports broken
+canvas shapes in captures. Visual acceptance remains incomplete; the cause has
+not been independently confirmed. The 200% preset was unavailable. See the
+[reported evidence and limitations](../evidence/gui-scaling-windows-report-2026-10-13.json). `gui_open` keeps its existing policy:
 GTK logical units on Linux, default DPI virtualization on Windows. No existing
 program is silently opted into per-monitor Windows awareness.
+
+Version 0.25.1 finishes all native child placements before invalidating the
+whole parent and each child. This prevents preserved old-scale canvas pixels
+from surviving merely because their client region was unchanged. It addresses
+a plausible repaint mechanism; it does not establish the cause of the reported
+captures or complete real-display visual acceptance. The diagnostic below can
+also be run on 0.25.0 before trying the candidate. See the native
+[MoveWindow repaint contract](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow)
+and [full-client invalidation](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidaterect).
 
 `gui_open_scaled(title: string, width: int64, height: int64) -> int64` opens a
 window in logical units (one unit is one pixel at 96 DPI). Existing bounds and
@@ -2804,14 +2819,16 @@ Primary contracts: [Windows DPI messages](https://learn.microsoft.com/en-us/wind
 
 Use a Windows x64 desktop whose display scale can be adjusted. Start at **100%**.
 Use the matching compiler, `stdlib/` and `examples/` from the release bundle.
-Run in PowerShell from the extracted bundle:
+Record the original display scale so it can be restored after closing.
+Run in PowerShell from the extracted bundle. Choose a fresh output name; the
+bundle already includes `scaling.exe`:
 
 ```powershell
 .\ramos.exe --version
-.\ramos.exe build .\examples\scaling.ramos -o .\scaling.exe --gui
+.\ramos.exe build .\examples\scaling.ramos -o .\dpi-test.exe --gui
 if ($LASTEXITCODE -ne 0) { throw 'Demo build failed' }
-Get-FileHash .\ramos.exe, .\scaling.exe -Algorithm SHA256
-$demo = Start-Process -FilePath "$PWD\scaling.exe" -PassThru `
+Get-FileHash .\ramos.exe, .\dpi-test.exe -Algorithm SHA256
+$demo = Start-Process -FilePath "$PWD\dpi-test.exe" -PassThru `
     -RedirectStandardOutput "$PWD\dpi.log" `
     -RedirectStandardError "$PWD\dpi-error.log"
 Start-Process 'ms-settings:display'
@@ -2838,14 +2855,29 @@ Get-Content .\dpi-error.log
 if ($demo.ExitCode -ne 0) { throw "Demo exited $($demo.ExitCode)" }
 $events = Get-Content .\dpi.log | Where-Object { $_ -match '^scale ' }
 $events
-foreach ($dpi in 144, 192, 96) {
-    if (-not ($events -match "^scale $dpi ")) { throw "Missing real DPI event $dpi" }
+# Set this to the exact presets you actually selected, in order.
+# For 100% -> 150% -> 175% -> 100%, use @(150, 175, 100).
+$selectedPresets = @(150, 200, 100)
+$expected = @($selectedPresets | ForEach-Object {
+    [int]$eventDpi = 96 * $_ / 100
+    $eventDpi
+})
+$actual = @($events | ForEach-Object {
+    [int]$eventDpi = ($_ -split ' ')[1]
+    $eventDpi
+})
+if (($actual -join ',') -ne ($expected -join ',')) {
+    throw "DPI events differ: expected $expected; got $actual"
 }
 if ((Get-Content .\dpi.log | Select-Object -Last 1) -ne 'closed -9') {
     throw 'Window did not close cleanly'
 }
 if ((Get-Item .\dpi-error.log).Length -ne 0) { throw 'Unexpected runtime error' }
 ```
+
+Restore the original display scale after the demo closes. An unavailable preset
+is **untested**, not a missing event for a change you actually performed. A
+substitute preset does not certify the unavailable 200% / DPI 192 transition.
 
 Return the log, compiler hash, Windows version, actual display scaling sequence,
 and visual observations. Missing genuine events or an unusable control is a
@@ -2865,6 +2897,32 @@ Linux changes the real GTK XSETTINGS scale 1 → 2 → 1 and checks pixels,
 open file descriptors and resident-memory growth after warm-up. These are
 bounded churn and lifetime checks, not a claim of hours-long soak testing or
 support for more than the existing 16 MiB live managed-memory budget.
+
+## Diagnose incomplete canvas captures
+
+Keep the same demo process alive and fully visible, without another window
+covering it. At a scale where shapes look broken, record whether the defect is
+visible directly on the screen as well as in the automation screenshot.
+
+The repository's `tools/canvas_capture.py` is a Windows-only Python diagnostic,
+not part of a Ramos program or runtime. Using Python 3, run:
+
+```powershell
+py -3 .\tools\canvas_capture.py --pid $demo.Id --output .\capture-175
+```
+
+It captures the canvas via native GDI **before** requesting any repaint, renders
+an independent GDI reference for the public demo's box/disk/line, then requests
+a full canvas repaint and captures again. It writes `before.bmp`,
+`reference.bmp`, `after-redraw.bmp`, and `capture.json`. It does not change DPI,
+edit the process's private memory or fabricate a DPI notification. The demo
+remains open; closing/restoring scale is still your responsibility.
+
+Return all four files alongside the scale log. If the before image differs but
+the image after repaint matches, that supports stale painting as the cause. If
+both match despite a broken automation screenshot, investigate capture artifacts.
+If both differ, inspect the independent images before diagnosing a drawing error.
+CI's full-canvas comparison at its initial DPI does not certify a real transition.
 
 
 ---
@@ -4021,7 +4079,7 @@ platforms, tooling or ecosystem.
 
 Opt-in scaling in the 0.25 preview needs Windows per-monitor-v2 support
 (Windows 10 1703 or newer). Existing `gui_open` preserves its policy.
-See [scaling contracts](29-gui-scaling.md); actual Windows transitions remain pending.
+See [scaling contracts](29-gui-scaling.md); a real Windows visual retest of the repaint candidate remains pending.
 
 
 ---
@@ -4082,8 +4140,8 @@ timings are historical; they are not a performance result for 0.13.
 | 0.19.1: GUI helpers (implemented; see [contracts](09-gui.md)) | Checked rectangles, padding, rows/columns and native Open/Save path pickers | Notes opens Unicode files, cancels safely and saves new files on both OSes |
 | 0.23: canvas drawing (implemented; see [contracts](27-canvas.md)) | Bounded reusable commands, native shapes/pixels, retained repaint snapshots | Interactive plot and actual native pixels, clipping, GC, resize and resource checks on both OSes |
 | 0.24: numerical output (implemented; see [contracts](28-math-output.md)) | Exact scientific/compact formatting in Ramos, fixed output preserved | Tiny calculator values remain visible; independent rounding and binary64 round trips on both OSes |
-| 0.25 preview: explicit scaling (see [contracts](29-gui-scaling.md)) | Opt-in logical geometry, native fonts/canvas and DPI events; bounded resource probes | Genuine GTK 1× → 2× → 1×; Windows native initial state and resource checks; actual Windows display transition pending |
-| GUI acceptance follow-up | Adjustable-display Windows report and genuine multi-monitor movement | Keep the same demo open through actual OS scale changes |
+| 0.25 preview: explicit scaling (see [contracts](29-gui-scaling.md)) | Opt-in logical geometry, native fonts/canvas and DPI events; bounded resource probes | Genuine GTK 1× → 2× → 1×; Windows native initial state and resource checks; reported Windows 144 → 168 → 96 events/input passed; canvas visual acceptance failed and repaint retest pending |
+| GUI acceptance follow-up | Intact canvas at native Windows transitions and genuine multi-monitor movement | Keep the same demo open through actual OS scale changes |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
 
 ### 0.14: specify the small syntax changes first
@@ -4202,7 +4260,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target the **0.25.0 preview** unless the task explicitly provides a newer compiler
+programs. Target the **0.25.1 preview** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 

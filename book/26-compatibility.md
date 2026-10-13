@@ -51,4 +51,4 @@ platforms, tooling or ecosystem.
 
 Opt-in scaling in the 0.25 preview needs Windows per-monitor-v2 support
 (Windows 10 1703 or newer). Existing `gui_open` preserves its policy.
-See [scaling contracts](29-gui-scaling.md); actual Windows transitions remain pending.
+See [scaling contracts](29-gui-scaling.md); a real Windows visual retest of the repaint candidate remains pending.

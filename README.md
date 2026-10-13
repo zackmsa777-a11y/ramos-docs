@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.25.0 preview**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.25.1 preview**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -11,8 +11,9 @@ readable HTML edition for people, generated from the same source.
 - **Compiler:** [zackmsa777-a11y/ramos](https://github.com/zackmsa777-a11y/ramos)
 
 The language rules are **simple programming** and **measured native speed**.
-This edition targets the released 0.25 preview. Genuine Windows display changes
-remain pending; the scaling chapter provides exact test commands.
+This edition targets the released 0.25 preview. The reported native 144 → 168 → 96 Windows events passed, while captured
+canvas shapes failed visual acceptance. The 0.25.1 repaint candidate still needs
+a real-display retest; the scaling chapter includes independent capture commands.
 
 ## Ramos project family
 
