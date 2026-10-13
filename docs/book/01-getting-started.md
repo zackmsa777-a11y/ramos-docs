@@ -1,8 +1,8 @@
 # Install, build and run
 
 Use the complete
-[0.23.0 canvas bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.23.0/ramos-0.23.0-canvas.zip),
-which also includes the CLI/TUI tools, both compilers, examples and all thirteen
+[0.24.0 numerical-output bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.24.0/ramos-0.24.0-numerical-output.zip),
+which also includes the CLI/TUI tools, both compilers, examples and all fourteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS` file lists asset hashes for integrity checking.
 

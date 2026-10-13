@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.23.0, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.24.0, with Markdown for agents and HTML for people.">
 <title>Complete book · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.23.0</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.24.0</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="03-values.html"><span>07</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>08</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>09</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>10</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>11</span>Working with bytes</a><a href="05-input.html"><span>12</span>Stdin and number conversion</a><a href="06-files.html"><span>13</span>Arguments and file I/O</a><a href="07-libraries.html"><span>14</span>Libraries with weave</a><a href="18-system.html"><span>15</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>16</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>17</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>18</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html"><span>19</span>Native drawing and retained canvas frames</a><a href="10-windows.html"><span>20</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>21</span>Runnable projects</a><a href="12-self-hosting.html"><span>22</span>How the compiler builds itself</a><a href="13-reference.html"><span>23</span>Limits and standard library reference</a><a href="14-performance.html"><span>24</span>Performance and evidence</a><a href="26-compatibility.html"><span>25</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>26</span>What comes next</a><a href="16-agent-guide.html"><span>27</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
-<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><nav class="contents" aria-label="Full book contents"><h1>The Ramos Book</h1><a href="#00-welcome">Welcome to the Ramos Book</a><a href="#01-getting-started">Install, build and run</a><a href="#19-devtools">Diagnostics, formatting and running source files</a><a href="#02-language">The language</a><a href="#17-easier-syntax">Easier syntax: branches, ranges and assignment</a><a href="#21-math">Native float64 and essential math</a><a href="#22-math-input">Decimal input and streamed numerical tools</a><a href="#03-values">Strings, structs, arrays and memory</a><a href="#20-text-builder">Reusable text builders and streamed text tools</a><a href="#24-collections">Collection capacity, release and integer sorting</a><a href="#25-stack">Checked recursion and native stack budgets</a><a href="#04-bytes">Working with bytes</a><a href="#05-input">Stdin and number conversion</a><a href="#06-files">Arguments and file I/O</a><a href="#07-libraries">Libraries with weave</a><a href="#18-system">Paths, directories, environment and child processes</a><a href="#08-cli-tui">CLI tools and terminal interfaces</a><a href="#23-timing">Monotonic timing and terminal animation</a><a href="#09-gui">Desktop GUI on Windows and Linux</a><a href="#27-canvas">Native drawing and retained canvas frames</a><a href="#10-windows">Windows and cross-compilation</a><a href="#11-cookbook">Runnable projects</a><a href="#12-self-hosting">How the compiler builds itself</a><a href="#13-reference">Limits and standard library reference</a><a href="#14-performance">Performance and evidence</a><a href="#26-compatibility">Versions, installation and compatibility</a><a href="#15-roadmap">What comes next</a><a href="#16-agent-guide">Guide for AI coding agents</a></nav><article><section id="00-welcome"><h1 id="00-welcome--welcome-to-the-ramos-book">Welcome to the Ramos Book</h1>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="28-math-output.html"><span>07</span>Exact scientific and compact numerical output</a><a href="03-values.html"><span>08</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>09</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>10</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>11</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>12</span>Working with bytes</a><a href="05-input.html"><span>13</span>Stdin and number conversion</a><a href="06-files.html"><span>14</span>Arguments and file I/O</a><a href="07-libraries.html"><span>15</span>Libraries with weave</a><a href="18-system.html"><span>16</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>17</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>18</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>19</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html"><span>20</span>Native drawing and retained canvas frames</a><a href="10-windows.html"><span>21</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>22</span>Runnable projects</a><a href="12-self-hosting.html"><span>23</span>How the compiler builds itself</a><a href="13-reference.html"><span>24</span>Limits and standard library reference</a><a href="14-performance.html"><span>25</span>Performance and evidence</a><a href="26-compatibility.html"><span>26</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>27</span>What comes next</a><a href="16-agent-guide.html"><span>28</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><nav class="contents" aria-label="Full book contents"><h1>The Ramos Book</h1><a href="#00-welcome">Welcome to the Ramos Book</a><a href="#01-getting-started">Install, build and run</a><a href="#19-devtools">Diagnostics, formatting and running source files</a><a href="#02-language">The language</a><a href="#17-easier-syntax">Easier syntax: branches, ranges and assignment</a><a href="#21-math">Native float64 and essential math</a><a href="#22-math-input">Decimal input and streamed numerical tools</a><a href="#28-math-output">Exact scientific and compact numerical output</a><a href="#03-values">Strings, structs, arrays and memory</a><a href="#20-text-builder">Reusable text builders and streamed text tools</a><a href="#24-collections">Collection capacity, release and integer sorting</a><a href="#25-stack">Checked recursion and native stack budgets</a><a href="#04-bytes">Working with bytes</a><a href="#05-input">Stdin and number conversion</a><a href="#06-files">Arguments and file I/O</a><a href="#07-libraries">Libraries with weave</a><a href="#18-system">Paths, directories, environment and child processes</a><a href="#08-cli-tui">CLI tools and terminal interfaces</a><a href="#23-timing">Monotonic timing and terminal animation</a><a href="#09-gui">Desktop GUI on Windows and Linux</a><a href="#27-canvas">Native drawing and retained canvas frames</a><a href="#10-windows">Windows and cross-compilation</a><a href="#11-cookbook">Runnable projects</a><a href="#12-self-hosting">How the compiler builds itself</a><a href="#13-reference">Limits and standard library reference</a><a href="#14-performance">Performance and evidence</a><a href="#26-compatibility">Versions, installation and compatibility</a><a href="#15-roadmap">What comes next</a><a href="#16-agent-guide">Guide for AI coding agents</a></nav><article><section id="00-welcome"><h1 id="00-welcome--welcome-to-the-ramos-book">Welcome to the Ramos Book</h1>
 <p>Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are <strong>simple
 programming</strong> and <strong>measured speed</strong>.</p>
-<p>This book describes <strong>Ramos 0.23.0</strong>. Markdown chapters are the canonical edition
+<p>This book describes <strong>Ramos 0.24.0</strong>. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.</p>
@@ -42,7 +42,7 @@ reuse/release for streamed tools.</p>
 <p><a href="21-math.html">Native math</a> adds explicit conversions, square root and fixed
 decimal formatting. <a href="22-math-input.html">Decimal input</a> adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.23.0. Read
+in 0.24.0. Read
 <a href="18-system.html">the OS libraries</a> for directory and child-process contracts. See <a href="17-easier-syntax.html">the new syntax</a> for ranges,
 else-if chains and compound assignment. See the
 <a href="13-reference.html">limits</a> and <a href="15-roadmap.html">proposed roadmap</a>. Planned syntax
@@ -59,7 +59,7 @@ status handling and signed integer sorting. <code>rsort</code> sorts stdin or a 
 <h2 id="00-welcome--project-links">Project links</h2>
 <ul>
 <li><a href="https://github.com/zackmsa777-a11y/ramos">Compiler and source</a></li>
-<li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.23.0">Ramos 0.23.0 release</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.24.0">Ramos 0.24.0 release</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation source</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-examples">Small runnable examples</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-calculator">Scientific calculator: CLI, REPL and GUI</a></li>
@@ -80,10 +80,13 @@ interactive applications have been tested there.</p>
 Read <a href="26-compatibility.html">compatibility and installation</a> before updating a project.</p>
 <p><a href="27-canvas.html">Canvas drawing</a> supplies bounded reusable commands for native lines,
 shapes and pixels. Repaint snapshots survive buffer reuse and garbage collection.
-The interactive plot runs on both desktops; per-monitor DPI policy remains future work.</p></section><section id="01-getting-started"><h1 id="01-getting-started--install-build-and-run">Install, build and run</h1>
+The interactive plot runs on both desktops; per-monitor DPI policy remains future work.</p>
+<p><a href="28-math-output.html">Exact numerical output</a> provides scientific and compact
+strings. Seventeen significant digits preserve finite binary64 values, including
+signed zero; the calculator uses it for readable tiny and large results.</p></section><section id="01-getting-started"><h1 id="01-getting-started--install-build-and-run">Install, build and run</h1>
 <p>Use the complete
-<a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.23.0/ramos-0.23.0-canvas.zip">0.23.0 canvas bundle</a>,
-which also includes the CLI/TUI tools, both compilers, examples and all thirteen
+<a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.24.0/ramos-0.24.0-numerical-output.zip">0.24.0 numerical-output bundle</a>,
+which also includes the CLI/TUI tools, both compilers, examples and all fourteen
 libraries. Extract the archive and keep its directory structure. The published
 <code>SHA256SUMS</code> file lists asset hashes for integrity checking.</p>
 <h2 id="01-getting-started--your-first-source-file">Your first source file</h2>
@@ -629,6 +632,10 @@ functions and arbitrary precision remain future work.</p>
 <li><code>math_clamp(value, low, high)</code> rejects reversed bounds with a library error/exit 1.</li>
 <li><code>math_sqrt(value)</code> wraps the checked intrinsic.</li>
 <li><code>math_text(value, places)</code> returns an immutable string with fixed decimal digits.</li>
+<li><code>math_scientific(value, places)</code> returns scientific notation with 0..18 fractional mantissa digits.</li>
+<li><code>math_format(value, digits)</code> returns compact notation with 1..17 significant digits.
+  Seventeen digits round-trip finite binary64 values, including signed zero.
+  Read <a href="28-math-output.html">exact output contracts</a>.</li>
 </ul>
 <p>All numerical arguments above are float64; formatting precision is int64.
 There are thirteen bundled libraries in 0.18.</p>
@@ -781,7 +788,70 @@ a 1,078,272-byte input, invalid/non-ASCII numbers, oversized lines and checked
 summation overflow. The complete Linux/Windows corpora and compiler fixed points
 are recorded in <a href="evidence/math-input-verification.json">math-input-verification.json</a>,
 <a href="evidence/bootstrap-proof.json">Linux proof</a> and <a href="evidence/windows-bootstrap-proof.json">native Windows proof</a>.
-No new comparative timing or language score is claimed.</p></section><section id="03-values"><h1 id="03-values--strings-structs-arrays-and-memory">Strings, structs, arrays and memory</h1>
+No new comparative timing or language score is claimed.</p></section><section id="28-math-output"><h1 id="28-math-output--exact-scientific-and-compact-numerical-output">Exact scientific and compact numerical output</h1>
+<p>Weave <code>stdlib/math.ramos</code>; these helpers are written in Ramos. They format the
+exact finite binary64 value with decimal rounding to nearest, ties to even.
+They do not repeatedly multiply a float by ten and round the approximation.</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>Precision</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>math_scientific(value: float64, places: int64) -&gt; string</code></td>
+<td>0..18 digits after the mantissa point</td>
+<td>One leading digit, exactly <code>places</code> fractional digits, lowercase <code>e</code>, explicit exponent sign, no exponent padding</td>
+</tr>
+<tr>
+<td><code>math_format(value: float64, digits: int64) -&gt; string</code></td>
+<td>1..17 significant digits</td>
+<td>Trailing insignificant zeros removed; plain notation when the rounded exponent is <code>-4 &lt;= exponent &lt; digits</code>, scientific otherwise</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-ramos">weave &quot;stdlib/math.ramos&quot;
+fn main() {
+    print(math_scientific(1e-100, 5)) // 1.00000e-100
+    print(math_format(1e-100, 17))    // 1e-100
+    print(math_format(3.5, 17))      // 3.5
+    print(math_scientific(2.5, 0))   // 2e+0 (even tie)
+    print(math_scientific(3.5, 0))   // 4e+0 (even tie)
+    print(math_format(9999.5, 4))    // 1e+4 (carry changes notation)
+    print(math_format(5e-324, 17))   // 4.9406564584124654e-324
+}
+</code></pre>
+<p>The weave path is relative to the source file. The complete program above assumes
+<code>stdlib/</code> is beside its source. The bundled <a href="examples/math_output.ramos">example</a>
+uses <code>../stdlib/math.ramos</code> because it lives in <code>examples/</code>.</p>
+<p>Both helpers preserve negative zero: <code>math_format(-0.0, 17)</code> is <code>s"-0"</code> and
+<code>math_scientific(-0.0, 2)</code> is <code>s"-0.00e+0"</code>. Invalid precision produces a Ramos
+library error on stderr and exit 1; even extreme int64 precision arguments are
+validated before arithmetic. Successful formatting leaves <code>io_error()</code> and
+<code>parse_error()</code> unchanged. Output is an ordinary immutable UTF-8 string.</p>
+<p>Use <code>math_format(value, 17)</code> with <code>math_parse</code> to preserve every finite binary64
+value. This is <strong>not a shortest-decimal algorithm</strong>: <code>math_format(0.1, 17)</code> is
+<code>s"0.10000000000000001"</code>. Lower precision rounds for display and can lose
+information. A rounded scientific representation of a value near the finite
+maximum can exceed the finite parsing range at low precision; only compact
+17-digit output has the round-trip contract.</p>
+<p><code>math_text</code>, <code>float_to_text</code>, and <code>print(float64)</code> retain their fixed-decimal
+contracts. No NaN, infinity, arbitrary-precision public type, or implicit
+conversion is added. The private conversion uses at most 512 base-65536 limbs
+and a 900-byte decimal work buffer; these fit all finite binary64 values and
+remain subject to the normal managed heap/GC limits.</p>
+<p>Verification uses Python's independent <code>Decimal.from_float</code> and ties-even
+quantization for 2,304 outputs, covering 256 binary64 inputs and nine precision
+choices. Separate tests verify 17-digit parsing round trips, signed zeros,
+subnormal/maximum values, carry transitions, invalid precisions, status
+independence, live aliases, and 6,000 iterations of allocation/recovery.
+Native platform and bootstrap evidence is in
+<a href="evidence/math-output-verification.json">math-output-verification.json</a>: 297 Linux and
+238 native Windows tests pass, with matching compiler fixed points on each OS.
+No new comparative speed claim is made.</p></section><section id="03-values"><h1 id="03-values--strings-structs-arrays-and-memory">Strings, structs, arrays and memory</h1>
 <p>These features implement the first three priorities from the developer feedback.
 Both native targets use the same checked semantics. Existing byte-buffer programs
 keep their byte-literal and API behavior; discarded allocations can now be reclaimed.
@@ -2846,7 +2916,7 @@ count/min/max/sum/mean. Omit the argument to read stdin. Input files are preserv
 syntax, fixed output and checked summation.</p>
 <h2 id="11-cookbook--larger-application-scientific-calculator">Larger application: scientific calculator</h2>
 <p>The <a href="https://github.com/zackmsa777-a11y/ramos-calculator">calculator repository</a>
-is a complete application consumer of Ramos 0.19.1: a shared expression engine,
+is a complete application consumer of Ramos 0.24.0: a shared expression engine,
 CLI/REPL and resizable native desktop GUI. It demonstrates <code>weave</code>, strings,
 structs, float64, fallible decimal input, reusable functions and GUI event loops.
 The parser handles precedence, parentheses, integer powers and bounded
@@ -2873,7 +2943,12 @@ input or more than 131072 numbers with a line number and exit 2. See
 <h2 id="11-cookbook--interactive-native-plot">Interactive native plot</h2>
 <p><a href="examples/plot.ramos">plot.ramos</a> draws a curve using <a href="27-canvas.html">the drawing library</a>,
 changes it with a button and rebuilds its scene on resize. It is verified on both
-native desktops. Build with <code>ramos build examples/plot.ramos -o plot --gui</code>.</p></section><section id="12-self-hosting"><h1 id="12-self-hosting--how-the-compiler-builds-itself">How the compiler builds itself</h1>
+native desktops. Build with <code>ramos build examples/plot.ramos -o plot --gui</code>.</p>
+<h2 id="11-cookbook--exact-numerical-display">Exact numerical display</h2>
+<p><a href="examples/math_output.ramos">math_output.ramos</a> demonstrates compact and
+scientific output, including tiny values, subnormals and ties-to-even rounding.
+The calculator uses the <a href="28-math-output.html">same library formatter</a> in its
+CLI, REPL and desktop GUI.</p></section><section id="12-self-hosting"><h1 id="12-self-hosting--how-the-compiler-builds-itself">How the compiler builds itself</h1>
 <p>The compiler implementation is <a href="https://github.com/zackmsa777-a11y/ramos/blob/d496ba4eb84d11152100d258df0464bea4a405bf/compiler/ramos.ramos">compiler/ramos.ramos</a>.
 It reads source files, lexes and checks tokens, discovers typed signatures,
 resolves scoped symbols, emits native x86-64 instructions, resolves labels,
@@ -3135,6 +3210,8 @@ fn math_max(a: float64, b: float64) -&gt; float64
 fn math_clamp(value: float64, low: float64, high: float64) -&gt; float64
 fn math_sqrt(value: float64) -&gt; float64
 fn math_text(value: float64, places: int64) -&gt; string
+fn math_scientific(value: float64, places: int64) -&gt; string
+fn math_format(value: float64, digits: int64) -&gt; string
 fn math_decimal_new(value: int64) -&gt; MathMagnitude
 fn math_decimal_copy(value: MathMagnitude) -&gt; MathMagnitude
 fn math_decimal_trim(value: MathMagnitude)
@@ -3759,7 +3836,7 @@ platforms, tooling or ecosystem.</p></section><section id="15-roadmap"><h1 id="1
 applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.</p>
-<p>This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion and 0.23 canvas drawing are now
+<p>This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion and 0.23 canvas drawing plus 0.24 exact numerical output are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -3853,6 +3930,11 @@ timings are historical; they are not a performance result for 0.13.</p>
 <td>0.23: canvas drawing (implemented; see <a href="27-canvas.html">contracts</a>)</td>
 <td>Bounded reusable commands, native shapes/pixels, retained repaint snapshots</td>
 <td>Interactive plot and actual native pixels, clipping, GC, resize and resource checks on both OSes</td>
+</tr>
+<tr>
+<td>0.24: numerical output (implemented; see <a href="28-math-output.html">contracts</a>)</td>
+<td>Exact scientific/compact formatting in Ramos, fixed output preserved</td>
+<td>Tiny calculator values remain visible; independent rounding and binary64 round trips on both OSes</td>
 </tr>
 <tr>
 <td>GUI follow-up</td>
@@ -3951,7 +4033,7 @@ are published. This is useful application capability, not all of Python or Rust.
 remain follow-up goals. GitHub Linguist recognition is independent of language
 correctness and application readiness.</p></section><section id="16-agent-guide"><h1 id="16-agent-guide--guide-for-ai-coding-agents">Guide for AI coding agents</h1>
 <p>This chapter is a compact capability contract for agents generating Ramos
-programs. Target <strong>0.23.0</strong> unless the task explicitly provides a newer compiler
+programs. Target <strong>0.24.0</strong> unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.</p>
 <h2 id="16-agent-guide--read-in-this-order">Read in this order</h2>
@@ -4056,5 +4138,9 @@ repeated rendering while paused. Do not interpret it as a Unix timestamp.</p>
 <p>For bounded integer collections, use <code>list_try_push</code> for expected full-capacity
 input, <code>list_reserve</code> when size is known and <code>list_sort</code> for ascending signed
 order. Map lookup stays linear. Clear retains arrays; release detaches owned
-storage while preserving external aliases. Read <a href="24-collections.html">collection contracts</a>.</p></section></article><nav class="pager" aria-label="Chapter navigation"></nav><footer>Ramos 0.23.0 · <a href="book/BOOK.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+storage while preserving external aliases. Read <a href="24-collections.html">collection contracts</a>.</p>
+<p>For numerical display, use <code>math_format(value, 17)</code> to preserve finite binary64
+values, or <code>math_scientific(value, places)</code> for a fixed mantissa precision.
+<code>math_text</code> and <code>print(float64)</code> still use fixed-decimal output and can round
+tiny values to zero. Read <a href="28-math-output.html">output contracts</a>.</p></section></article><nav class="pager" aria-label="Chapter navigation"></nav><footer>Ramos 0.24.0 · <a href="book/BOOK.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

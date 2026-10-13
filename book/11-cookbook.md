@@ -179,7 +179,7 @@ syntax, fixed output and checked summation.
 ## Larger application: scientific calculator
 
 The [calculator repository](https://github.com/zackmsa777-a11y/ramos-calculator)
-is a complete application consumer of Ramos 0.19.1: a shared expression engine,
+is a complete application consumer of Ramos 0.24.0: a shared expression engine,
 CLI/REPL and resizable native desktop GUI. It demonstrates `weave`, strings,
 structs, float64, fallible decimal input, reusable functions and GUI event loops.
 The parser handles precedence, parentheses, integer powers and bounded
@@ -216,3 +216,10 @@ input or more than 131072 numbers with a line number and exit 2. See
 [plot.ramos](../examples/plot.ramos) draws a curve using [the drawing library](27-canvas.md),
 changes it with a button and rebuilds its scene on resize. It is verified on both
 native desktops. Build with `ramos build examples/plot.ramos -o plot --gui`.
+
+## Exact numerical display
+
+[math_output.ramos](../examples/math_output.ramos) demonstrates compact and
+scientific output, including tiny values, subnormals and ties-to-even rounding.
+The calculator uses the [same library formatter](28-math-output.md) in its
+CLI, REPL and desktop GUI.

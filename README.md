@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.23.0**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.24.0**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -32,31 +32,32 @@ The existing compiler release and book URLs remain stable.
 5. Easier syntax: branches, ranges and assignment
 6. Native float64 and essential math
 7. Decimal input and streamed numerical tools
-8. Strings, structs, arrays and memory
-9. Reusable text builders and streamed text tools
-10. Collection capacity, release and integer sorting
-11. Checked recursion and native stack budgets
-12. Working with bytes
-13. Stdin and number conversion
-14. Arguments and file I/O
-15. Libraries with weave
-16. Paths, directories, environment and child processes
-17. CLI tools and terminal interfaces
-18. Monotonic timing and terminal animation
-19. Desktop GUI on Windows and Linux
-20. Native drawing and retained canvas frames
-21. Windows and cross-compilation
-22. Runnable projects
-23. How the compiler builds itself
-24. Limits and standard library reference
-25. Performance and evidence
-26. Versions, installation and compatibility
-27. What comes next
-28. Guide for AI coding agents
+8. Exact scientific and compact numerical output
+9. Strings, structs, arrays and memory
+10. Reusable text builders and streamed text tools
+11. Collection capacity, release and integer sorting
+12. Checked recursion and native stack budgets
+13. Working with bytes
+14. Stdin and number conversion
+15. Arguments and file I/O
+16. Libraries with weave
+17. Paths, directories, environment and child processes
+18. CLI tools and terminal interfaces
+19. Monotonic timing and terminal animation
+20. Desktop GUI on Windows and Linux
+21. Native drawing and retained canvas frames
+22. Windows and cross-compilation
+23. Runnable projects
+24. How the compiler builds itself
+25. Limits and standard library reference
+26. Performance and evidence
+27. Versions, installation and compatibility
+28. What comes next
+29. Guide for AI coding agents
 
 The `examples/` and `stdlib/` folders contain matching source from the compiler
 repository. Download a native compiler from the
-[0.23.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.23.0)
+[0.24.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.24.0)
 and place it at this repository's root to compile those examples. See the
 [quick start](book/01-getting-started.md). This repository does not include or
 implement a second compiler.

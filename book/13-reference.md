@@ -170,6 +170,8 @@ fn math_max(a: float64, b: float64) -> float64
 fn math_clamp(value: float64, low: float64, high: float64) -> float64
 fn math_sqrt(value: float64) -> float64
 fn math_text(value: float64, places: int64) -> string
+fn math_scientific(value: float64, places: int64) -> string
+fn math_format(value: float64, digits: int64) -> string
 fn math_decimal_new(value: int64) -> MathMagnitude
 fn math_decimal_copy(value: MathMagnitude) -> MathMagnitude
 fn math_decimal_trim(value: MathMagnitude)

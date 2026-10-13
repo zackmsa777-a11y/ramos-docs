@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.23.0** unless the task explicitly provides a newer compiler
+programs. Target **0.24.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -130,3 +130,8 @@ For bounded integer collections, use `list_try_push` for expected full-capacity
 input, `list_reserve` when size is known and `list_sort` for ascending signed
 order. Map lookup stays linear. Clear retains arrays; release detaches owned
 storage while preserving external aliases. Read [collection contracts](24-collections.md).
+
+For numerical display, use `math_format(value, 17)` to preserve finite binary64
+values, or `math_scientific(value, places)` for a fixed mantissa precision.
+`math_text` and `print(float64)` still use fixed-decimal output and can round
+tiny values to zero. Read [output contracts](28-math-output.md).

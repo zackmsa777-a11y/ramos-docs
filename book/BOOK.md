@@ -1,4 +1,4 @@
-# The Ramos Book — 0.23.0
+# The Ramos Book — 0.24.0
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.23.0**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.24.0**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -36,7 +36,7 @@ reuse/release for streamed tools.
 [Native math](21-math.md) adds explicit conversions, square root and fixed
 decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
 for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.23.0. Read
+in 0.24.0. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -57,7 +57,7 @@ status handling and signed integer sorting. `rsort` sorts stdin or a streamed fi
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.23.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.23.0)
+- [Ramos 0.24.0 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.24.0)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 - [Small runnable examples](https://github.com/zackmsa777-a11y/ramos-examples)
 - [Scientific calculator: CLI, REPL and GUI](https://github.com/zackmsa777-a11y/ramos-calculator)
@@ -83,14 +83,18 @@ Read [compatibility and installation](26-compatibility.md) before updating a pro
 shapes and pixels. Repaint snapshots survive buffer reuse and garbage collection.
 The interactive plot runs on both desktops; per-monitor DPI policy remains future work.
 
+[Exact numerical output](28-math-output.md) provides scientific and compact
+strings. Seventeen significant digits preserve finite binary64 values, including
+signed zero; the calculator uses it for readable tiny and large results.
+
 
 ---
 
 # Install, build and run
 
 Use the complete
-[0.23.0 canvas bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.23.0/ramos-0.23.0-canvas.zip),
-which also includes the CLI/TUI tools, both compilers, examples and all thirteen
+[0.24.0 numerical-output bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.24.0/ramos-0.24.0-numerical-output.zip),
+which also includes the CLI/TUI tools, both compilers, examples and all fourteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS` file lists asset hashes for integrity checking.
 
@@ -750,6 +754,10 @@ Weave `stdlib/math.ramos`. Its helpers use ordinary Ramos code:
 - `math_clamp(value, low, high)` rejects reversed bounds with a library error/exit 1.
 - `math_sqrt(value)` wraps the checked intrinsic.
 - `math_text(value, places)` returns an immutable string with fixed decimal digits.
+- `math_scientific(value, places)` returns scientific notation with 0..18 fractional mantissa digits.
+- `math_format(value, digits)` returns compact notation with 1..17 significant digits.
+  Seventeen digits round-trip finite binary64 values, including signed zero.
+  Read [exact output contracts](28-math-output.md).
 
 All numerical arguments above are float64; formatting precision is int64.
 There are thirteen bundled libraries in 0.18.
@@ -928,6 +936,66 @@ summation overflow. The complete Linux/Windows corpora and compiler fixed points
 are recorded in [math-input-verification.json](../evidence/math-input-verification.json),
 [Linux proof](../evidence/bootstrap-proof.json) and [native Windows proof](../evidence/windows-bootstrap-proof.json).
 No new comparative timing or language score is claimed.
+
+
+---
+
+# Exact scientific and compact numerical output
+
+Weave `stdlib/math.ramos`; these helpers are written in Ramos. They format the
+exact finite binary64 value with decimal rounding to nearest, ties to even.
+They do not repeatedly multiply a float by ten and round the approximation.
+
+| API | Precision | Result |
+| --- | --- | --- |
+| `math_scientific(value: float64, places: int64) -> string` | 0..18 digits after the mantissa point | One leading digit, exactly `places` fractional digits, lowercase `e`, explicit exponent sign, no exponent padding |
+| `math_format(value: float64, digits: int64) -> string` | 1..17 significant digits | Trailing insignificant zeros removed; plain notation when the rounded exponent is `-4 <= exponent < digits`, scientific otherwise |
+
+```ramos
+weave "stdlib/math.ramos"
+fn main() {
+    print(math_scientific(1e-100, 5)) // 1.00000e-100
+    print(math_format(1e-100, 17))    // 1e-100
+    print(math_format(3.5, 17))      // 3.5
+    print(math_scientific(2.5, 0))   // 2e+0 (even tie)
+    print(math_scientific(3.5, 0))   // 4e+0 (even tie)
+    print(math_format(9999.5, 4))    // 1e+4 (carry changes notation)
+    print(math_format(5e-324, 17))   // 4.9406564584124654e-324
+}
+```
+
+The weave path is relative to the source file. The complete program above assumes
+`stdlib/` is beside its source. The bundled [example](../examples/math_output.ramos)
+uses `../stdlib/math.ramos` because it lives in `examples/`.
+
+Both helpers preserve negative zero: `math_format(-0.0, 17)` is `s"-0"` and
+`math_scientific(-0.0, 2)` is `s"-0.00e+0"`. Invalid precision produces a Ramos
+library error on stderr and exit 1; even extreme int64 precision arguments are
+validated before arithmetic. Successful formatting leaves `io_error()` and
+`parse_error()` unchanged. Output is an ordinary immutable UTF-8 string.
+
+Use `math_format(value, 17)` with `math_parse` to preserve every finite binary64
+value. This is **not a shortest-decimal algorithm**: `math_format(0.1, 17)` is
+`s"0.10000000000000001"`. Lower precision rounds for display and can lose
+information. A rounded scientific representation of a value near the finite
+maximum can exceed the finite parsing range at low precision; only compact
+17-digit output has the round-trip contract.
+
+`math_text`, `float_to_text`, and `print(float64)` retain their fixed-decimal
+contracts. No NaN, infinity, arbitrary-precision public type, or implicit
+conversion is added. The private conversion uses at most 512 base-65536 limbs
+and a 900-byte decimal work buffer; these fit all finite binary64 values and
+remain subject to the normal managed heap/GC limits.
+
+Verification uses Python's independent `Decimal.from_float` and ties-even
+quantization for 2,304 outputs, covering 256 binary64 inputs and nine precision
+choices. Separate tests verify 17-digit parsing round trips, signed zeros,
+subnormal/maximum values, carry transitions, invalid precisions, status
+independence, live aliases, and 6,000 iterations of allocation/recovery.
+Native platform and bootstrap evidence is in
+[math-output-verification.json](../evidence/math-output-verification.json): 297 Linux and
+238 native Windows tests pass, with matching compiler fixed points on each OS.
+No new comparative speed claim is made.
 
 
 ---
@@ -2995,7 +3063,7 @@ syntax, fixed output and checked summation.
 ## Larger application: scientific calculator
 
 The [calculator repository](https://github.com/zackmsa777-a11y/ramos-calculator)
-is a complete application consumer of Ramos 0.19.1: a shared expression engine,
+is a complete application consumer of Ramos 0.24.0: a shared expression engine,
 CLI/REPL and resizable native desktop GUI. It demonstrates `weave`, strings,
 structs, float64, fallible decimal input, reusable functions and GUI event loops.
 The parser handles precedence, parentheses, integer powers and bounded
@@ -3032,6 +3100,13 @@ input or more than 131072 numbers with a line number and exit 2. See
 [plot.ramos](../examples/plot.ramos) draws a curve using [the drawing library](27-canvas.md),
 changes it with a button and rebuilds its scene on resize. It is verified on both
 native desktops. Build with `ramos build examples/plot.ramos -o plot --gui`.
+
+## Exact numerical display
+
+[math_output.ramos](../examples/math_output.ramos) demonstrates compact and
+scientific output, including tiny values, subnormals and ties-to-even rounding.
+The calculator uses the [same library formatter](28-math-output.md) in its
+CLI, REPL and desktop GUI.
 
 
 ---
@@ -3374,6 +3449,8 @@ fn math_max(a: float64, b: float64) -> float64
 fn math_clamp(value: float64, low: float64, high: float64) -> float64
 fn math_sqrt(value: float64) -> float64
 fn math_text(value: float64, places: int64) -> string
+fn math_scientific(value: float64, places: int64) -> string
+fn math_format(value: float64, digits: int64) -> string
 fn math_decimal_new(value: int64) -> MathMagnitude
 fn math_decimal_copy(value: MathMagnitude) -> MathMagnitude
 fn math_decimal_trim(value: MathMagnitude)
@@ -3815,7 +3892,7 @@ applications on Windows x64 and Linux x64. A beginner should be able to build
 and run a small tool from a short example; larger tools should have the libraries,
 diagnostics and resource handling needed to keep working.
 
-This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion and 0.23 canvas drawing are now
+This development plan starts from 0.13. The 0.14 syntax, 0.15 OS libraries, 0.16 authoring tools, 0.17 text builders and 0.18 float/math and 0.18.1 decimal input plus 0.19 Linux GUI and 0.19.1 layout/file pickers plus 0.20 monotonic timing and 0.21 collection controls plus 0.22 checked recursion and 0.23 canvas drawing plus 0.24 exact numerical output are now
 implemented; all remaining milestones below are proposals. Proposed version labels below describe order, not deadlines.
 Keep each release small enough to implement and verify completely; split a
 milestone if necessary. Python-like ease and Rust/C-like native performance
@@ -3863,6 +3940,7 @@ timings are historical; they are not a performance result for 0.13.
 | 0.19: portable GUI (implemented; see [contracts](09-gui.md)) | GTK3 Linux backend, existing native controls/events/panels, `run --gui` | The same Notes source opens/saves Unicode files and remains responsive while resizing on Windows and Linux |
 | 0.19.1: GUI helpers (implemented; see [contracts](09-gui.md)) | Checked rectangles, padding, rows/columns and native Open/Save path pickers | Notes opens Unicode files, cancels safely and saves new files on both OSes |
 | 0.23: canvas drawing (implemented; see [contracts](27-canvas.md)) | Bounded reusable commands, native shapes/pixels, retained repaint snapshots | Interactive plot and actual native pixels, clipping, GC, resize and resource checks on both OSes |
+| 0.24: numerical output (implemented; see [contracts](28-math-output.md)) | Exact scientific/compact formatting in Ramos, fixed output preserved | Tiny calculator values remain visible; independent rounding and binary64 round trips on both OSes |
 | GUI follow-up | Explicit DPI policy/events | A drawing app handles per-monitor desktop scaling on both OSes |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
 
@@ -3982,7 +4060,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target **0.23.0** unless the task explicitly provides a newer compiler
+programs. Target **0.24.0** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -4111,3 +4189,8 @@ For bounded integer collections, use `list_try_push` for expected full-capacity
 input, `list_reserve` when size is known and `list_sort` for ascending signed
 order. Map lookup stays linear. Clear retains arrays; release detaches owned
 storage while preserving external aliases. Read [collection contracts](24-collections.md).
+
+For numerical display, use `math_format(value, 17)` to preserve finite binary64
+values, or `math_scientific(value, places)` for a fixed mantissa precision.
+`math_text` and `print(float64)` still use fixed-decimal output and can round
+tiny values to zero. Read [output contracts](28-math-output.md).
