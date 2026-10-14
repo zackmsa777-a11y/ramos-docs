@@ -39,6 +39,21 @@ timings are historical; they are not a performance result for 0.13.
 
 ## Ordered milestones
 
+After the 0.26 native HTTP(S) preview, the current user priority is useful API
+agents and deliberate desktop styling. Development source work is tracked in
+the [compiler roadmap](https://github.com/zackmsa777-a11y/ramos/blob/main/docs/roadmap-1.0.md).
+The published 0.26 archive and this book's bundled libraries do not yet include
+the new JSON library, agent tool loop or visual palette helpers.
+
+The order is JSON and a bounded tool loop; reusable Paper/Graphite/Ember color
+roles; native control colors/fonts, canvas text, minimum sizes and focus states;
+then a responsive agent GUI with an explicit request lifecycle. Theme work must
+preserve keyboard navigation, Unicode, text selection and accessibility and be
+verified on both native OSes. Palette colors alone are not a whole-window theme.
+CSS is a design inspiration, not a promised parsing/rendering engine. A browser
+shell would need a separate embedded webview integration and does not depend
+on finishing the agent. These priorities are not completion dates.
+
 | Proposed milestone | Work | Runnable acceptance example |
 | --- | --- | --- |
 | 0.14: easier code (implemented; see [contracts](17-easier-syntax.md)) | `else if`, exclusive-range `for`, `+=` and `-=`; updated syntax documentation and highlighting | Simplify an existing search/viewer example while preserving its output and behavior on both OSes |
