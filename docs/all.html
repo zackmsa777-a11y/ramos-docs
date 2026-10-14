@@ -2,20 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.25.1, with Markdown for agents and HTML for people.">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.26.0, with Markdown for agents and HTML for people.">
 <title>Complete book · The Ramos Book</title>
 <link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.25.1</small></a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.26.0</small></a>
 <div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
-<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="28-math-output.html"><span>07</span>Exact scientific and compact numerical output</a><a href="03-values.html"><span>08</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>09</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>10</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>11</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>12</span>Working with bytes</a><a href="05-input.html"><span>13</span>Stdin and number conversion</a><a href="06-files.html"><span>14</span>Arguments and file I/O</a><a href="07-libraries.html"><span>15</span>Libraries with weave</a><a href="18-system.html"><span>16</span>Paths, directories, environment and child processes</a><a href="08-cli-tui.html"><span>17</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>18</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>19</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html"><span>20</span>Native drawing and retained canvas frames</a><a href="29-gui-scaling.html"><span>21</span>Logical GUI scaling and native resource checks</a><a href="10-windows.html"><span>22</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>23</span>Runnable projects</a><a href="12-self-hosting.html"><span>24</span>How the compiler builds itself</a><a href="13-reference.html"><span>25</span>Limits and standard library reference</a><a href="14-performance.html"><span>26</span>Performance and evidence</a><a href="26-compatibility.html"><span>27</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>28</span>What comes next</a><a href="16-agent-guide.html"><span>29</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
-<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><nav class="contents" aria-label="Full book contents"><h1>The Ramos Book</h1><a href="#00-welcome">Welcome to the Ramos Book</a><a href="#01-getting-started">Install, build and run</a><a href="#19-devtools">Diagnostics, formatting and running source files</a><a href="#02-language">The language</a><a href="#17-easier-syntax">Easier syntax: branches, ranges and assignment</a><a href="#21-math">Native float64 and essential math</a><a href="#22-math-input">Decimal input and streamed numerical tools</a><a href="#28-math-output">Exact scientific and compact numerical output</a><a href="#03-values">Strings, structs, arrays and memory</a><a href="#20-text-builder">Reusable text builders and streamed text tools</a><a href="#24-collections">Collection capacity, release and integer sorting</a><a href="#25-stack">Checked recursion and native stack budgets</a><a href="#04-bytes">Working with bytes</a><a href="#05-input">Stdin and number conversion</a><a href="#06-files">Arguments and file I/O</a><a href="#07-libraries">Libraries with weave</a><a href="#18-system">Paths, directories, environment and child processes</a><a href="#08-cli-tui">CLI tools and terminal interfaces</a><a href="#23-timing">Monotonic timing and terminal animation</a><a href="#09-gui">Desktop GUI on Windows and Linux</a><a href="#27-canvas">Native drawing and retained canvas frames</a><a href="#29-gui-scaling">Logical GUI scaling and native resource checks</a><a href="#10-windows">Windows and cross-compilation</a><a href="#11-cookbook">Runnable projects</a><a href="#12-self-hosting">How the compiler builds itself</a><a href="#13-reference">Limits and standard library reference</a><a href="#14-performance">Performance and evidence</a><a href="#26-compatibility">Versions, installation and compatibility</a><a href="#15-roadmap">What comes next</a><a href="#16-agent-guide">Guide for AI coding agents</a></nav><article><section id="00-welcome"><h1 id="00-welcome--welcome-to-the-ramos-book">Welcome to the Ramos Book</h1>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="28-math-output.html"><span>07</span>Exact scientific and compact numerical output</a><a href="03-values.html"><span>08</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>09</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>10</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>11</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>12</span>Working with bytes</a><a href="05-input.html"><span>13</span>Stdin and number conversion</a><a href="06-files.html"><span>14</span>Arguments and file I/O</a><a href="07-libraries.html"><span>15</span>Libraries with weave</a><a href="18-system.html"><span>16</span>Paths, directories, environment and child processes</a><a href="30-http.html"><span>17</span>Native HTTP(S) clients and verified TLS</a><a href="08-cli-tui.html"><span>18</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>19</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>20</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html"><span>21</span>Native drawing and retained canvas frames</a><a href="29-gui-scaling.html"><span>22</span>Logical GUI scaling and native resource checks</a><a href="10-windows.html"><span>23</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>24</span>Runnable projects</a><a href="12-self-hosting.html"><span>25</span>How the compiler builds itself</a><a href="13-reference.html"><span>26</span>Limits and standard library reference</a><a href="14-performance.html"><span>27</span>Performance and evidence</a><a href="26-compatibility.html"><span>28</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>29</span>What comes next</a><a href="16-agent-guide.html"><span>30</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><nav class="contents" aria-label="Full book contents"><h1>The Ramos Book</h1><a href="#00-welcome">Welcome to the Ramos Book</a><a href="#01-getting-started">Install, build and run</a><a href="#19-devtools">Diagnostics, formatting and running source files</a><a href="#02-language">The language</a><a href="#17-easier-syntax">Easier syntax: branches, ranges and assignment</a><a href="#21-math">Native float64 and essential math</a><a href="#22-math-input">Decimal input and streamed numerical tools</a><a href="#28-math-output">Exact scientific and compact numerical output</a><a href="#03-values">Strings, structs, arrays and memory</a><a href="#20-text-builder">Reusable text builders and streamed text tools</a><a href="#24-collections">Collection capacity, release and integer sorting</a><a href="#25-stack">Checked recursion and native stack budgets</a><a href="#04-bytes">Working with bytes</a><a href="#05-input">Stdin and number conversion</a><a href="#06-files">Arguments and file I/O</a><a href="#07-libraries">Libraries with weave</a><a href="#18-system">Paths, directories, environment and child processes</a><a href="#30-http">Native HTTP(S) clients and verified TLS</a><a href="#08-cli-tui">CLI tools and terminal interfaces</a><a href="#23-timing">Monotonic timing and terminal animation</a><a href="#09-gui">Desktop GUI on Windows and Linux</a><a href="#27-canvas">Native drawing and retained canvas frames</a><a href="#29-gui-scaling">Logical GUI scaling and native resource checks</a><a href="#10-windows">Windows and cross-compilation</a><a href="#11-cookbook">Runnable projects</a><a href="#12-self-hosting">How the compiler builds itself</a><a href="#13-reference">Limits and standard library reference</a><a href="#14-performance">Performance and evidence</a><a href="#26-compatibility">Versions, installation and compatibility</a><a href="#15-roadmap">What comes next</a><a href="#16-agent-guide">Guide for AI coding agents</a></nav><article><section id="00-welcome"><h1 id="00-welcome--welcome-to-the-ramos-book">Welcome to the Ramos Book</h1>
 <p>Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are <strong>simple
 programming</strong> and <strong>measured speed</strong>.</p>
-<p>This book describes <strong>Ramos 0.25.1 preview</strong>. Markdown chapters are the canonical edition
+<p>This book describes <strong>Ramos 0.26.0 preview</strong>. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.</p>
@@ -41,8 +41,9 @@ environment lookup, direct child execution and reusable UTF-8 text builders.
 reuse/release for streamed tools.</p>
 <p><a href="21-math.html">Native math</a> adds explicit conversions, square root and fixed
 decimal formatting. <a href="22-math-input.html">Decimal input</a> adds fallible parsing
-for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.25.1. Read
+for numerical CLI apps such as streamed statistics. Native <a href="30-http.html">HTTP(S) clients</a> support GET/POST with captured responses
+and verified TLS. There are no namespaces, raw sockets, network servers or package
+registry in 0.26.0. Read
 <a href="18-system.html">the OS libraries</a> for directory and child-process contracts. See <a href="17-easier-syntax.html">the new syntax</a> for ranges,
 else-if chains and compound assignment. See the
 <a href="13-reference.html">limits</a> and <a href="15-roadmap.html">proposed roadmap</a>. Planned syntax
@@ -59,7 +60,7 @@ status handling and signed integer sorting. <code>rsort</code> sorts stdin or a 
 <h2 id="00-welcome--project-links">Project links</h2>
 <ul>
 <li><a href="https://github.com/zackmsa777-a11y/ramos">Compiler and source</a></li>
-<li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.25.1">Ramos 0.25.1 release</a></li>
+<li><a href="https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.26.0">Ramos 0.26.0 preview</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation source</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-examples">Small runnable examples</a></li>
 <li><a href="https://github.com/zackmsa777-a11y/ramos-calculator">Scientific calculator: CLI, REPL and GUI</a></li>
@@ -92,9 +93,9 @@ canvas shapes. The 0.25.1 repaint candidate needs a real-display visual retest;
 200% was unavailable on the reported display. See the <a href="29-gui-scaling.html">test commands</a>.
 The practical 1.0 goal remains unfinished.</p></section><section id="01-getting-started"><h1 id="01-getting-started--install-build-and-run">Install, build and run</h1>
 <p>Use the complete
-<a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.25.1/ramos-0.25.1-gui-repaint-preview.zip">0.25.1 GUI-scaling preview bundle</a>,
-This is a repaint candidate whose real Windows visual acceptance is still pending.
-It also includes the CLI/TUI tools, both compilers, examples and all fourteen
+<a href="https://github.com/zackmsa777-a11y/ramos/releases/download/v0.26.0/ramos-0.26.0-http-preview.zip">0.26.0 HTTP(S) preview bundle</a>,
+Native HTTP(S) clients are included; the opt-in GUI scaling visual retest remains pending.
+It also includes the CLI/TUI tools, both compilers, examples and all fifteen
 libraries. Extract the archive and keep its directory structure. The published
 <code>SHA256SUMS</code> file lists asset hashes for integrity checking.</p>
 <h2 id="01-getting-started--your-first-source-file">Your first source file</h2>
@@ -1980,7 +1981,146 @@ close, generation/capacity checks, Unicode directory creation, junction/symlink
 cycles, exact child arguments, inherited streams/environment and child failures.
 See <a href="evidence/system-verification.json">release evidence</a>, <a href="evidence/bootstrap-proof.json">Linux bootstrap proof</a>
 and <a href="evidence/windows-bootstrap-proof.json">Windows bootstrap proof</a>. Historical 0.14
-benchmark scores are not performance measurements of 0.15; no speedup is claimed.</p></section><section id="08-cli-tui"><h1 id="08-cli-tui--cli-tools-and-terminal-interfaces">CLI tools and terminal interfaces</h1>
+benchmark scores are not performance measurements of 0.15; no speedup is claimed.</p></section><section id="30-http"><h1 id="30-http--native-https-clients-026-preview">Native HTTP(S) clients — 0.26 preview</h1>
+<p><code>weave "stdlib/http.ramos"</code> provides synchronous GET/POST requests that capture response
+bytes. Ramos calls <strong>libcurl on Linux</strong> and the <strong>system WinHTTP library on
+Windows</strong>, directly from the native executable. It does not spawn curl, Python,
+a shell, or a helper executable. TLS is supplied by those native libraries;
+Ramos does not implement its own cryptography.</p>
+<p>Linux networking executables need <code>libcurl.so.4</code> and the x64 ELF loader. The
+compiler automatically adds the HTTP imports when it emits the HTTP intrinsic;
+no <code>--net</code> flag is required. CLI programs without HTTP remain static. GTK is
+still opt-in with <code>--gui</code>; combining HTTP and GUI loads both libraries. Windows
+loads WinHTTP from System32 lazily, without another DLL to distribute.</p>
+<h2 id="30-http--api">API</h2>
+<pre><code class="language-ramos">struct HttpResponse { code: int64, status: int64, body: bytes }
+</code></pre>
+<ul>
+<li><code>http_get(url: string, headers: [string], timeout_ms: int64) -&gt; HttpResponse</code></li>
+<li><code>http_post(url: string, headers: [string], body: bytes, timeout_ms: int64) -&gt; HttpResponse</code></li>
+<li><code>http_request(method: string, url: string, headers: [string], body: bytes, timeout_ms: int64) -&gt; HttpResponse</code></li>
+</ul>
+<p><code>method</code> must be <code>s"GET"</code> or <code>s"POST"</code>. GET requires an empty body. POST accepts
+arbitrary bytes, including NUL and UTF-8 JSON. Headers are individual ASCII
+<code>Name: value</code> lines with nonempty token names and nonempty values. Do not add
+CR/LF terminators. A response body is a fresh mutable byte buffer.</p>
+<p><code>status == 0</code> means a complete HTTP response was received. <code>code</code> is its HTTP
+status: a 401, 429 or 500 is an HTTP result with its response body, not a transport
+failure. A negative <code>status</code> means the request failed; <code>code</code> is zero and the
+body is empty, including after an interrupted or oversized response. Treat the
+returned record's status as authoritative: library validation can return before
+calling the intrinsic and therefore does not change <code>io_error()</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-22</td>
+<td>Invalid method, URL, header, timeout or private packet</td>
+</tr>
+<tr>
+<td>-7</td>
+<td>Request metadata/header count exceeds the library limit</td>
+</tr>
+<tr>
+<td>-27</td>
+<td>Response body exceeds capacity</td>
+</tr>
+<tr>
+<td>-13</td>
+<td>TLS handshake, certificate/trust-store or hostname verification failure</td>
+</tr>
+<tr>
+<td>-110</td>
+<td>Network timeout</td>
+</tr>
+<tr>
+<td>-113</td>
+<td>Hostname resolution failure</td>
+</tr>
+<tr>
+<td>-111</td>
+<td>Connection failure</td>
+</tr>
+<tr>
+<td>-38</td>
+<td>Required native API unavailable</td>
+</tr>
+<tr>
+<td>-5</td>
+<td>Other native transport failure</td>
+</tr>
+</tbody>
+</table>
+<p>Limits are explicit: URL at most 8,192 ASCII bytes; at most 64 headers; total
+packed request metadata at most 32,768 bytes; POST body at most the existing
+1 MiB buffer limit; response body at most <strong>1,048,568 bytes</strong> (eight metadata
+bytes share the output buffer). Timeouts must be 1..120,000 milliseconds.</p>
+<p>URLs must start with lowercase <code>http://</code> or <code>https://</code>, have a nonempty authority,
+and contain ASCII bytes without spaces, backslashes, fragments or embedded
+credentials. Use percent encoding for non-ASCII paths and punycode for DNS names.
+Only HTTP(S) protocols are enabled. Requests are direct: automatic proxy lookup
+and environment proxy variables are not used. Redirects are returned to the
+caller, never followed automatically. Response headers, raw sockets, servers,
+async requests and streaming/SSE parsing are not provided by this milestone.</p>
+<h2 id="30-http--tls-and-timeout-contracts">TLS and timeout contracts</h2>
+<p>HTTPS verifies the certificate chain and the URL hostname, with TLS 1.2 or newer.
+There is no certificate-disable option. Linux uses libcurl's system trust store;
+if <code>SSL_CERT_FILE</code> is nonempty, it explicitly selects a PEM trust bundle while
+verification stays enabled. Windows uses the OS trust store. The client does not
+attempt automatic Windows authentication; explicit Authorization headers work.</p>
+<p>The timeout bounds the network transfer. Linux uses libcurl's transfer timer;
+Windows uses private native completion callbacks and an event wait with the
+remaining transfer budget. DNS/connect/send/read stages share that budget.
+On timeout, Windows cancels the request and waits for the final native handle
+closing callback before releasing buffers. Cancellation cleanup and the final
+response copy can extend total call duration; this is not a strict wall-clock
+return guarantee. The public API remains synchronous and does not provide
+background GUI work.</p>
+<p>Native contracts: <a href="https://curl.se/libcurl/c/CURLOPT_SSL_VERIFYHOST.html">libcurl hostname checking</a>,
+<a href="https://curl.se/libcurl/c/CURLOPT_TIMEOUT_MS.html">libcurl transfer timeout</a>,
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest">WinHTTP requests</a>
+and <a href="https://learn.microsoft.com/en-us/windows/win32/winhttp/option-flags">WinHTTP TLS/redirect options</a>.</p>
+<h2 id="30-http--a-jsonapi-client-in-ramos">A JSON/API client in Ramos</h2>
+<p>The complete <a href="examples/api_post.ramos">api_post example</a> reads a JSON request
+file, optionally adds <code>RAMOS_API_TOKEN</code> as a Bearer token, captures the HTTP(S)
+response, writes its bytes to stdout and exits nonzero on transport or non-2xx
+results. It does not print the token or place it on the command line.</p>
+<pre><code class="language-sh">./ramos build examples/api_post.ramos -o api-post
+./api-post https://your-api.example/endpoint request.json
+# Or compile and run directly:
+./ramos run examples/api_post.ramos -- https://your-api.example/endpoint request.json
+</code></pre>
+<p>On Windows, use the same source and compiler/library bundle:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\api_post.ramos -o .\my-api-post.exe
+.\my-api-post.exe https://your-api.example/endpoint .\request.json
+</code></pre>
+<p>Supply a real endpoint and its required JSON yourself. For a non-streaming LLM
+API, put its model/messages and other required fields in that file. This is a
+native transport client, not an SDK, JSON parser or complete autonomous agent.
+No live provider or paid LLM call is part of the automated tests.</p>
+<h2 id="30-http--verification-scope">Verification scope</h2>
+<p>The native <a href="evidence/http-verification.json">recorded proof</a> passes 309 Linux tests and
+250 Windows tests with matching compiler fixed points. A cancellation test then
+recycles 24 MiB of managed buffers and succeeds on another request in the same
+process. These are bounded tests, not a long-duration server or soak claim.</p>
+<p>Controlled loopback fixtures exercise GET/POST, binary and Unicode bodies,
+request headers/query strings, chunked responses, empty/401/302 results, no
+redirect following, connection refusal/timeouts, response limits and repeated
+requests/collection. TLS fixtures use a temporary trusted CA to prove success,
+then reject hostname mismatch and an untrusted certificate before any HTTP
+request is sent. Linux selects a per-process test trust bundle; native Windows
+installs its unique fixture CA in the disposable CI machine's Root store and
+removes that exact certificate afterward. Those Windows TLS tests require an
+elevated, isolated test host; application requests themselves do not require
+administrator access. Python/OpenSSL are test tooling only.</p>
+<p>The retained seed skips the new library/intrinsic tests. Windows TLS acceptance
+requires native Windows; Wine is not a substitute for that trust-store proof.
+GUI scaling retains its separate <a href="29-gui-scaling.html">preview acceptance</a>.</p></section><section id="08-cli-tui"><h1 id="08-cli-tui--cli-tools-and-terminal-interfaces">CLI tools and terminal interfaces</h1>
 <p>Ramos 0.12 adds streamed regular-file I/O, exact stdout, command-line helpers,
 and a terminal UI library written in Ramos. These are concrete building blocks
 for native CLI tools on Linux and Windows x64. The compiler remains self-hosted
@@ -3260,7 +3400,7 @@ or active-call limits.</p>
 statuses, clear/release ownership, signed integer sorting and the native <code>rsort</code>
 CLI. The existing array/live-heap bounds remain checked.</p>
 <h2 id="13-reference--standard-library-signatures">Standard library signatures</h2>
-<p>These are the complete function signatures defined in the thirteen bundled
+<p>These are the complete function signatures defined in the fifteen bundled
 libraries. Follow chapter APIs for supported application-facing helpers; some
 prefixed functions are implementation helpers. Read source for structs and
 exact status/lifetime contracts. <a href="21-math.html">Math</a>, <a href="22-math-input.html">decimal input</a>,
@@ -3464,7 +3604,20 @@ fn draw_present(id: int64, canvas: Canvas) -&gt; int64
 <p>For scaled windows, control/drawing geometry and resize/scale-event dimensions
 are logical units. Kind 6 carries DPI in <code>id</code>. Windows opt-in scaling needs
 per-monitor-v2 support; <a href="29-gui-scaling.html">scaling contracts</a> distinguish native
-initial checks from the pending actual Windows display transition.</p></section><section id="14-performance"><h1 id="14-performance--ramos-0220-performance-eight-task-index">Ramos 0.22.0 performance: eight-task index</h1>
+initial checks from the pending actual Windows display transition.</p>
+<h3 id="13-reference--httpramos">http.ramos</h3>
+<p>See <a href="30-http.html">transport, TLS and timeout contracts</a> and <a href="stdlib/http.ramos">the source</a>.</p>
+<pre><code class="language-ramos">struct HttpResponse { code: int64, status: int64, body: bytes }
+struct HttpPacket { data: bytes, used: int64, status: int64 }
+fn http_byte(packet: HttpPacket, value: int64)
+fn http_text(packet: HttpPacket, value: string)
+fn http_number(packet: HttpPacket, value: int64)
+fn http_get(url: string, headers: [string], timeout_ms: int64) -&gt; HttpResponse
+fn http_post(url: string, headers: [string], body: bytes, timeout_ms: int64) -&gt; HttpResponse
+fn http_request(method: string, url: string, headers: [string], body: bytes, timeout_ms: int64) -&gt; HttpResponse
+</code></pre>
+<p>The <code>http_byte</code>, <code>http_text</code>, <code>http_number</code> and <code>HttpPacket</code> definitions in the
+source are packet-building helpers. Use the three request functions for apps.</p></section><section id="14-performance"><h1 id="14-performance--ramos-0220-performance-eight-task-index">Ramos 0.22.0 performance: eight-task index</h1>
 <p>Measured 2026-10-12T17:48:33.683094+00:00 on x86-64 Linux. Higher scores are faster; optimized C = 100.</p>
 <table>
 <thead>
@@ -4107,6 +4260,16 @@ timings are historical; they are not a performance result for 0.13.</p>
 <td>Keep the same demo open through actual OS scale changes</td>
 </tr>
 <tr>
+<td>0.26 preview: native HTTP(S) (see <a href="30-http.html">contracts</a>)</td>
+<td>GET/POST, headers, bounded captured bodies and verified TLS through libcurl/WinHTTP</td>
+<td>Controlled trusted HTTPS JSON client; reject untrusted certificates/name mismatch, preserve HTTP errors and close handles</td>
+</tr>
+<tr>
+<td>API client follow-up</td>
+<td>JSON parsing/formatting, response headers and explicitly designed deadlines/streaming</td>
+<td>A complete non-streaming LLM client and tool loop without a helper network process</td>
+</tr>
+<tr>
 <td>1.0 candidate: reliability and measured speed</td>
 <td>Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility</td>
 <td>Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes</td>
@@ -4198,7 +4361,7 @@ are published. This is useful application capability, not all of Python or Rust.
 remain follow-up goals. GitHub Linguist recognition is independent of language
 correctness and application readiness.</p></section><section id="16-agent-guide"><h1 id="16-agent-guide--guide-for-ai-coding-agents">Guide for AI coding agents</h1>
 <p>This chapter is a compact capability contract for agents generating Ramos
-programs. Target the <strong>0.25.1 preview</strong> unless the task explicitly provides a newer compiler
+programs. Target the <strong>0.26.0 preview</strong> unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.</p>
 <h2 id="16-agent-guide--read-in-this-order">Read in this order</h2>
@@ -4206,7 +4369,7 @@ from Python, C or Rust syntax.</p>
 <li><a href="02-language.html">Language</a>: statements, types, operators and functions.</li>
 <li><a href="03-values.html">Values</a>: immutable strings, aliases, arrays and heap behavior.</li>
 <li><a href="07-libraries.html">Libraries</a> and <a href="13-reference.html">signatures</a>.</li>
-<li><a href="06-files.html">Files</a>, <a href="08-cli-tui.html">CLI/TUI</a> or <a href="09-gui.html">GUI</a> for the task.</li>
+<li><a href="06-files.html">Files</a>, <a href="08-cli-tui.html">CLI/TUI</a>, <a href="09-gui.html">GUI</a> or <a href="30-http.html">HTTP(S)</a> for the task.</li>
 </ol>
 <p><code>BOOK.md</code> is a generated single-file edition if loading the whole reference is
 useful. Individual chapters are smaller and have stable relative links.</p>
@@ -4248,6 +4411,13 @@ entry kinds, skip links/junctions during traversal, and close after early exit.
 there is no shell or PATH lookup. Supply an executable path; at most 256 argument
 values and 32767 packed UTF-8 bytes. Child input/output is inherited, not captured.
 <code>system_env</code> returns bytes and distinguishes missing (-2) from empty success.</p>
+<p>For HTTP(S), use the <a href="30-http.html">native client library</a>, not a child-process
+network helper. <code>http_get</code>/<code>http_post</code> return HttpResponse: check status first,
+then the HTTP code, then consume body bytes. HTTP 401/429/500 preserve their
+response body. Certificate/name failures return negative status with empty body.
+Linux networking executables require libcurl; compiler imports are automatic.
+Windows uses system WinHTTP. This API is synchronous and bounded; do not invent
+raw sockets, response-header access, proxy settings, async requests or SSE parsing.</p>
 <p>For GUI, use <code>run app.ramos --gui</code> or <code>build app.ramos -o PROGRAM --gui</code>.
 Windows uses system controls; Linux requires GTK3 and a display. A static Linux
 build returns -38 from GUI startup, a missing display returns -19, and missing
@@ -4311,5 +4481,5 @@ tiny values to zero. Read <a href="28-math-output.html">output contracts</a>.</p
 <p>For explicit DPI policy, use <code>gui_open_scaled</code>, check the opening status, then
 handle kind 6 alongside logical resize events. Read <a href="29-gui-scaling.html">scaling contracts</a>
 for GTK integer scales and Windows requirements. Do not treat fabricated DPI
-messages or initial 100% CI checks as genuine Windows transition proof.</p></section></article><nav class="pager" aria-label="Chapter navigation"></nav><footer>Ramos 0.25.1 · <a href="book/BOOK.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+messages or initial 100% CI checks as genuine Windows transition proof.</p></section></article><nav class="pager" aria-label="Chapter navigation"></nav><footer>Ramos 0.26.0 · <a href="book/BOOK.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
 </body></html>

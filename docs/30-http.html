@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Ramos Book: a practical reference for Ramos 0.26.0, with Markdown for agents and HTML for people.">
+<title>Native HTTP(S) clients and verified TLS · The Ramos Book</title>
+<link rel="stylesheet" href="assets/book.css"><script src="assets/book.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="index.html"><b>R</b> The Ramos Book <small>0.26.0</small></a>
+<div class="actions"><a href="book/BOOK.md">Markdown</a><a href="all.html">Print book</a><button id="theme" aria-label="Switch color theme">Theme</button><button id="menu" aria-expanded="false" aria-controls="sidebar">Chapters</button></div></header>
+<aside id="sidebar"><label for="search">Search the book</label><input id="search" type="search" placeholder="Strings, files, GUI…" autocomplete="off"><div id="results" aria-live="polite" hidden></div><nav aria-label="Book chapters"><a href="index.html"><span>00</span>Welcome to the Ramos Book</a><a href="01-getting-started.html"><span>01</span>Install, build and run</a><a href="19-devtools.html"><span>02</span>Diagnostics, formatting and running source files</a><a href="02-language.html"><span>03</span>The language</a><a href="17-easier-syntax.html"><span>04</span>Easier syntax: branches, ranges and assignment</a><a href="21-math.html"><span>05</span>Native float64 and essential math</a><a href="22-math-input.html"><span>06</span>Decimal input and streamed numerical tools</a><a href="28-math-output.html"><span>07</span>Exact scientific and compact numerical output</a><a href="03-values.html"><span>08</span>Strings, structs, arrays and memory</a><a href="20-text-builder.html"><span>09</span>Reusable text builders and streamed text tools</a><a href="24-collections.html"><span>10</span>Collection capacity, release and integer sorting</a><a href="25-stack.html"><span>11</span>Checked recursion and native stack budgets</a><a href="04-bytes.html"><span>12</span>Working with bytes</a><a href="05-input.html"><span>13</span>Stdin and number conversion</a><a href="06-files.html"><span>14</span>Arguments and file I/O</a><a href="07-libraries.html"><span>15</span>Libraries with weave</a><a href="18-system.html"><span>16</span>Paths, directories, environment and child processes</a><a href="30-http.html" aria-current="page"><span>17</span>Native HTTP(S) clients and verified TLS</a><a href="08-cli-tui.html"><span>18</span>CLI tools and terminal interfaces</a><a href="23-timing.html"><span>19</span>Monotonic timing and terminal animation</a><a href="09-gui.html"><span>20</span>Desktop GUI on Windows and Linux</a><a href="27-canvas.html"><span>21</span>Native drawing and retained canvas frames</a><a href="29-gui-scaling.html"><span>22</span>Logical GUI scaling and native resource checks</a><a href="10-windows.html"><span>23</span>Windows and cross-compilation</a><a href="11-cookbook.html"><span>24</span>Runnable projects</a><a href="12-self-hosting.html"><span>25</span>How the compiler builds itself</a><a href="13-reference.html"><span>26</span>Limits and standard library reference</a><a href="14-performance.html"><span>27</span>Performance and evidence</a><a href="26-compatibility.html"><span>28</span>Versions, installation and compatibility</a><a href="15-roadmap.html"><span>29</span>What comes next</a><a href="16-agent-guide.html"><span>30</span>Guide for AI coding agents</a></nav><a class="source" href="https://github.com/zackmsa777-a11y/ramos-docs">Documentation on GitHub ↗</a></aside>
+<main id="main"><div class="edition">A practical native language · Simple syntax · Measured speed</div><article><h1 id="native-https-clients-026-preview">Native HTTP(S) clients — 0.26 preview</h1>
+<p><code>weave "stdlib/http.ramos"</code> provides synchronous GET/POST requests that capture response
+bytes. Ramos calls <strong>libcurl on Linux</strong> and the <strong>system WinHTTP library on
+Windows</strong>, directly from the native executable. It does not spawn curl, Python,
+a shell, or a helper executable. TLS is supplied by those native libraries;
+Ramos does not implement its own cryptography.</p>
+<p>Linux networking executables need <code>libcurl.so.4</code> and the x64 ELF loader. The
+compiler automatically adds the HTTP imports when it emits the HTTP intrinsic;
+no <code>--net</code> flag is required. CLI programs without HTTP remain static. GTK is
+still opt-in with <code>--gui</code>; combining HTTP and GUI loads both libraries. Windows
+loads WinHTTP from System32 lazily, without another DLL to distribute.</p>
+<h2 id="api">API</h2>
+<pre><code class="language-ramos">struct HttpResponse { code: int64, status: int64, body: bytes }
+</code></pre>
+<ul>
+<li><code>http_get(url: string, headers: [string], timeout_ms: int64) -&gt; HttpResponse</code></li>
+<li><code>http_post(url: string, headers: [string], body: bytes, timeout_ms: int64) -&gt; HttpResponse</code></li>
+<li><code>http_request(method: string, url: string, headers: [string], body: bytes, timeout_ms: int64) -&gt; HttpResponse</code></li>
+</ul>
+<p><code>method</code> must be <code>s"GET"</code> or <code>s"POST"</code>. GET requires an empty body. POST accepts
+arbitrary bytes, including NUL and UTF-8 JSON. Headers are individual ASCII
+<code>Name: value</code> lines with nonempty token names and nonempty values. Do not add
+CR/LF terminators. A response body is a fresh mutable byte buffer.</p>
+<p><code>status == 0</code> means a complete HTTP response was received. <code>code</code> is its HTTP
+status: a 401, 429 or 500 is an HTTP result with its response body, not a transport
+failure. A negative <code>status</code> means the request failed; <code>code</code> is zero and the
+body is empty, including after an interrupted or oversized response. Treat the
+returned record's status as authoritative: library validation can return before
+calling the intrinsic and therefore does not change <code>io_error()</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-22</td>
+<td>Invalid method, URL, header, timeout or private packet</td>
+</tr>
+<tr>
+<td>-7</td>
+<td>Request metadata/header count exceeds the library limit</td>
+</tr>
+<tr>
+<td>-27</td>
+<td>Response body exceeds capacity</td>
+</tr>
+<tr>
+<td>-13</td>
+<td>TLS handshake, certificate/trust-store or hostname verification failure</td>
+</tr>
+<tr>
+<td>-110</td>
+<td>Network timeout</td>
+</tr>
+<tr>
+<td>-113</td>
+<td>Hostname resolution failure</td>
+</tr>
+<tr>
+<td>-111</td>
+<td>Connection failure</td>
+</tr>
+<tr>
+<td>-38</td>
+<td>Required native API unavailable</td>
+</tr>
+<tr>
+<td>-5</td>
+<td>Other native transport failure</td>
+</tr>
+</tbody>
+</table>
+<p>Limits are explicit: URL at most 8,192 ASCII bytes; at most 64 headers; total
+packed request metadata at most 32,768 bytes; POST body at most the existing
+1 MiB buffer limit; response body at most <strong>1,048,568 bytes</strong> (eight metadata
+bytes share the output buffer). Timeouts must be 1..120,000 milliseconds.</p>
+<p>URLs must start with lowercase <code>http://</code> or <code>https://</code>, have a nonempty authority,
+and contain ASCII bytes without spaces, backslashes, fragments or embedded
+credentials. Use percent encoding for non-ASCII paths and punycode for DNS names.
+Only HTTP(S) protocols are enabled. Requests are direct: automatic proxy lookup
+and environment proxy variables are not used. Redirects are returned to the
+caller, never followed automatically. Response headers, raw sockets, servers,
+async requests and streaming/SSE parsing are not provided by this milestone.</p>
+<h2 id="tls-and-timeout-contracts">TLS and timeout contracts</h2>
+<p>HTTPS verifies the certificate chain and the URL hostname, with TLS 1.2 or newer.
+There is no certificate-disable option. Linux uses libcurl's system trust store;
+if <code>SSL_CERT_FILE</code> is nonempty, it explicitly selects a PEM trust bundle while
+verification stays enabled. Windows uses the OS trust store. The client does not
+attempt automatic Windows authentication; explicit Authorization headers work.</p>
+<p>The timeout bounds the network transfer. Linux uses libcurl's transfer timer;
+Windows uses private native completion callbacks and an event wait with the
+remaining transfer budget. DNS/connect/send/read stages share that budget.
+On timeout, Windows cancels the request and waits for the final native handle
+closing callback before releasing buffers. Cancellation cleanup and the final
+response copy can extend total call duration; this is not a strict wall-clock
+return guarantee. The public API remains synchronous and does not provide
+background GUI work.</p>
+<p>Native contracts: <a href="https://curl.se/libcurl/c/CURLOPT_SSL_VERIFYHOST.html">libcurl hostname checking</a>,
+<a href="https://curl.se/libcurl/c/CURLOPT_TIMEOUT_MS.html">libcurl transfer timeout</a>,
+<a href="https://learn.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest">WinHTTP requests</a>
+and <a href="https://learn.microsoft.com/en-us/windows/win32/winhttp/option-flags">WinHTTP TLS/redirect options</a>.</p>
+<h2 id="a-jsonapi-client-in-ramos">A JSON/API client in Ramos</h2>
+<p>The complete <a href="examples/api_post.ramos">api_post example</a> reads a JSON request
+file, optionally adds <code>RAMOS_API_TOKEN</code> as a Bearer token, captures the HTTP(S)
+response, writes its bytes to stdout and exits nonzero on transport or non-2xx
+results. It does not print the token or place it on the command line.</p>
+<pre><code class="language-sh">./ramos build examples/api_post.ramos -o api-post
+./api-post https://your-api.example/endpoint request.json
+# Or compile and run directly:
+./ramos run examples/api_post.ramos -- https://your-api.example/endpoint request.json
+</code></pre>
+<p>On Windows, use the same source and compiler/library bundle:</p>
+<pre><code class="language-powershell">.\ramos.exe build .\examples\api_post.ramos -o .\my-api-post.exe
+.\my-api-post.exe https://your-api.example/endpoint .\request.json
+</code></pre>
+<p>Supply a real endpoint and its required JSON yourself. For a non-streaming LLM
+API, put its model/messages and other required fields in that file. This is a
+native transport client, not an SDK, JSON parser or complete autonomous agent.
+No live provider or paid LLM call is part of the automated tests.</p>
+<h2 id="verification-scope">Verification scope</h2>
+<p>The native <a href="evidence/http-verification.json">recorded proof</a> passes 309 Linux tests and
+250 Windows tests with matching compiler fixed points. A cancellation test then
+recycles 24 MiB of managed buffers and succeeds on another request in the same
+process. These are bounded tests, not a long-duration server or soak claim.</p>
+<p>Controlled loopback fixtures exercise GET/POST, binary and Unicode bodies,
+request headers/query strings, chunked responses, empty/401/302 results, no
+redirect following, connection refusal/timeouts, response limits and repeated
+requests/collection. TLS fixtures use a temporary trusted CA to prove success,
+then reject hostname mismatch and an untrusted certificate before any HTTP
+request is sent. Linux selects a per-process test trust bundle; native Windows
+installs its unique fixture CA in the disposable CI machine's Root store and
+removes that exact certificate afterward. Those Windows TLS tests require an
+elevated, isolated test host; application requests themselves do not require
+administrator access. Python/OpenSSL are test tooling only.</p>
+<p>The retained seed skips the new library/intrinsic tests. Windows TLS acceptance
+requires native Windows; Wine is not a substitute for that trust-store proof.
+GUI scaling retains its separate <a href="29-gui-scaling.html">preview acceptance</a>.</p></article><nav class="pager" aria-label="Chapter navigation"><a href="18-system.html">← Paths, directories, environment and child processes</a><a href="08-cli-tui.html">CLI tools and terminal interfaces →</a></nav><footer>Ramos 0.26.0 · <a href="book/30-http.md">Read this in Markdown</a> · <a href="https://github.com/zackmsa777-a11y/ramos-docs/issues">Report a documentation issue</a><br>Future features are marked as plans. Examples and limits describe this edition.</footer></main>
+</body></html>

@@ -1,7 +1,7 @@
 {
-  "version": "0.25.1",
+  "version": "0.26.0",
   "source_repository": "https://github.com/zackmsa777-a11y/ramos",
-  "source_commit": "eb50b064374329209f948e99504d38311f9c92b7",
+  "source_commit": "8ec5fd83a39f8df79e23b46324be6cd1469d3a5b",
   "chapters": [
     {
       "slug": "00-welcome",
@@ -89,6 +89,11 @@
       "source": "docs/system.md"
     },
     {
+      "slug": "30-http",
+      "title": "Native HTTP(S) clients and verified TLS",
+      "source": "docs/http.md"
+    },
+    {
       "slug": "08-cli-tui",
       "title": "CLI tools and terminal interfaces",
       "source": "docs/cli-tui.md"
@@ -154,5 +159,5 @@
       "source": null
     }
   ],
-  "release_status": "preview: genuine Windows display transitions pending"
+  "release_status": "preview: native HTTP(S) verified; real Windows GUI visual retest pending"
 }

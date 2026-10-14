@@ -1,7 +1,7 @@
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target the **0.25.1 preview** unless the task explicitly provides a newer compiler
+programs. Target the **0.26.0 preview** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -10,7 +10,7 @@ from Python, C or Rust syntax.
 1. [Language](02-language.md): statements, types, operators and functions.
 2. [Values](03-values.md): immutable strings, aliases, arrays and heap behavior.
 3. [Libraries](07-libraries.md) and [signatures](13-reference.md).
-4. [Files](06-files.md), [CLI/TUI](08-cli-tui.md) or [GUI](09-gui.md) for the task.
+4. [Files](06-files.md), [CLI/TUI](08-cli-tui.md), [GUI](09-gui.md) or [HTTP(S)](30-http.md) for the task.
 
 `BOOK.md` is a generated single-file edition if loading the whole reference is
 useful. Individual chapters are smaller and have stable relative links.
@@ -58,6 +58,14 @@ entry kinds, skip links/junctions during traversal, and close after early exit.
 there is no shell or PATH lookup. Supply an executable path; at most 256 argument
 values and 32767 packed UTF-8 bytes. Child input/output is inherited, not captured.
 `system_env` returns bytes and distinguishes missing (-2) from empty success.
+
+For HTTP(S), use the [native client library](30-http.md), not a child-process
+network helper. `http_get`/`http_post` return HttpResponse: check status first,
+then the HTTP code, then consume body bytes. HTTP 401/429/500 preserve their
+response body. Certificate/name failures return negative status with empty body.
+Linux networking executables require libcurl; compiler imports are automatic.
+Windows uses system WinHTTP. This API is synchronous and bounded; do not invent
+raw sockets, response-header access, proxy settings, async requests or SSE parsing.
 
 For GUI, use `run app.ramos --gui` or `build app.ramos -o PROGRAM --gui`.
 Windows uses system controls; Linux requires GTK3 and a display. A static Linux

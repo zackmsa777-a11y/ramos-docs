@@ -1,4 +1,4 @@
-# The Ramos Book — 0.25.1
+# The Ramos Book — 0.26.0
 
 # Welcome to the Ramos Book
 
@@ -6,7 +6,7 @@ Ramos is a small, self-hosted language that compiles directly to native
 Linux x64 and Windows x64 executables. Its two guiding rules are **simple
 programming** and **measured speed**.
 
-This book describes **Ramos 0.25.1 preview**. Markdown chapters are the canonical edition
+This book describes **Ramos 0.26.0 preview**. Markdown chapters are the canonical edition
 for AI agents, review and offline reading. The HTML edition is generated from
 those same chapters for comfortable human reading. Historical version labels
 identify when a feature arrived; they do not change this book's baseline.
@@ -35,8 +35,9 @@ reuse/release for streamed tools.
 
 [Native math](21-math.md) adds explicit conversions, square root and fixed
 decimal formatting. [Decimal input](22-math-input.md) adds fallible parsing
-for numerical CLI apps such as streamed statistics. There are no namespaces, networking APIs or package registry
-in 0.25.1. Read
+for numerical CLI apps such as streamed statistics. Native [HTTP(S) clients](30-http.md) support GET/POST with captured responses
+and verified TLS. There are no namespaces, raw sockets, network servers or package
+registry in 0.26.0. Read
 [the OS libraries](18-system.md) for directory and child-process contracts. See [the new syntax](17-easier-syntax.md) for ranges,
 else-if chains and compound assignment. See the
 [limits](13-reference.md) and [proposed roadmap](15-roadmap.md). Planned syntax
@@ -57,7 +58,7 @@ status handling and signed integer sorting. `rsort` sorts stdin or a streamed fi
 ## Project links
 
 - [Compiler and source](https://github.com/zackmsa777-a11y/ramos)
-- [Ramos 0.25.1 release](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.25.1)
+- [Ramos 0.26.0 preview](https://github.com/zackmsa777-a11y/ramos/releases/tag/v0.26.0)
 - [Documentation source](https://github.com/zackmsa777-a11y/ramos-docs)
 - [Small runnable examples](https://github.com/zackmsa777-a11y/ramos-examples)
 - [Scientific calculator: CLI, REPL and GUI](https://github.com/zackmsa777-a11y/ramos-calculator)
@@ -101,9 +102,9 @@ The practical 1.0 goal remains unfinished.
 # Install, build and run
 
 Use the complete
-[0.25.1 GUI-scaling preview bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.25.1/ramos-0.25.1-gui-repaint-preview.zip),
-This is a repaint candidate whose real Windows visual acceptance is still pending.
-It also includes the CLI/TUI tools, both compilers, examples and all fourteen
+[0.26.0 HTTP(S) preview bundle](https://github.com/zackmsa777-a11y/ramos/releases/download/v0.26.0/ramos-0.26.0-http-preview.zip),
+Native HTTP(S) clients are included; the opt-in GUI scaling visual retest remains pending.
+It also includes the CLI/TUI tools, both compilers, examples and all fifteen
 libraries. Extract the archive and keep its directory structure. The published
 `SHA256SUMS` file lists asset hashes for integrity checking.
 
@@ -2089,6 +2090,141 @@ benchmark scores are not performance measurements of 0.15; no speedup is claimed
 
 ---
 
+# Native HTTP(S) clients — 0.26 preview
+
+`weave "stdlib/http.ramos"` provides synchronous GET/POST requests that capture response
+bytes. Ramos calls **libcurl on Linux** and the **system WinHTTP library on
+Windows**, directly from the native executable. It does not spawn curl, Python,
+a shell, or a helper executable. TLS is supplied by those native libraries;
+Ramos does not implement its own cryptography.
+
+Linux networking executables need `libcurl.so.4` and the x64 ELF loader. The
+compiler automatically adds the HTTP imports when it emits the HTTP intrinsic;
+no `--net` flag is required. CLI programs without HTTP remain static. GTK is
+still opt-in with `--gui`; combining HTTP and GUI loads both libraries. Windows
+loads WinHTTP from System32 lazily, without another DLL to distribute.
+
+## API
+
+```ramos
+struct HttpResponse { code: int64, status: int64, body: bytes }
+```
+
+- `http_get(url: string, headers: [string], timeout_ms: int64) -> HttpResponse`
+- `http_post(url: string, headers: [string], body: bytes, timeout_ms: int64) -> HttpResponse`
+- `http_request(method: string, url: string, headers: [string], body: bytes, timeout_ms: int64) -> HttpResponse`
+
+`method` must be `s"GET"` or `s"POST"`. GET requires an empty body. POST accepts
+arbitrary bytes, including NUL and UTF-8 JSON. Headers are individual ASCII
+`Name: value` lines with nonempty token names and nonempty values. Do not add
+CR/LF terminators. A response body is a fresh mutable byte buffer.
+
+`status == 0` means a complete HTTP response was received. `code` is its HTTP
+status: a 401, 429 or 500 is an HTTP result with its response body, not a transport
+failure. A negative `status` means the request failed; `code` is zero and the
+body is empty, including after an interrupted or oversized response. Treat the
+returned record's status as authoritative: library validation can return before
+calling the intrinsic and therefore does not change `io_error()`.
+
+| Status | Meaning |
+| --- | --- |
+| -22 | Invalid method, URL, header, timeout or private packet |
+| -7 | Request metadata/header count exceeds the library limit |
+| -27 | Response body exceeds capacity |
+| -13 | TLS handshake, certificate/trust-store or hostname verification failure |
+| -110 | Network timeout |
+| -113 | Hostname resolution failure |
+| -111 | Connection failure |
+| -38 | Required native API unavailable |
+| -5 | Other native transport failure |
+
+Limits are explicit: URL at most 8,192 ASCII bytes; at most 64 headers; total
+packed request metadata at most 32,768 bytes; POST body at most the existing
+1 MiB buffer limit; response body at most **1,048,568 bytes** (eight metadata
+bytes share the output buffer). Timeouts must be 1..120,000 milliseconds.
+
+URLs must start with lowercase `http://` or `https://`, have a nonempty authority,
+and contain ASCII bytes without spaces, backslashes, fragments or embedded
+credentials. Use percent encoding for non-ASCII paths and punycode for DNS names.
+Only HTTP(S) protocols are enabled. Requests are direct: automatic proxy lookup
+and environment proxy variables are not used. Redirects are returned to the
+caller, never followed automatically. Response headers, raw sockets, servers,
+async requests and streaming/SSE parsing are not provided by this milestone.
+
+## TLS and timeout contracts
+
+HTTPS verifies the certificate chain and the URL hostname, with TLS 1.2 or newer.
+There is no certificate-disable option. Linux uses libcurl's system trust store;
+if `SSL_CERT_FILE` is nonempty, it explicitly selects a PEM trust bundle while
+verification stays enabled. Windows uses the OS trust store. The client does not
+attempt automatic Windows authentication; explicit Authorization headers work.
+
+The timeout bounds the network transfer. Linux uses libcurl's transfer timer;
+Windows uses private native completion callbacks and an event wait with the
+remaining transfer budget. DNS/connect/send/read stages share that budget.
+On timeout, Windows cancels the request and waits for the final native handle
+closing callback before releasing buffers. Cancellation cleanup and the final
+response copy can extend total call duration; this is not a strict wall-clock
+return guarantee. The public API remains synchronous and does not provide
+background GUI work.
+
+Native contracts: [libcurl hostname checking](https://curl.se/libcurl/c/CURLOPT_SSL_VERIFYHOST.html),
+[libcurl transfer timeout](https://curl.se/libcurl/c/CURLOPT_TIMEOUT_MS.html),
+[WinHTTP requests](https://learn.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpopenrequest)
+and [WinHTTP TLS/redirect options](https://learn.microsoft.com/en-us/windows/win32/winhttp/option-flags).
+
+## A JSON/API client in Ramos
+
+The complete [api_post example](../examples/api_post.ramos) reads a JSON request
+file, optionally adds `RAMOS_API_TOKEN` as a Bearer token, captures the HTTP(S)
+response, writes its bytes to stdout and exits nonzero on transport or non-2xx
+results. It does not print the token or place it on the command line.
+
+```sh
+./ramos build examples/api_post.ramos -o api-post
+./api-post https://your-api.example/endpoint request.json
+# Or compile and run directly:
+./ramos run examples/api_post.ramos -- https://your-api.example/endpoint request.json
+```
+
+On Windows, use the same source and compiler/library bundle:
+
+```powershell
+.\ramos.exe build .\examples\api_post.ramos -o .\my-api-post.exe
+.\my-api-post.exe https://your-api.example/endpoint .\request.json
+```
+
+Supply a real endpoint and its required JSON yourself. For a non-streaming LLM
+API, put its model/messages and other required fields in that file. This is a
+native transport client, not an SDK, JSON parser or complete autonomous agent.
+No live provider or paid LLM call is part of the automated tests.
+
+## Verification scope
+
+The native [recorded proof](../evidence/http-verification.json) passes 309 Linux tests and
+250 Windows tests with matching compiler fixed points. A cancellation test then
+recycles 24 MiB of managed buffers and succeeds on another request in the same
+process. These are bounded tests, not a long-duration server or soak claim.
+
+
+Controlled loopback fixtures exercise GET/POST, binary and Unicode bodies,
+request headers/query strings, chunked responses, empty/401/302 results, no
+redirect following, connection refusal/timeouts, response limits and repeated
+requests/collection. TLS fixtures use a temporary trusted CA to prove success,
+then reject hostname mismatch and an untrusted certificate before any HTTP
+request is sent. Linux selects a per-process test trust bundle; native Windows
+installs its unique fixture CA in the disposable CI machine's Root store and
+removes that exact certificate afterward. Those Windows TLS tests require an
+elevated, isolated test host; application requests themselves do not require
+administrator access. Python/OpenSSL are test tooling only.
+
+The retained seed skips the new library/intrinsic tests. Windows TLS acceptance
+requires native Windows; Wine is not a substitute for that trust-store proof.
+GUI scaling retains its separate [preview acceptance](29-gui-scaling.md).
+
+
+---
+
 # CLI tools and terminal interfaces
 
 Ramos 0.12 adds streamed regular-file I/O, exact stdout, command-line helpers,
@@ -3508,7 +3644,7 @@ CLI. The existing array/live-heap bounds remain checked.
 
 ## Standard library signatures
 
-These are the complete function signatures defined in the thirteen bundled
+These are the complete function signatures defined in the fifteen bundled
 libraries. Follow chapter APIs for supported application-facing helpers; some
 prefixed functions are implementation helpers. Read source for structs and
 exact status/lifetime contracts. [Math](21-math.md), [decimal input](22-math-input.md),
@@ -3770,6 +3906,24 @@ For scaled windows, control/drawing geometry and resize/scale-event dimensions
 are logical units. Kind 6 carries DPI in `id`. Windows opt-in scaling needs
 per-monitor-v2 support; [scaling contracts](29-gui-scaling.md) distinguish native
 initial checks from the pending actual Windows display transition.
+
+### http.ramos
+
+See [transport, TLS and timeout contracts](30-http.md) and [the source](../stdlib/http.ramos).
+
+```ramos
+struct HttpResponse { code: int64, status: int64, body: bytes }
+struct HttpPacket { data: bytes, used: int64, status: int64 }
+fn http_byte(packet: HttpPacket, value: int64)
+fn http_text(packet: HttpPacket, value: string)
+fn http_number(packet: HttpPacket, value: int64)
+fn http_get(url: string, headers: [string], timeout_ms: int64) -> HttpResponse
+fn http_post(url: string, headers: [string], body: bytes, timeout_ms: int64) -> HttpResponse
+fn http_request(method: string, url: string, headers: [string], body: bytes, timeout_ms: int64) -> HttpResponse
+```
+
+The `http_byte`, `http_text`, `http_number` and `HttpPacket` definitions in the
+source are packet-building helpers. Use the three request functions for apps.
 
 
 ---
@@ -4142,6 +4296,8 @@ timings are historical; they are not a performance result for 0.13.
 | 0.24: numerical output (implemented; see [contracts](28-math-output.md)) | Exact scientific/compact formatting in Ramos, fixed output preserved | Tiny calculator values remain visible; independent rounding and binary64 round trips on both OSes |
 | 0.25 preview: explicit scaling (see [contracts](29-gui-scaling.md)) | Opt-in logical geometry, native fonts/canvas and DPI events; bounded resource probes | Genuine GTK 1× → 2× → 1×; Windows native initial state and resource checks; reported Windows 144 → 168 → 96 events/input passed; canvas visual acceptance failed and repaint retest pending |
 | GUI acceptance follow-up | Intact canvas at native Windows transitions and genuine multi-monitor movement | Keep the same demo open through actual OS scale changes |
+| 0.26 preview: native HTTP(S) (see [contracts](30-http.md)) | GET/POST, headers, bounded captured bodies and verified TLS through libcurl/WinHTTP | Controlled trusted HTTPS JSON client; reject untrusted certificates/name mismatch, preserve HTTP errors and close handles |
+| API client follow-up | JSON parsing/formatting, response headers and explicitly designed deadlines/streaming | A complete non-streaming LLM client and tool loop without a helper network process |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
 
 ### 0.14: specify the small syntax changes first
@@ -4260,7 +4416,7 @@ correctness and application readiness.
 # Guide for AI coding agents
 
 This chapter is a compact capability contract for agents generating Ramos
-programs. Target the **0.25.1 preview** unless the task explicitly provides a newer compiler
+programs. Target the **0.26.0 preview** unless the task explicitly provides a newer compiler
 and verified documentation. Read the relevant chapter rather than guessing
 from Python, C or Rust syntax.
 
@@ -4269,7 +4425,7 @@ from Python, C or Rust syntax.
 1. [Language](02-language.md): statements, types, operators and functions.
 2. [Values](03-values.md): immutable strings, aliases, arrays and heap behavior.
 3. [Libraries](07-libraries.md) and [signatures](13-reference.md).
-4. [Files](06-files.md), [CLI/TUI](08-cli-tui.md) or [GUI](09-gui.md) for the task.
+4. [Files](06-files.md), [CLI/TUI](08-cli-tui.md), [GUI](09-gui.md) or [HTTP(S)](30-http.md) for the task.
 
 `BOOK.md` is a generated single-file edition if loading the whole reference is
 useful. Individual chapters are smaller and have stable relative links.
@@ -4317,6 +4473,14 @@ entry kinds, skip links/junctions during traversal, and close after early exit.
 there is no shell or PATH lookup. Supply an executable path; at most 256 argument
 values and 32767 packed UTF-8 bytes. Child input/output is inherited, not captured.
 `system_env` returns bytes and distinguishes missing (-2) from empty success.
+
+For HTTP(S), use the [native client library](30-http.md), not a child-process
+network helper. `http_get`/`http_post` return HttpResponse: check status first,
+then the HTTP code, then consume body bytes. HTTP 401/429/500 preserve their
+response body. Certificate/name failures return negative status with empty body.
+Linux networking executables require libcurl; compiler imports are automatic.
+Windows uses system WinHTTP. This API is synchronous and bounded; do not invent
+raw sockets, response-header access, proxy settings, async requests or SSE parsing.
 
 For GUI, use `run app.ramos --gui` or `build app.ramos -o PROGRAM --gui`.
 Windows uses system controls; Linux requires GTK3 and a display. A static Linux

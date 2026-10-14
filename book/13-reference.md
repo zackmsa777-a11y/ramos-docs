@@ -41,7 +41,7 @@ CLI. The existing array/live-heap bounds remain checked.
 
 ## Standard library signatures
 
-These are the complete function signatures defined in the thirteen bundled
+These are the complete function signatures defined in the fifteen bundled
 libraries. Follow chapter APIs for supported application-facing helpers; some
 prefixed functions are implementation helpers. Read source for structs and
 exact status/lifetime contracts. [Math](21-math.md), [decimal input](22-math-input.md),
@@ -303,3 +303,21 @@ For scaled windows, control/drawing geometry and resize/scale-event dimensions
 are logical units. Kind 6 carries DPI in `id`. Windows opt-in scaling needs
 per-monitor-v2 support; [scaling contracts](29-gui-scaling.md) distinguish native
 initial checks from the pending actual Windows display transition.
+
+### http.ramos
+
+See [transport, TLS and timeout contracts](30-http.md) and [the source](../stdlib/http.ramos).
+
+```ramos
+struct HttpResponse { code: int64, status: int64, body: bytes }
+struct HttpPacket { data: bytes, used: int64, status: int64 }
+fn http_byte(packet: HttpPacket, value: int64)
+fn http_text(packet: HttpPacket, value: string)
+fn http_number(packet: HttpPacket, value: int64)
+fn http_get(url: string, headers: [string], timeout_ms: int64) -> HttpResponse
+fn http_post(url: string, headers: [string], body: bytes, timeout_ms: int64) -> HttpResponse
+fn http_request(method: string, url: string, headers: [string], body: bytes, timeout_ms: int64) -> HttpResponse
+```
+
+The `http_byte`, `http_text`, `http_number` and `HttpPacket` definitions in the
+source are packet-building helpers. Use the three request functions for apps.

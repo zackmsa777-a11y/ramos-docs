@@ -1,6 +1,6 @@
 # The Ramos Book
 
-A practical book for **Ramos 0.25.1 preview**: Markdown for AI coding agents and a
+A practical book for **Ramos 0.26.0 preview**: Markdown for AI coding agents and a
 readable HTML edition for people, generated from the same source.
 
 - **Read online:** [The Ramos Book](https://zackmsa777-a11y.github.io/ramos-docs/)
@@ -11,7 +11,7 @@ readable HTML edition for people, generated from the same source.
 - **Compiler:** [zackmsa777-a11y/ramos](https://github.com/zackmsa777-a11y/ramos)
 
 The language rules are **simple programming** and **measured native speed**.
-This edition targets the released 0.25 preview. The reported native 144 → 168 → 96 Windows events passed, while captured
+This edition targets the 0.26 HTTP(S) preview. The reported native 144 → 168 → 96 Windows events passed, while captured
 canvas shapes failed visual acceptance. The 0.25.1 repaint candidate still needs
 a real-display retest; the scaling chapter includes independent capture commands.
 
@@ -44,19 +44,20 @@ The existing compiler release and book URLs remain stable.
 15. Arguments and file I/O
 16. Libraries with weave
 17. Paths, directories, environment and child processes
-18. CLI tools and terminal interfaces
-19. Monotonic timing and terminal animation
-20. Desktop GUI on Windows and Linux
-21. Native drawing and retained canvas frames
-22. Logical GUI scaling and native resource checks
-23. Windows and cross-compilation
-24. Runnable projects
-25. How the compiler builds itself
-26. Limits and standard library reference
-27. Performance and evidence
-28. Versions, installation and compatibility
-29. What comes next
-30. Guide for AI coding agents
+18. Native HTTP(S) clients and verified TLS
+19. CLI tools and terminal interfaces
+20. Monotonic timing and terminal animation
+21. Desktop GUI on Windows and Linux
+22. Native drawing and retained canvas frames
+23. Logical GUI scaling and native resource checks
+24. Windows and cross-compilation
+25. Runnable projects
+26. How the compiler builds itself
+27. Limits and standard library reference
+28. Performance and evidence
+29. Versions, installation and compatibility
+30. What comes next
+31. Guide for AI coding agents
 
 ## Read offline
 

@@ -56,6 +56,8 @@ timings are historical; they are not a performance result for 0.13.
 | 0.24: numerical output (implemented; see [contracts](28-math-output.md)) | Exact scientific/compact formatting in Ramos, fixed output preserved | Tiny calculator values remain visible; independent rounding and binary64 round trips on both OSes |
 | 0.25 preview: explicit scaling (see [contracts](29-gui-scaling.md)) | Opt-in logical geometry, native fonts/canvas and DPI events; bounded resource probes | Genuine GTK 1× → 2× → 1×; Windows native initial state and resource checks; reported Windows 144 → 168 → 96 events/input passed; canvas visual acceptance failed and repaint retest pending |
 | GUI acceptance follow-up | Intact canvas at native Windows transitions and genuine multi-monitor movement | Keep the same demo open through actual OS scale changes |
+| 0.26 preview: native HTTP(S) (see [contracts](30-http.md)) | GET/POST, headers, bounded captured bodies and verified TLS through libcurl/WinHTTP | Controlled trusted HTTPS JSON client; reject untrusted certificates/name mismatch, preserve HTTP errors and close handles |
+| API client follow-up | JSON parsing/formatting, response headers and explicitly designed deadlines/streaming | A complete non-streaming LLM client and tool loop without a helper network process |
 | 1.0 candidate: reliability and measured speed | Profile the acceptance apps, fix demonstrated costs, polish installation and packaging, document compatibility | Build, run and package the CLI/TUI/GUI examples from a clean installation on both OSes |
 
 ### 0.14: specify the small syntax changes first

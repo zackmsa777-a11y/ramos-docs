@@ -1,7 +1,7 @@
 {
-  "version": "Ramos 0.25.1 \u2014 compiler written in Ramos; Linux and Windows x64",
+  "version": "Ramos 0.26.0 \u2014 compiler written in Ramos; Linux and Windows x64",
   "target": "windows-x64",
-  "compiler_sha256": "868fa98e4ab7bc7c030c6cc0f6be9bb81dedd3d1cae0178179b6b3df2f429508",
+  "compiler_sha256": "f03c4edf9b0c05009e563a9958f38f36fe2fdc06be2c38f0b31a63ae1537013f",
   "unicode_install_path": true,
   "empty_path": true,
   "run_arguments_exit_status": true,
